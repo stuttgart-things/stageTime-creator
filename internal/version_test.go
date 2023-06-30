@@ -2,7 +2,7 @@
 Copyright © 2023 PATRICK HERMANN patrick.hermann@sva.de
 */
 
-package cmd
+package internal
 
 import (
 	"testing"
@@ -10,5 +10,4 @@ import (
 
 func TestPrintBanner(t *testing.T) {
 	PrintBanner()
-
 }

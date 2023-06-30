@@ -5,9 +5,10 @@ Copyright © 2023 PATRICK HERMANN patrick.hermann@sva.de
 package main
 
 import (
+	"fmt"
 	"os"
 
-	"github.com/stuttgart-things/sweatShop-creator/cmd"
+	"github.com/stuttgart-things/sweatShop-creator/internal"
 )
 
 var (
@@ -19,6 +20,8 @@ var (
 
 func main() {
 
-	cmd.PrintBanner()
+	internal.PrintBanner()
 
+	hello := internal.RenderManifest(internal.Manifest{Name: "dsfds"})
+	fmt.Println(hello)
 }

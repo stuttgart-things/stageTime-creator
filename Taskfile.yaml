@@ -56,7 +56,7 @@ tasks:
     desc: Test code
     cmds:
       - go mod tidy
-      - go test -v
+      - go test ./... -v
 
   tag:
     desc: commit, push & tag the module

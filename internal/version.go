@@ -2,7 +2,7 @@
 Copyright © 2023 PATRICK HERMANN patrick.hermann@sva.de
 */
 
-package cmd
+package internal
 
 import (
 	"github.com/fatih/color"
