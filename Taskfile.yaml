@@ -9,14 +9,6 @@ vars:
   KUSTOMIZE_CMD: /usr/bin/kustomize
   PROJECT_NAME:
     sh: pwd | grep -o "[^/]*$"
-  # MAJOR:
-  #   sh: git describe --tags --abbrev=0 | cut -d "." -f1
-  # MINOR:
-  #   sh: git describe --tags --abbrev=0 | cut -d "." -f2
-  # PATCH:
-  #   sh: git describe --tags --abbrev=0 | cut -d "." -f3 |  cut -d "-" -f1
-  # VERSION:
-  #   sh: git describe --tags --abbrev=0
   GIT_COMMIT:
     sh: git log -n 1 --format=%h
   DATE:
@@ -60,7 +52,7 @@ tasks:
 
   tag:
     desc: commit, push & tag the module
-    deps: [lint]
+    deps: [lint, test]
     cmds:
       - go mod tidy
       - git pull
@@ -71,10 +63,9 @@ tasks:
       - git tag -a {{ .UPDATED_TAG_VERSION }}{{ .BRANCH }} -m 'updated for stuttgart-things {{ .DATE }} for tag version {{ .UPDATED_TAG_VERSION }}{{ .BRANCH }}'
       - git push origin --tags
 
-  # build-image:
-  #   desc: Build image
-  #   deps: [tag, crds]
-  #   cmds:
-  #     - "{{ .CONTAINER_RUNTIME_CMD }} build -t {{ .REGISTRY }}/{{ .REPOSITORY_NAME }}/{{ .PROJECT_NAME }}:{{ .DATE }}-{{ .UPDATED_TAG_VERSION }}{{ .BRANCH }} ."
-  #     - "{{ .CONTAINER_RUNTIME_CMD }} push {{ .REGISTRY }}/{{ .REPOSITORY_NAME }}/{{ .PROJECT_NAME }}:{{ .DATE }}-{{ .UPDATED_TAG_VERSION }}{{ .BRANCH }}"
-  #     - cd config/manager && {{ .KUSTOMIZE_CMD }} edit set image controller={{ .REGISTRY }}/{{ .REPOSITORY_NAME }}/{{ .PROJECT_NAME }}:{{ .DATE }}-{{ .UPDATED_TAG_VERSION }}{{ .BRANCH }}
+  build-image:
+    desc: Build image
+    deps: [tag]
+    cmds:
+      - "{{ .CONTAINER_RUNTIME_CMD }} build -t {{ .REGISTRY }}/{{ .REPOSITORY_NAME }}/{{ .PROJECT_NAME }}:{{ .DATE }}-{{ .UPDATED_TAG_VERSION }}{{ .BRANCH }} ."
+      - "{{ .CONTAINER_RUNTIME_CMD }} push {{ .REGISTRY }}/{{ .REPOSITORY_NAME }}/{{ .PROJECT_NAME }}:{{ .DATE }}-{{ .UPDATED_TAG_VERSION }}{{ .BRANCH }}"
