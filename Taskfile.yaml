@@ -51,7 +51,7 @@ tasks:
       - go test ./... -v
 
   tag:
-    desc: commit, push & tag the module
+    desc: Commit, push & tag the module
     deps: [lint, test]
     cmds:
       - go mod tidy
