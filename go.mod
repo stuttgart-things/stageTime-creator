@@ -1,4 +1,4 @@
-module github/sweatShop-creator
+module github.com/stuttgart-things/sweatShop-creator
 
 go 1.20
 
