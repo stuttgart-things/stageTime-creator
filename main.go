@@ -25,10 +25,9 @@ func main() {
 	internal.PrintBanner()
 	template, templateFileExists := internal.ReadTemplateFromFilesystem(templatePath, templateName)
 
-	fmt.Println(template)
-
 	if templateFileExists {
-		renderedManifest := internal.RenderManifest(internal.Manifest{Name: "dsfds"})
+		manifestValues := internal.Manifest{Name: "hello"}
+		renderedManifest := internal.RenderManifest(manifestValues, template)
 		fmt.Println(renderedManifest)
 		internal.ApplyManifest(renderedManifest)
 	} else {

@@ -15,15 +15,7 @@ type Manifest struct {
 	Name string
 }
 
-const manifestTemplate = `
-apiVersion: batch/v1
-kind: Job
-metadata:
-  name: {{ .Name }}
-  namespace: machine-shop
-`
-
-func RenderManifest(resource Manifest) string {
+func RenderManifest(resource Manifest, manifestTemplate string) string {
 
 	var buf bytes.Buffer
 

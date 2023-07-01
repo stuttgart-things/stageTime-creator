@@ -18,7 +18,7 @@ metadata:
 
 func TestRenderManifest(t *testing.T) {
 
-	rendered := RenderManifest(Manifest{Name: "hello"})
+	rendered := RenderManifest(Manifest{Name: "hello"}, renderedJobManifest)
 
 	if rendered != renderedJobManifest {
 		t.Errorf("expected: %s\ngot: %s", rendered, renderedJobManifest)
