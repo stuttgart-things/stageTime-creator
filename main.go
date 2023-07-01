@@ -17,7 +17,7 @@ var (
 	redisServer   = os.Getenv("REDIS_SERVER")
 	redisPort     = os.Getenv("REDIS_PORT")
 	redisPassword = os.Getenv("REDIS_PASSWORD")
-	redisStream   = "q9:1"
+	redisStream   = os.Getenv("REDIS_STREAM")
 )
 
 func main() {
