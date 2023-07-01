@@ -7,6 +7,8 @@ package internal
 import (
 	"bytes"
 	"html/template"
+
+	sthingsBase "github.com/stuttgart-things/sthingsBase"
 )
 
 type Manifest struct {
@@ -36,4 +38,15 @@ func RenderManifest(resource Manifest) string {
 	}
 
 	return buf.String()
+}
+
+func ReadTemplateFromFilesystem(templatePath, templateName string) (template string, templateFileExists bool) {
+
+	templateFileExists, _ = sthingsBase.VerifyIfFileOrDirExists(templatePath, "file")
+
+	if templateFileExists {
+		template = sthingsBase.ReadFileToVariable(templatePath + "/" + templateName)
+	}
+
+	return
 }

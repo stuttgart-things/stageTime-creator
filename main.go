@@ -12,6 +12,8 @@ import (
 )
 
 var (
+	templatePath  = os.Getenv("TEMPLATE_PATH")
+	templateName  = os.Getenv("TEMPLATE_NAME")
 	redisServer   = os.Getenv("REDIS_SERVER")
 	redisPort     = os.Getenv("REDIS_PORT")
 	redisPassword = os.Getenv("REDIS_PASSWORD")
@@ -21,7 +23,13 @@ var (
 func main() {
 
 	internal.PrintBanner()
+	template, templateFileExists := internal.ReadTemplateFromFilesystem(templatePath, templateName)
 
-	hello := internal.RenderManifest(internal.Manifest{Name: "dsfds"})
-	fmt.Println(hello)
+	if templateFileExists {
+		renderedManifest := internal.RenderManifest(internal.Manifest{Name: "dsfds"})
+		fmt.Println(renderedManifest)
+		internal.ApplyManifest(renderedManifest)
+	} else {
+		fmt.Println("TEMPLATE (PATH) NOT FOUND")
+	}
 }

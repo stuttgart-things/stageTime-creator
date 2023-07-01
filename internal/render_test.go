@@ -5,7 +5,6 @@ Copyright © 2023 PATRICK HERMANN patrick.hermann@sva.de
 package internal
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -19,10 +18,9 @@ metadata:
 
 func TestRenderManifest(t *testing.T) {
 
-	hello := RenderManifest(Manifest{Name: "hello"})
-	fmt.Println(hello)
+	rendered := RenderManifest(Manifest{Name: "hello"})
 
-	if hello != renderedJobManifest {
-		t.Errorf("expected: %s\ngot: %s", hello, renderedJobManifest)
+	if rendered != renderedJobManifest {
+		t.Errorf("expected: %s\ngot: %s", rendered, renderedJobManifest)
 	}
 }
