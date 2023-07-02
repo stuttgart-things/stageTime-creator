@@ -55,7 +55,7 @@ tasks:
     deps: [lint, test]
     cmds:
       - go mod tidy
-      - git pull
+      - git pull && git pull --tags
       - git add *
       - git config advice.addIgnoredFile false
       - git commit -am 'updated {{ .PROJECT_NAME }} {{ .DATE }} for tag version {{ .UPDATED_TAG_VERSION }}{{ .BRANCH }} '
@@ -75,3 +75,10 @@ tasks:
     deps: [build-image]
     cmds:
       - "{{ .CONTAINER_RUNTIME_CMD }} run {{ .REGISTRY }}/{{ .REPOSITORY_NAME }}/{{ lower (.PROJECT_NAME) }}:{{ .DATE }}-{{ .UPDATED_TAG_VERSION }}{{ .BRANCH }}"
+
+  release:
+    desc: Build amd release to github
+    deps: [tag]
+    cmds:
+      - goreleaser release --skip-publish --snapshot --clean
+      - goreleaser release --clean
