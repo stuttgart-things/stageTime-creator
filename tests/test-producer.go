@@ -31,8 +31,8 @@ func main() {
 	err2 := p.Enqueue(&redisqueue.Message{
 		Stream: redisStream,
 		Values: map[string]interface{}{
-			"content": "content",
-			"hello":   "world",
+			"template": "job-template.yaml",
+			"name":     "run-packer-rocky9",
 		},
 	})
 	if err2 != nil {

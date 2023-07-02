@@ -10,8 +10,8 @@ import (
 	"time"
 
 	"github.com/redis/go-redis/v9"
-
 	"github.com/stuttgart-things/redisqueue"
+	sthingsBase "github.com/stuttgart-things/sthingsBase"
 )
 
 var (
@@ -20,7 +20,8 @@ var (
 	redisPassword = os.Getenv("REDIS_PASSWORD")
 	redisStream   = os.Getenv("REDIS_STREAM")
 	templatePath  = os.Getenv("TEMPLATE_PATH")
-	templateName  = os.Getenv("TEMPLATE_NAME")
+	log           = sthingsBase.StdOutFileLogger(logfilePath, "2006-01-02 15:04:05", 50, 3, 28)
+	logfilePath   = "/tmp/sweatShop-creator.log"
 )
 
 func PollRedisStreams() {
@@ -50,33 +51,42 @@ func PollRedisStreams() {
 		}
 	}()
 
-	fmt.Println("POLLING FOR REDIS STREAM " + redisStream + " ON " + redisServer + ":" + redisPort)
+	log.Info("start polling stream", redisStream+" on "+redisServer+":"+redisPort)
+
+	// fmt.Println("POLLING FOR REDIS STREAM " + redisStream + " ON " + redisServer + ":" + redisPort)
 
 	c.Run()
 
-	fmt.Println("POLLING FOR REDIS STREAM STOPPED")
+	log.Warn("polling stopped")
 
 }
 
 func processStreams(msg *redisqueue.Message) error {
 
-	// DEBUG OUTPUT MESSAGE
-	fmt.Println("TEMPLATE-PATH", templatePath)
-	fmt.Println("TEMPLATE", templateName)
+	log.Info("templatePath: ", templatePath)
+	fmt.Println(msg.Values["template"])
 
-	fmt.Printf("processing message: %v\n", msg.Values)
-	// msg.Values["job"]
+	if msg.Values["template"] != nil {
 
-	// CHECK FOR TEMPLATE
-	template, templateFileExists := ReadTemplateFromFilesystem(templatePath, templateName)
+		templateName := msg.Values["template"].(string)
+		log.Info("templateName: ", templateName)
 
-	if templateFileExists {
-		manifestValues := Manifest{Name: "hello"}
-		renderedManifest := RenderManifest(manifestValues, template)
-		ApplyManifest(renderedManifest)
+		template, templateFileExists := ReadTemplateFromFilesystem(templatePath, templateName)
+
+		if templateFileExists {
+			log.Info("template " + templateName + " imported")
+
+			manifestValues := Manifest{Name: "hello"}
+			renderedManifest := RenderManifest(manifestValues, template)
+			fmt.Println(renderedManifest)
+			ApplyManifest(renderedManifest)
+
+		} else {
+			log.Error("template " + templateName + " does not exist on filesystem")
+		}
 
 	} else {
-		fmt.Println("TEMPLATE (PATH) NOT FOUND")
+		log.Error("templateName not defined in stream!")
 	}
 
 	return nil
