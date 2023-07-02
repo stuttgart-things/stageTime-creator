@@ -11,7 +11,7 @@ import (
 	sthingsK8s "github.com/stuttgart-things/sthingsK8s"
 )
 
-func ApplyManifest(renderedManifest string) {
+func ApplyManifest(renderedManifest, namespace string) {
 
 	clusterConfig, _ := sthingsK8s.GetKubeConfig(os.Getenv("KUBECONFIG"))
 
@@ -19,6 +19,6 @@ func ApplyManifest(renderedManifest string) {
 	ns := sthingsK8s.GetK8sNamespaces(clusterConfig)
 	fmt.Println("FOUND NAMESAPCES", ns)
 
-	sthingsK8s.CreateDynamicResourcesFromTemplate(clusterConfig, []byte(renderedManifest), "default")
+	sthingsK8s.CreateDynamicResourcesFromTemplate(clusterConfig, []byte(renderedManifest), namespace)
 
 }

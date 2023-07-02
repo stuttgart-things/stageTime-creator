@@ -12,7 +12,8 @@ import (
 )
 
 type Manifest struct {
-	Name string
+	Name      string
+	Namespace string
 }
 
 func RenderManifest(resource Manifest, manifestTemplate string) string {

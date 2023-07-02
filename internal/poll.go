@@ -69,17 +69,20 @@ func processStreams(msg *redisqueue.Message) error {
 	if msg.Values["template"] != nil {
 
 		templateName := msg.Values["template"].(string)
+		namespace := msg.Values["namespace"].(string)
+
 		log.Info("templateName: ", templateName)
+		log.Info("namespace: ", namespace)
 
 		template, templateFileExists := ReadTemplateFromFilesystem(templatePath, templateName)
 
 		if templateFileExists {
 			log.Info("template " + templateName + " imported")
 
-			manifestValues := Manifest{Name: "hello"}
+			manifestValues := Manifest{Name: "hello", Namespace: namespace}
 			renderedManifest := RenderManifest(manifestValues, template)
 			fmt.Println(renderedManifest)
-			ApplyManifest(renderedManifest)
+			ApplyManifest(renderedManifest, namespace)
 
 		} else {
 			log.Error("template " + templateName + " does not exist on filesystem")
