@@ -8,10 +8,10 @@ renders & creates k8s resources
 
 ```
 export KUBECONFIG=~/.kube/dev11
-export TEMPLATE_PATH=~/projects/go/src/github/sweatShop-creator
+export TEMPLATE_PATH=~/projects/go/src/github/sweatShop-creator/tests
 export TEMPLATE_NAME=job-template.yaml
 export REDIS_STREAM=sweatshop:test
-export REDIS_PASSWORD=<SETME>
+export REDIS_PASSWORD=<SET-ME>
 export REDIS_SERVER=redis-pve.labul.sva.de
 export REDIS_PORT=6379
 task run
