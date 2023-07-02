@@ -1,14 +1,14 @@
 ---
 version: 3
 vars:
+  PROJECT_NAME:
+    sh: pwd | grep -o "[^/]*$"
   REGISTRY: eu.gcr.io
   REPOSITORY_NAME: stuttgart-things
   MODULE: github.com/{{ .REPOSITORY_NAME }}/{{ .PROJECT_NAME }}
   CONTAINER_RUNTIME_CMD: sudo nerdctl
   CONTROLLER_GEN_CMD: "./bin/controller-gen"
   KUSTOMIZE_CMD: /usr/bin/kustomize
-  PROJECT_NAME:
-    sh: pwd | grep -o "[^/]*$"
   GIT_COMMIT:
     sh: git log -n 1 --format=%h
   DATE:
@@ -21,6 +21,14 @@ vars:
     sh: if [ $(git rev-parse --abbrev-ref HEAD) != "main" ]; then echo -$(git rev-parse --abbrev-ref HEAD) ; fi
 
 tasks:
+
+  build:
+    desc: Build the app
+    deps: [lint, test]
+    cmds:
+      - go install -ldflags="-X {{ .MODULE }}/internal.date={{ .DATE }} -X {{ .MODULE }}/internal.version={{ .UPDATED_TAG_VERSION }} -X {{ .MODULE }}/internal.commit={{ .GIT_COMMIT }}"
+      - "{{ .PROJECT_NAME }}"
+
   run:
     desc: Run app
     deps: [lint, test]
@@ -43,6 +51,7 @@ tasks:
     desc: Commit, push & tag the module
     deps: [lint, test]
     cmds:
+      - rm -rf dist
       - go mod tidy
       - git pull && git pull --tags
       - git add *
@@ -56,7 +65,7 @@ tasks:
     desc: Build image
     deps: [tag]
     cmds:
-      - "{{ .CONTAINER_RUNTIME_CMD }} build -t {{ .REGISTRY }}/{{ .REPOSITORY_NAME }}/{{ lower (.PROJECT_NAME) }}:{{ .DATE }}-{{ .UPDATED_TAG_VERSION }}{{ .BRANCH }} ."
+      - "{{ .CONTAINER_RUNTIME_CMD }} build -t {{ .REGISTRY }}/{{ .REPOSITORY_NAME }}/{{ lower (.PROJECT_NAME) }}:{{ .DATE }}-{{ .UPDATED_TAG_VERSION }}{{ .BRANCH }} --build-arg VERSION={{ .MAJOR }}.{{ .MINOR }}.{{ .PATCH }} ."
       - "{{ .CONTAINER_RUNTIME_CMD }} push {{ .REGISTRY }}/{{ .REPOSITORY_NAME }}/{{ lower (.PROJECT_NAME) }}:{{ .DATE }}-{{ .UPDATED_TAG_VERSION }}{{ .BRANCH }}"
 
   run-container:

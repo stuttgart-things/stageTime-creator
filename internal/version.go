@@ -10,10 +10,10 @@ import (
 )
 
 var (
-	version = "unset"
 	date    = "unknown"
 	commit  = "unknown"
 	output  = "yaml"
+	version = "unset"
 )
 
 // https://fsymbols.com/generators/carty/
