@@ -1,82 +1,111 @@
 # Default values for sweatShop-creator.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
+namespace: sweatshop
 
-replicaCount: 1
+configmaps:
+  manifest-templates: |
+    apiVersion: batch/v1
+    kind: Job
+    metadata:
+      name: {{ .Name }}
+      namespace: machine-shop
 
-image:
-  repository: nginx
-  pullPolicy: IfNotPresent
-  # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+deployment:
+  name: sweatshop-creator
+  volumes:
+    manifest-templates:
+      volumeKind: configMap
+  labels:
+    app: sweatshop-creator
+  selectorLabels:
+    app: sweatshop-creator
+  allowPrivilegeEscalation: "false"
+  privileged: "false"
+  runAsNonRoot: "false"
+  readOnlyRootFilesystem: "true"
+  serviceAccount: sweatshop-creator
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 100m
+      memory: 128Mi
+  containers:
+    sweatshop-creator:
+      volumeMounts:
+        manifest-templates:
+          mountPath: /templates/
+          volumeKind: emptyDir
+      image: eu.gcr.io/stuttgart-things/sweatshop-creator
+      replicaCount: 1
+      imagePullPolicy: Always
+      tag: 23.0622.1132-0.3.11
+      securityContext:
+        capabilities: {}
 
-imagePullSecrets: []
-nameOverride: ""
-fullnameOverride: ""
+# RBAC
+serviceAccounts:
+  sweatshop-creator:
+    labels:
+      app: sweatshop-creator
 
-serviceAccount:
-  # Specifies whether a service account should be created
-  create: true
-  # Annotations to add to the service account
-  annotations: {}
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
-  name: ""
+roles:
+  sweatshop-creator:
+    labels:
+      app: sweatshop-creator
+    rules:
+      - apiGroups:
+          - ""
+        resources:
+          - pods
+        verbs:
+          - get
+          - list
+          - watch
+          - create
+      - apiGroups:
+          - "batch"
+        resources:
+          - jobs
+        verbs:
+          - get
+          - list
+          - watch
+          - create
 
-podAnnotations: {}
+roleBindings:
+  sweatshop-creator:
+    labels:
+      app: sweatshop-creator
+    roleRef:
+      kind: Role
+      name: sweatshop-creator
+      apiGroup: rbac.authorization.k8s.io
+    subjects:
+      - kind: ServiceAccount
+        name: sweatshop-creator
+        namespace: yacht
 
-podSecurityContext: {}
-  # fsGroup: 2000
+clusterRoles:
+  list-all-namespaces:
+    labels:
+      app: sweatshop-creator
+    rules:
+      - apiGroups:
+          - ""
+        resources:
+          - namespaces
+        verbs:
+          - get
+          - list
 
-securityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
-
-service:
-  type: ClusterIP
-  port: 80
-
-ingress:
-  enabled: false
-  className: ""
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-  hosts:
-    - host: chart-example.local
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
-
-resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
-
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
-
-nodeSelector: {}
-
-tolerations: []
-
-affinity: {}
+clusterRoleBindings:
+  list-all-namespaces:
+    roleRef:
+      kind: ClusterRole
+      name: list-all-namespaces
+      apiGroup: rbac.authorization.k8s.io
+    subjects:
+      - kind: ServiceAccount
+        name: sweatshop-creator
+        namespace: yacht
