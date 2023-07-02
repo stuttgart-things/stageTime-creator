@@ -2,7 +2,17 @@
 
 dynamic rendering and creation of k8s-resources polled from redis streams
 
-## TEST SERVICE LOCALLY
+## DEPLOY TO CLUSTER
+
+<details><summary><b>REDIS</b></summary>
+
+</details>
+
+<details><summary><b>DEPLOYMENT</b></summary>
+
+</details>
+
+## TEST SERVICE LOCALLY (OUTSIDE CLUSTER)
 
 <details><summary><b>START CONSUMER</b></summary>
 
