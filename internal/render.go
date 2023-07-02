@@ -34,10 +34,12 @@ func RenderManifest(resource Manifest, manifestTemplate string) string {
 
 func ReadTemplateFromFilesystem(templatePath, templateName string) (template string, templateFileExists bool) {
 
-	templateFileExists, _ = sthingsBase.VerifyIfFileOrDirExists(templatePath, "file")
+	templateFileExists, _ = sthingsBase.VerifyIfFileOrDirExists(templatePath+"/"+templateName, "file")
 
 	if templateFileExists {
+
 		template = sthingsBase.ReadFileToVariable(templatePath + "/" + templateName)
+
 	}
 
 	return

@@ -2,12 +2,18 @@
 namespace: sweatshop
 
 configmaps:
-  manifest-templates: |
-    apiVersion: batch/v1
-    kind: Job
-    metadata:
-      name: {{ .Name }}
-      namespace: machine-shop
+  configuration:
+    TEMPLATE_PATH: /templates
+    TEMPLATE_NAME: job.yaml.gotmpl
+    REDIS_STREAM: "sweatshop:manifests"
+
+  manifest-templates:
+    job.yaml.gotmpl: |
+      apiVersion: batch/v1
+      kind: Job
+      metadata:
+        name: {{ .Name }}
+        namespace: machine-shop
 
 deployment:
   name: sweatshop-creator

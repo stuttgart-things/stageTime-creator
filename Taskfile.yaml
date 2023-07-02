@@ -29,11 +29,16 @@ tasks:
       - go install -ldflags="-X {{ .MODULE }}/internal.date={{ .DATE }} -X {{ .MODULE }}/internal.version={{ .UPDATED_TAG_VERSION }} -X {{ .MODULE }}/internal.commit={{ .GIT_COMMIT }}"
       - "{{ .PROJECT_NAME }}"
 
+  run-test-producer:
+    desc: Run test-producer
+    cmds:
+      - go run ./tests/test-producer.go
+
   run:
     desc: Run app
-    deps: [lint, test]
+    deps: [build]
     cmds:
-      - go run main.go
+      - "{{ .PROJECT_NAME }}"
 
   lint:
     desc: Lint code

@@ -2,6 +2,34 @@
 
 renders & creates k8s resources
 
+
+## TEST SERVICE LOCALLY
+
+<details><summary><b>START CONSUMER</b></summary>
+
+```
+export KUBECONFIG=~/.kube/dev11
+export TEMPLATE_PATH=~/projects/go/src/github/sweatShop-creator
+export TEMPLATE_NAME=job-template.yaml
+export REDIS_STREAM=sweatshop:test
+export REDIS_PASSWORD=<SETME>
+export REDIS_SERVER=redis-pve.labul.sva.de
+export REDIS_PORT=6379
+task run
+```
+
+</details>
+
+<details><summary><b>START TEST PRODUCING</b></summary>
+
+```
+export REDIS_STREAM=sweatshop:test
+export REDIS_PASSWORD=<SETME>
+export REDIS_SERVER=redis-pve.labul.sva.de
+export REDIS_PORT=6379
+task run-test-producer
+```
+
 ## License
 
 Copyright 2023 patrick hermann.
