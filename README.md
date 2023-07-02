@@ -31,9 +31,9 @@ task run-test-producer
 
 </details>
 
-## License
+## LICENSE
 
-<details><summary><b>LICENSE</b></summary>
+<details><summary><b>APACHE 2.0</b></summary>
 
 Copyright 2023 patrick hermann.
 
