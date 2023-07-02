@@ -1,6 +1,6 @@
 # stuttgart-things/sweatShop-creator
 
-renders & creates k8s resources
+dynamic rendering and creation of k8s-resources polled from redis streams
 
 ## TEST SERVICE LOCALLY
 
