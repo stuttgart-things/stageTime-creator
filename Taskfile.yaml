@@ -77,7 +77,7 @@ tasks:
       - "{{ .CONTAINER_RUNTIME_CMD }} run {{ .REGISTRY }}/{{ .REPOSITORY_NAME }}/{{ lower (.PROJECT_NAME) }}:{{ .DATE }}-{{ .UPDATED_TAG_VERSION }}{{ .BRANCH }}"
 
   release:
-    desc: Build amd release to github
+    desc: Build amd release to github w/ goreleaser
     deps: [tag]
     cmds:
       - goreleaser release --skip-publish --snapshot --clean
