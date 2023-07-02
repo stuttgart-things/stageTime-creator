@@ -2,7 +2,6 @@
 
 renders & creates k8s resources
 
-
 ## TEST SERVICE LOCALLY
 
 <details><summary><b>START CONSUMER</b></summary>
@@ -29,6 +28,8 @@ export REDIS_SERVER=redis-pve.labul.sva.de
 export REDIS_PORT=6379
 task run-test-producer
 ```
+
+</details>
 
 ## License
 
