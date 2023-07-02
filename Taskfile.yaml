@@ -21,17 +21,6 @@ vars:
     sh: if [ $(git rev-parse --abbrev-ref HEAD) != "main" ]; then echo -$(git rev-parse --abbrev-ref HEAD) ; fi
 
 tasks:
-  project-init-go:
-    desc: Bootstrap project
-    cmds:
-      - go mod init {{ .Module }}
-      - go mod tidy
-      - git add go.mod
-      - git commit -am 'initialized go module {{ .Module }}'
-      - git push
-      - git tag -a v0.1.0 -m 'initialized module {{ .Module }}'
-      - git push origin --tags
-
   run:
     desc: Run app
     deps: [lint, test]
