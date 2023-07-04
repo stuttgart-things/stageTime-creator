@@ -1,19 +1,75 @@
 # Default values for sweatShop-creator.
 namespace: sweatshop
 
+redis:
+  enabled: false
+
 configmaps:
   configuration:
     TEMPLATE_PATH: /templates
-    TEMPLATE_NAME: job.yaml.gotmpl
+    TEMPLATE_NAME: ansible-job.yaml.gotmpl
     REDIS_STREAM: "sweatshop:manifests"
+    REDIS_SERVER: sweatshop-informer-redis-headless.sweatshop.svc.cluster.local
+    REDIS_PORT: "6379"
+    REDIS_PASSWORD: Ce1jvZRoZH
 
   manifest-templates:
-    job.yaml.gotmpl: |
+    ansible-job.yaml.gotmpl: |
       apiVersion: batch/v1
       kind: Job
       metadata:
-        name: {{ .Name }}
-        namespace: machine-shop
+        name: 2023-07-02-configure-rke-node-19mv
+        namespace: {{ .Namespace }}
+        labels:
+          app: machine-shop-operator
+          machine-shop-operator: ansible
+      spec:
+        template:
+          metadata:
+            name: 2023-07-02-configure-rke-node-19mv
+            labels:
+              app: machine-shop-operator
+              machine-shop-operator: ansible
+          spec:
+            containers:
+              - name: manager
+                image: eu.gcr.io/stuttgart-things/sthings-ansible:8.0.0-4
+                imagePullPolicy: Always
+                securityContext:
+                  allowPrivilegeEscalation: true
+                  privileged: true
+                  runAsNonRoot: true
+                  readOnlyRootFilesystem: false
+                  runAsUser: 65532
+                env:
+                  - name: ANSIBLE_HOST_KEY_CHECKING
+                    value: "False"
+                  - name: INV_PATH
+                    value: "/tmp/inv"
+                  - name: TARGETS
+                    value: "mso-vm2.tiab.labda.sva.de"
+                envFrom:
+                  - secretRef:
+                      name: vault
+                resources:
+                  requests:
+                    cpu: 150m
+                    memory: 256Mi
+                  limits:
+                    cpu: 500m
+                    memory: 768Mi
+                command:
+                  - /bin/sh
+                  - -ec
+                  - touch ${INV_PATH} && ansible-playbook -i $INV_PATH $HOME/ansible/play.yaml -vv -e prepare_env=true -e execute_baseos=true -e target_play=configure-rke-node
+                volumeMounts:
+                  - name: ansible
+                    mountPath: /home/nonroot/ansible
+            restartPolicy: Never
+            volumes:
+              - name: ansible
+                configMap:
+                  name: ansible
 
 deployment:
   name: sweatshop-creator
@@ -90,10 +146,10 @@ roleBindings:
     subjects:
       - kind: ServiceAccount
         name: sweatshop-creator
-        namespace: yacht
+        namespace: sweatshop
 
 clusterRoles:
-  list-all-namespaces:
+  sweatshop-creator:
     labels:
       app: sweatshop-creator
     rules:
@@ -106,12 +162,12 @@ clusterRoles:
           - list
 
 clusterRoleBindings:
-  list-all-namespaces:
+  sweatshop-creator:
     roleRef:
       kind: ClusterRole
-      name: list-all-namespaces
+      name: sweatshop-creator
       apiGroup: rbac.authorization.k8s.io
     subjects:
       - kind: ServiceAccount
         name: sweatshop-creator
-        namespace: yacht
+        namespace: sweatshop

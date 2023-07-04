@@ -10,3 +10,7 @@ dependencies:
   - name: sthings-helm-toolkit
     version: 2.4.42
     repository: oci://eu.gcr.io/stuttgart-things
+  - name: redis
+    version: 17.11.6
+    repository: https://charts.bitnami.com/bitnami
+    condition: redis.enabled
