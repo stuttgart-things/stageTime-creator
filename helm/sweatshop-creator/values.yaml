@@ -1,6 +1,5 @@
 # Default values for sweatShop-creator.
 namespace: sweatshop2
-
 redis:
   enabled: false
   sentinel:
@@ -19,15 +18,14 @@ redis:
   auth:
     password: just4dev
 
-# configmaps:
-#   creator:
-#     TEMPLATE_PATH: /templates
-#     TEMPLATE_NAME: ansible-job.yaml.gotmpl
-#     REDIS_STREAM: sweatshop:manifests
-#     REDIS_SERVER: sweatshop-informer-redis-headless.sweatshop.svc.cluster.local
-#     REDIS_PORT: "6379"
-#     REDIS_PASSWORD: just4dev
-
+configmaps:
+    #   creator:
+    #     TEMPLATE_PATH: /templates
+    #     TEMPLATE_NAME: ansible-job.yaml.gotmpl
+    #     REDIS_STREAM: sweatshop:manifests
+    #     REDIS_SERVER: sweatshop-informer-redis-headless.sweatshop.svc.cluster.local
+    #     REDIS_PORT: "6379"
+    #     REDIS_PASSWORD: just4dev
   manifest-templates:
     ansible-job.yaml.gotmpl: |
       apiVersion: batch/v1
@@ -85,7 +83,6 @@ redis:
               - name: ansible
                 configMap:
                   name: ansible
-
 deployment:
   name: sweatshop-creator
   volumes:
@@ -116,16 +113,14 @@ deployment:
       image: eu.gcr.io/stuttgart-things/sweatshop-creator
       replicaCount: 1
       imagePullPolicy: Always
-      tag: 23.0704.1511-v0.1.14
+      tag: 23.0704.1945-v0.1.15
       securityContext:
         capabilities: {}
-
 # RBAC
 serviceAccounts:
   sweatshop-creator:
     labels:
       app: sweatshop-creator
-
 roles:
   sweatshop-creator:
     labels:
@@ -149,7 +144,6 @@ roles:
           - list
           - watch
           - create
-
 roleBindings:
   sweatshop-creator:
     labels:
@@ -162,7 +156,6 @@ roleBindings:
       - kind: ServiceAccount
         name: sweatshop-creator
         namespace: sweatshop2
-
 clusterRoles:
   sweatshop-creator:
     labels:
@@ -175,7 +168,6 @@ clusterRoles:
         verbs:
           - get
           - list
-
 clusterRoleBindings:
   sweatshop-creator:
     roleRef:
