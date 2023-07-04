@@ -5,7 +5,7 @@ redis:
   enabled: false
 
 configmaps:
-  configuration:
+  creator:
     TEMPLATE_PATH: /templates
     TEMPLATE_NAME: ansible-job.yaml.gotmpl
     REDIS_STREAM: "sweatshop:manifests"
@@ -101,7 +101,7 @@ deployment:
       image: eu.gcr.io/stuttgart-things/sweatshop-creator
       replicaCount: 1
       imagePullPolicy: Always
-      tag: 23.0622.1132-0.3.11
+      tag: 23.0704.1157-v0.1.13
       securityContext:
         capabilities: {}
 
