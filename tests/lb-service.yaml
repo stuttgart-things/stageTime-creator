@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    meta.helm.sh/release-name: sweatshop-informer
+    meta.helm.sh/release-namespace: sweatshop
+  labels:
+    app.kubernetes.io/instance: sweatshop-informer
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: redis
+    helm.sh/chart: redis-17.11.6
+  name: sweatshop-informer-redis-headless2
+  namespace: sweatshop
+spec:
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - name: tcp-redis
+    port: 6379
+    protocol: TCP
+    targetPort: redis
+  - name: tcp-sentinel
+    port: 26379
+    protocol: TCP
+    targetPort: redis-sentinel
+  publishNotReadyAddresses: true
+  selector:
+    app.kubernetes.io/instance: sweatshop-informer
+    app.kubernetes.io/name: redis
+  sessionAffinity: None
+  type: LoadBalancer

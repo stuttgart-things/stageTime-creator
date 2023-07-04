@@ -53,8 +53,6 @@ func PollRedisStreams() {
 
 	log.Info("start polling stream", redisStream+" on "+redisServer+":"+redisPort)
 
-	// fmt.Println("POLLING FOR REDIS STREAM " + redisStream + " ON " + redisServer + ":" + redisPort)
-
 	c.Run()
 
 	log.Warn("polling stopped")
