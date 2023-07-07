@@ -33,7 +33,7 @@ spec:
                   git-revision: main
                   context: /kaniko/swsc
                   gitWorkspaceSubdirectory: /kaniko/swsc
-                  image: scr.app.4sthings.tiab.ssc.sva.de/machine-shop-operator/swsc
+                  image: scr.app.4sthings.tiab.ssc.sva.de/sweat-shop-creator/swsc
                   tag: 0.8.15
                   registry: eu.gcr.io
                   dockerfile: Dockerfile
@@ -57,7 +57,7 @@ spec:
                   git-repo-url: git@github.com:stuttgart-things/sweatShop-creator.git
                   git-revision: main
                   gitWorkspaceSubdirectory: /helm/swsc
-                  helm-chart-name: machine-shop-operator
+                  helm-chart-name: sweat-shop-creator
                   helm-chart-tag: 0.8.15
                   helm-chart-path: helm
                   registry: scr.app.4sthings.tiab.ssc.sva.de
