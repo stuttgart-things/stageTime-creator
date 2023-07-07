@@ -108,3 +108,9 @@ tasks:
     desc: Update deployment application
     cmds:
       - yq e -i '.spec.source.targetRevision = "{{ .UPDATED_TAG_VERSION }}"' argocd/deployment.yaml
+
+  update-tekton:
+    desc: Update tetkon
+    cmds:
+      - yq e -i '.spec.source.targetRevision = "{{ .UPDATED_TAG_VERSION }}"' argocd/deployment.yaml
+      - yq e -i '.metadata.name = "hello"' argocd/tekton.yaml

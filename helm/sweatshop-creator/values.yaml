@@ -143,6 +143,7 @@ roles:
           - list
           - watch
           - create
+          - patch
 roleBindings:
   sweatshop-creator:
     labels:
@@ -175,6 +176,7 @@ clusterRoles:
           - get
           - list
           - create
+          - patch
 clusterRoleBindings:
   sweatshop-creator:
     roleRef:
