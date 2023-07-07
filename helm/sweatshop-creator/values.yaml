@@ -167,6 +167,14 @@ clusterRoles:
         verbs:
           - get
           - list
+      - apiGroups:
+          - "batch"
+        resources:
+          - jobs
+        verbs:
+          - get
+          - list
+          - create
 clusterRoleBindings:
   sweatshop-creator:
     roleRef:
