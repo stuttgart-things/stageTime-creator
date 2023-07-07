@@ -30,11 +30,11 @@ spec:
                 REDIS_PASSWORD: <path:apps/data/sweatshop#redisPassword>
             clusterRoleBindings:
               sweatshop-creator:
-                subjects:
+                subjects[0]:
                   namespace: sweatshop
             roleBindings:
               sweatshop-creator:
-                subjects:
+                subjects[0]:
                   namespace: sweatshop
   syncPolicy:
     automated:
