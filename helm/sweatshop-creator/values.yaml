@@ -134,6 +134,8 @@ roles:
           - list
           - watch
           - create
+          - patch
+          - delete
       - apiGroups:
           - "batch"
         resources:
@@ -144,6 +146,7 @@ roles:
           - watch
           - create
           - patch
+          - delete
 roleBindings:
   sweatshop-creator:
     labels:
@@ -177,6 +180,7 @@ clusterRoles:
           - list
           - create
           - patch
+          - delete
 clusterRoleBindings:
   sweatshop-creator:
     roleRef:
