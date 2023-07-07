@@ -1,0 +1,80 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: tkn-sweat-shop-creator
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+spec:
+  project: app
+  destination:
+    name: dev11
+    namespace: tekton-cd
+  source:
+    repoURL: eu.gcr.io/stuttgart-things
+    chart: yacht-tekton-resources
+    targetRevision: v0.47.10
+    plugin:
+      name: argocd-vault-plugin-helm
+      env:
+        - name: HELM_VALUES
+          value: |
+            enableRuns: true
+            runs:
+              buildKanikoImage:
+                name: build-sws-creator-kaniko-1
+                addRandomDateToRunName: false
+                namespace: tekton-cd
+                kind: Pipeline
+                ref: build-kaniko-image
+                params:
+                  gitRepoUrl: git@github.com:stuttgart-things/sweatShop-creator.git
+                  git-revision: main
+                  context: /kaniko/swsc
+                  gitWorkspaceSubdirectory: /kaniko/swsc
+                  image: scr.app.4sthings.tiab.ssc.sva.de/machine-shop-operator/swsc
+                  tag: 0.8.15
+                  registry: eu.gcr.io
+                  dockerfile: Dockerfile
+                workspaces:
+                  ssh-credentials:
+                    workspaceKind: secret
+                    workspaceRef: github-ssh
+                  shared-workspace:
+                    workspaceKind: persistentVolumeClaim
+                    workspaceRef: kaniko-workspace
+                  dockerconfig:
+                    workspaceKind: secret
+                    workspaceRef: scr-labda-vsphere
+              buildHelmChart:
+                name: build-sws-creator-helm-1
+                addRandomDateToRunName: false
+                namespace: tekton-cd
+                kind: Pipeline
+                ref: package-publish-helmchart
+                params:
+                  git-repo-url: git@github.com:stuttgart-things/sweatShop-creator.git
+                  git-revision: main
+                  gitWorkspaceSubdirectory: /helm/swsc
+                  helm-chart-name: machine-shop-operator
+                  helm-chart-tag: 0.8.15
+                  helm-chart-path: helm
+                  registry: scr.app.4sthings.tiab.ssc.sva.de
+                  working-image: "eu.gcr.io/stuttgart-things/sthings-k8s:1.127.2"
+                workspaces:
+                  ssh-credentials:
+                    workspaceKind: secret
+                    workspaceRef: github-ssh
+                  source:
+                    workspaceKind: persistentVolumeClaim
+                    workspaceRef: helm-workspace
+                  dockerconfig:
+                    workspaceKind: secret
+                    workspaceRef: scr-labda-vsphere
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
