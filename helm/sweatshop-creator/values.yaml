@@ -1,22 +1,22 @@
 # Default values for sweatShop-creator.
-namespace: sweatshop2
+namespace: sweatshop
 redis:
   enabled: false
-  sentinel:
-    enabled: true
-  master:
-    service:
-      type: ClusterIP
-    persistence:
-      enabled: false
-      medium: ""
-  replica:
-    replicaCount: 1
-    persistence:
-      enabled: false
-      medium: ""
-  auth:
-    password: just4dev
+  # sentinel:
+  #   enabled: true
+  # master:
+  #   service:
+  #     type: ClusterIP
+  #   persistence:
+  #     enabled: false
+  #     medium: ""
+  # replica:
+  #   replicaCount: 1
+  #   persistence:
+  #     enabled: false
+  #     medium: ""
+  # auth:
+  #   password: just4dev
 configmaps:
   #   creator:
   #     TEMPLATE_PATH: /templates
@@ -154,7 +154,7 @@ roleBindings:
     subjects:
       - kind: ServiceAccount
         name: sweatshop-creator
-        namespace: sweatshop2
+        namespace: sweatshop
 clusterRoles:
   sweatshop-creator:
     labels:
@@ -176,4 +176,4 @@ clusterRoleBindings:
     subjects:
       - kind: ServiceAccount
         name: sweatshop-creator
-        namespace: sweatshop2
+        namespace: sweatshop

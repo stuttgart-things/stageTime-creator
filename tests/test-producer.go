@@ -31,7 +31,7 @@ func main() {
 	err2 := p.Enqueue(&redisqueue.Message{
 		Stream: redisStream,
 		Values: map[string]interface{}{
-			"template":  "job-template.yaml",
+			"template":  "ansible-job.yaml.gotmpl",
 			"name":      "run-packer-rocky9",
 			"namespace": "machine-shop",
 		},

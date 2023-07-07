@@ -45,6 +45,7 @@ task run-test-producer
 
 ```
 kubectl -n <REDIS-NS> port-forward redis-sweatshop-deployment-node-0 <HOST-PORT>:<CONTAINER-PORT>
+
 # kubectl -n sweatshop-redis port-forward redis-sweatshop-deployment-node-0 28015:6379
 
 export REDIS_STREAM=sweatshop:manifests
@@ -56,10 +57,11 @@ task run-test-producer
 
 </details>
 
-<details><summary><b>VERIFY ON REDIS</b></summary>
+<details><summary><b>VERIFY REDIS</b></summary>
 
 ```
 redis-cli -h <REDIS_SERVER>-p <HOST-PORT> -a <SETME>
+
 # redis-cli -h 127.0.0.1 -p 28015 -a test
 
 KEYS *
