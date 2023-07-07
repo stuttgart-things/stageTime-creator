@@ -17,15 +17,14 @@ redis:
       medium: ""
   auth:
     password: just4dev
-
 configmaps:
-    #   creator:
-    #     TEMPLATE_PATH: /templates
-    #     TEMPLATE_NAME: ansible-job.yaml.gotmpl
-    #     REDIS_STREAM: sweatshop:manifests
-    #     REDIS_SERVER: sweatshop-informer-redis-headless.sweatshop.svc.cluster.local
-    #     REDIS_PORT: "6379"
-    #     REDIS_PASSWORD: just4dev
+  #   creator:
+  #     TEMPLATE_PATH: /templates
+  #     TEMPLATE_NAME: ansible-job.yaml.gotmpl
+  #     REDIS_STREAM: sweatshop:manifests
+  #     REDIS_SERVER: sweatshop-informer-redis-headless.sweatshop.svc.cluster.local
+  #     REDIS_PORT: "6379"
+  #     REDIS_PASSWORD: just4dev
   manifest-templates:
     ansible-job.yaml.gotmpl: |
       apiVersion: batch/v1
@@ -113,7 +112,7 @@ deployment:
       image: eu.gcr.io/stuttgart-things/sweatshop-creator
       replicaCount: 1
       imagePullPolicy: Always
-      tag: 23.0704.1945-v0.1.15
+      tag: 23.0704.1950-v0.1.16
       securityContext:
         capabilities: {}
 # RBAC

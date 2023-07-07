@@ -29,10 +29,10 @@ task run
 
 </details>
 
-<details><summary><b>START TEST PRODUCING</b></summary>
+<details><summary><b>START TEST PRODUCING (EXTERNAL REDIS)</b></summary>
 
 ```
-export REDIS_STREAM=sweatshop:test
+export REDIS_STREAM=sweatshop:manifests
 export REDIS_PASSWORD=<SETME>
 export REDIS_SERVER=redis-pve.labul.sva.de
 export REDIS_PORT=6379
@@ -40,6 +40,37 @@ task run-test-producer
 ```
 
 </details>
+
+<details><summary><b>START TEST PRODUCING (REDIS INSIDE CLUSTER)</b></summary>
+
+```
+kubectl -n <REDIS-NS> port-forward redis-sweatshop-deployment-node-0 <HOST-PORT>:<CONTAINER-PORT>
+# kubectl -n sweatshop-redis port-forward redis-sweatshop-deployment-node-0 28015:6379
+
+export REDIS_STREAM=sweatshop:manifests
+export REDIS_PASSWORD=<SETME>
+export REDIS_SERVER=127.0.0.1
+export REDIS_PORT=28015 # HOST-PORT
+task run-test-producer
+```
+
+</details>
+
+<details><summary><b>VERIFY ON REDIS</b></summary>
+
+```
+redis-cli -h <REDIS_SERVER>-p <HOST-PORT> -a <SETME>
+# redis-cli -h 127.0.0.1 -p 28015 -a test
+
+KEYS *
+# GET VALUE
+GET <KEYNAME>
+# GET STREAM
+XREAD COUNT 2 STREAMS <STREAM-NAME> writers 0-0 0-0
+```
+
+</details>
+
 
 ## LICENSE
 
