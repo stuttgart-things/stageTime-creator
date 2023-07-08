@@ -33,7 +33,7 @@ func main() {
 		Values: map[string]interface{}{
 			"template":  "ansible-job.yaml.gotmpl",
 			"name":      "run-packer-rocky9",
-			"namespace": "sweatshop",
+			"namespace": "machine-shop",
 		},
 	})
 	if err2 != nil {
