@@ -23,7 +23,7 @@ spec:
             enableRuns: true
             runs:
               buildHelmChart:
-                name: build-sws-creator-helm-3
+                name: build-sws-creator-helm-4
                 addRandomDateToRunName: false
                 namespace: tekton-cd
                 kind: Pipeline

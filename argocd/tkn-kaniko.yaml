@@ -23,7 +23,7 @@ spec:
             enableRuns: true
             runs:
               buildKanikoImage:
-                name: build-sws-creator-kaniko-3
+                name: build-sws-creator-kaniko-4
                 addRandomDateToRunName: false
                 namespace: tekton-cd
                 kind: Pipeline
