@@ -1,5 +1,38 @@
 # Default values for sweatShop-creator.
 namespace: sweatshop
+
+tektonResources:
+  enabled: true
+
+yacht-tekton-resources:
+  enableRuns: true
+  runs:
+    buildHelmChart:
+      name: sws-creator-helm-${ARGOCD_APP_SOURCE_TARGET_REVISION}
+      addRandomDateToRunName: false
+      namespace: tekton-cd
+      kind: Pipeline
+      ref: package-publish-helmchart
+      params:
+        git-repo-url: git@github.com:stuttgart-things/sweatShop-creator.git
+        git-revision: main
+        gitWorkspaceSubdirectory: /helm/swsc
+        helm-chart-name: sweatshop-creator
+        helm-chart-tag: 0.8.15
+        helm-chart-path: helm
+        registry: scr.app.4sthings.tiab.ssc.sva.de
+        working-image: "eu.gcr.io/stuttgart-things/sthings-k8s:1.127.2"
+      workspaces:
+        ssh-credentials:
+          workspaceKind: secret
+          workspaceRef: github-ssh
+        source:
+          workspaceKind: persistentVolumeClaim
+          workspaceRef: helm-workspace
+        dockerconfig:
+          workspaceKind: secret
+          workspaceRef: scr-labda-vsphere
+
 redis:
   enabled: false
   # sentinel:
