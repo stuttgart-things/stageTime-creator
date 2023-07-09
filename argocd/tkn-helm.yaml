@@ -23,7 +23,7 @@ spec:
             enableRuns: true
             runs:
               buildHelmChart:
-                name: sws-creator-helm-${ARGOCD_APP_REVISION}
+                name: sws-creator-helm-${ARGOCD_APP_SOURCE_TARGET_REVISION}
                 addRandomDateToRunName: false
                 namespace: tekton-cd
                 kind: Pipeline
