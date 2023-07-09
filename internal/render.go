@@ -11,12 +11,7 @@ import (
 	sthingsBase "github.com/stuttgart-things/sthingsBase"
 )
 
-type Manifest struct {
-	Name      string
-	Namespace string
-}
-
-func RenderManifest(resource Manifest, manifestTemplate string) string {
+func RenderManifest(resource map[string]interface{}, manifestTemplate string) string {
 
 	var buf bytes.Buffer
 

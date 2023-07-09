@@ -77,9 +77,10 @@ func processStreams(msg *redisqueue.Message) error {
 		if templateFileExists {
 			log.Info("template " + templateName + " imported")
 
-			manifestValues := Manifest{Name: "hello", Namespace: namespace}
-			renderedManifest := RenderManifest(manifestValues, template)
-			fmt.Println(renderedManifest)
+			renderedManifest := RenderManifest(msg.Values, template)
+			log.Info("rendered template: ", renderedManifest)
+
+			// fmt.Println(renderedManifest)
 			ApplyManifest(renderedManifest, namespace)
 
 		} else {
