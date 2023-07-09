@@ -1,9 +1,7 @@
 # Default values for sweatShop-creator.
 namespace: sweatshop
-
 tektonResources:
   enabled: false
-
 yacht-tekton-resources:
   enableRuns: true
   runs:
@@ -32,7 +30,6 @@ yacht-tekton-resources:
         dockerconfig:
           workspaceKind: secret
           workspaceRef: scr-labda-vsphere
-
 redis:
   enabled: false
   # sentinel:
@@ -145,7 +142,7 @@ deployment:
       image: eu.gcr.io/stuttgart-things/sweatshop-creator
       replicaCount: 1
       imagePullPolicy: Always
-      tag: 23.0709.0531-v0.1.21
+      tag: 23.0709.1503-v0.1.22
       securityContext:
         capabilities: {}
 # RBAC
