@@ -2,7 +2,7 @@
 namespace: sweatshop
 
 tektonResources:
-  enabled: true
+  enabled: false
 
 yacht-tekton-resources:
   enableRuns: true
