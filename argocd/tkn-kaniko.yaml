@@ -23,7 +23,7 @@ spec:
             enableRuns: true
             runs:
               buildKanikoImage:
-                name: build-sws-creator-kaniko-4
+                name: sws-creator-kaniko-${ARGOCD_APP_SOURCE_TARGET_REVISION}
                 addRandomDateToRunName: false
                 namespace: tekton-cd
                 kind: Pipeline
