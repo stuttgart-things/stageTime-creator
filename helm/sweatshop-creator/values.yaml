@@ -142,7 +142,7 @@ deployment:
       image: eu.gcr.io/stuttgart-things/sweatshop-creator
       replicaCount: 1
       imagePullPolicy: Always
-      tag: 23.0709.1513-v0.1.23
+      tag: 23.0709.1524-v0.1.24
       securityContext:
         capabilities: {}
 # RBAC
