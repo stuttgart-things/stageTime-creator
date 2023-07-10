@@ -1,9 +1,7 @@
 # Default values for sweatShop-creator.
 namespace: sweatshop
-
 tektonResources:
   enabled: false
-
 tekton-resources:
   enableRuns: true
   runs:
@@ -144,7 +142,7 @@ deployment:
       image: eu.gcr.io/stuttgart-things/sweatshop-creator
       replicaCount: 1
       imagePullPolicy: Always
-      tag: 23.0709.1513-v0.1.23
+      tag: 23.0710.1018-v0.1.25
       securityContext:
         capabilities: {}
 # RBAC
