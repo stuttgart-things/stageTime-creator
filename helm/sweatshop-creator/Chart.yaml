@@ -12,7 +12,7 @@ dependencies:
     version: 17.11.6
     repository: https://charts.bitnami.com/bitnami
     condition: redis.enabled
-  - name: yacht-tekton-resources
-    version: v0.47.10
+  - name: tekton-resources
+    version: v0.47.11
     repository: oci://eu.gcr.io/stuttgart-things
     condition: tektonResources.enabled
