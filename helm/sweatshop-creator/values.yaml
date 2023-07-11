@@ -60,8 +60,8 @@ configmaps:
       kind: ConfigMap
       apiVersion: v1
       metadata:
-        name: {{ .name }}
-        namespace: {{ .namespace }}
+        name: {{`{{  .name }}`}}
+        namespace: {{`{{  .namespace }}`}}
       data:
         inventory: |
           [{{`{{ .groupName }}`}}]
@@ -152,7 +152,7 @@ deployment:
       image: eu.gcr.io/stuttgart-things/sweatshop-creator
       replicaCount: 1
       imagePullPolicy: Always
-      tag: 23.0711.1420-v0.1.27
+      tag: 23.0711.1429-v0.1.28
       securityContext:
         capabilities: {}
 # RBAC
