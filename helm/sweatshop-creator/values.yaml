@@ -60,12 +60,12 @@ configmaps:
       kind: ConfigMap
       apiVersion: v1
       metadata:
-        name: ansible
-        namespace: machine-shop
+        name: {{ .name }}
+        namespace: {{ .namespace }}
       data:
-        baseos-setup.yaml: |
-          [{{ .GroupName }}]
-          {{ .Hostname }}
+        inventory: |
+          [{{`{{ .groupName }}`}}]
+          {{`{{ .hostName }}`}}
 
     ansible-job.yaml.gotmpl: |
       apiVersion: batch/v1
