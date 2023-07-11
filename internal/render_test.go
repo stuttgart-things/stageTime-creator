@@ -9,12 +9,54 @@ import (
 	"testing"
 )
 
+func TestRenderManifest(t *testing.T) {
+
+	for _, tc := range tests {
+
+		// TEST RENDER
+		rendered := RenderManifest(tc.testInput, tc.testTemplate)
+
+		fmt.Println(rendered)
+		fmt.Println(tc.want)
+
+		if rendered != tc.want {
+			t.Errorf("expected: %s\ngot: %s", rendered, renderedJobManifest)
+		}
+
+	}
+
+}
+
+const templateInventoryConfigMap = `
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: ansible
+  namespace: machine-shop
+data:
+  baseos-setup.yaml: |
+	[{{ .groupName }}]
+	{{ .hostName }}
+`
+
 const templateJobManifest = `
 apiVersion: batch/v1
 kind: Job
 metadata:
   name: {{ .name }}
   namespace: {{ .namespace }}
+`
+
+const renderedInventoryConfigMap = `
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: ansible
+  namespace: machine-shop
+data:
+  baseos-setup.yaml: |
+	[all]
+	whatever.com
 `
 
 const renderedJobManifest = `
@@ -25,30 +67,25 @@ metadata:
   namespace: machine-shop
 `
 
-func TestRenderManifest(t *testing.T) {
-
-	// MAPS HOLDING DATA
-	redisValueData := make(map[string]string)
-	templateValueData := make(map[string]interface{})
-
-	// TEST DATA
-	redisValueData["name"] = "test-job"
-	redisValueData["namespace"] = "machine-shop"
-
-	// ADD TEST DATA TO INTERFACE MAP
-	for k, v := range redisValueData {
-		templateValueData[k] = v
-	}
-
-	// TEST RENDER
-	rendered := RenderManifest(templateValueData, templateJobManifest)
-
-	// TEST OUTPUT
-	fmt.Print(rendered)
-	fmt.Print(renderedJobManifest)
-
-	// COMPARE RESULT
-	if rendered != renderedJobManifest {
-		t.Errorf("expected: %s\ngot: %s", rendered, renderedJobManifest)
-	}
+type test struct {
+	testTemplate string
+	testInput    map[string]interface{}
+	want         string
 }
+
+var (
+	inventoryConfigMapValueData = map[string]interface{}{
+		"groupName": "all",
+		"hostName":  "whatever.com",
+	}
+
+	jobManifestValueData = map[string]interface{}{
+		"name":      "test-job",
+		"namespace": "machine-shop",
+	}
+
+	tests = []test{
+		{testInput: jobManifestValueData, testTemplate: templateJobManifest, want: renderedJobManifest},
+		{testInput: inventoryConfigMapValueData, testTemplate: templateInventoryConfigMap, want: renderedInventoryConfigMap},
+	}
+)

@@ -6,7 +6,7 @@ tekton-resources:
   enableRuns: true
   runs:
     buildHelmChart:
-      name: sws-creator-helm-
+      name: sws-creator-helm
       addRandomDateToRunName: false
       namespace: tekton-cd
       kind: Pipeline
@@ -56,6 +56,17 @@ configmaps:
   #     REDIS_PORT: "6379"
   #     REDIS_PASSWORD: just4dev
   manifest-templates:
+    inventory.gotmpl: |
+      kind: ConfigMap
+      apiVersion: v1
+      metadata:
+        name: ansible
+        namespace: machine-shop
+      data:
+        baseos-setup.yaml: |
+          [{{ .GroupName }}]
+          {{ .Hostname }}
+
     ansible-job.yaml.gotmpl: |
       apiVersion: batch/v1
       kind: Job
@@ -177,6 +188,18 @@ roles:
           - create
           - patch
           - delete
+      - apiGroups:
+          - ""
+        resources:
+          - configmaps
+        verbs:
+          - get
+          - list
+          - watch
+          - create
+          - update
+          - patch
+          - delete
 roleBindings:
   sweatshop-creator:
     labels:
@@ -209,6 +232,18 @@ clusterRoles:
           - get
           - list
           - create
+          - patch
+          - delete
+      - apiGroups:
+          - ""
+        resources:
+          - configmaps
+        verbs:
+          - get
+          - list
+          - watch
+          - create
+          - update
           - patch
           - delete
 clusterRoleBindings:
