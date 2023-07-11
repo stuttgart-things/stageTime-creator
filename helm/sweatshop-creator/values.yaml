@@ -66,7 +66,6 @@ configmaps:
         inventory: |
           [{{`{{ .groupName }}`}}]
           {{`{{ .hostName }}`}}
-
     ansible-job.yaml.gotmpl: |
       apiVersion: batch/v1
       kind: Job
@@ -153,7 +152,7 @@ deployment:
       image: eu.gcr.io/stuttgart-things/sweatshop-creator
       replicaCount: 1
       imagePullPolicy: Always
-      tag: 23.0710.1040-v0.1.26
+      tag: 23.0711.1420-v0.1.27
       securityContext:
         capabilities: {}
 # RBAC
