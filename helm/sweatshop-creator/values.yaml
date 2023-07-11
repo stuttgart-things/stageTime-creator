@@ -71,7 +71,7 @@ configmaps:
       kind: Job
       metadata:
         name: 2023-07-02-configure-rke-node-19mv
-        namespace: {{ .Namespace }}
+        namespace: {{`{{ .Namespace }}`}}
         labels:
           app: machine-shop-operator
           machine-shop-operator: ansible
