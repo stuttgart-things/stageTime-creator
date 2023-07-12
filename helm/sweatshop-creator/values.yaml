@@ -16,7 +16,7 @@ tekton-resources:
         git-revision: main
         gitWorkspaceSubdirectory: /helm/sws-c
         helm-chart-name: sweatshop-creator
-        helm-chart-tag: v0.1.33
+        helm-chart-tag: raaa
         helm-chart-path: helm
         registry: scr.app.4sthings.tiab.ssc.sva.de
         working-image: "eu.gcr.io/stuttgart-things/sthings-k8s:1.127.2"
@@ -255,8 +255,3 @@ clusterRoleBindings:
       - kind: ServiceAccount
         name: sweatshop-creator
         namespace: sweatshop
-\"tekton-resources\":
-  runs:
-    buildHelmChart:
-      params:
-        helm-chart-tag: v0.1.33
