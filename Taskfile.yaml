@@ -105,7 +105,8 @@ tasks:
 
   push-chart:
     desc: Push to registry
-    deps: [push, build-image, package, push]
+    deps: [build-image, package]
     cmds:
       - helm push {{ lower (.PROJECT_NAME) }}-{{ .UPDATED_TAG_VERSION }}.tgz oci://{{ .REGISTRY }}/{{ .REPOSITORY_NAME }}
       - rm -rf {{ lower (.PROJECT_NAME) }}-{{ .UPDATED_TAG_VERSION }}.tgz
+      - task: push
