@@ -30,6 +30,32 @@ tekton-resources:
         dockerconfig:
           workspaceKind: secret
           workspaceRef: scr-labda-vsphere
+    buildKanikoImageGithub:
+      name: sws-creator-kaniko
+      addRandomDateToRunName: false
+      namespace: tekton-cd
+      kind: Pipeline
+      ref: build-kaniko-image
+      params:
+        gitRepoUrl: git@github.com:stuttgart-things/sweatShop-creator.git
+        git-revision: main
+        context: /kaniko/sws-creator
+        gitWorkspaceSubdirectory: /kaniko/sws-creator
+        image: scr.app.4sthings.tiab.ssc.sva.de/sweatshop/creator
+        tag: 8.0.0-5
+        registry: eu.gcr.io
+        dockerfile: Dockerfile
+      workspaces:
+        ssh-credentials:
+          workspaceKind: secret
+          workspaceRef: github-ssh
+        shared-workspace:
+          workspaceKind: persistentVolumeClaim
+          workspaceRef: kaniko-workspace
+        dockerconfig:
+          workspaceKind: secret
+          workspaceRef: scr-labda-vsphere
+
 redis:
   enabled: false
   # sentinel:
