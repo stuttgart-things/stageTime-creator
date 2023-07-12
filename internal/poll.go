@@ -80,9 +80,7 @@ func processStreams(msg *redisqueue.Message) error {
 			renderedManifest := RenderManifest(msg.Values, template)
 			log.Info("rendered template: ", renderedManifest)
 
-			// fmt.Println(renderedManifest)
 			ApplyManifest(renderedManifest, namespace)
-
 		} else {
 			log.Error("template " + templateName + " does not exist on filesystem")
 		}

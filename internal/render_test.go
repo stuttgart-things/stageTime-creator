@@ -11,7 +11,7 @@ import (
 
 func TestRenderManifest(t *testing.T) {
 
-	for _, tc := range tests {
+	for _, tc := range testsRender {
 
 		// TEST RENDER
 		rendered := RenderManifest(tc.testInput, tc.testTemplate)
@@ -35,8 +35,8 @@ metadata:
   namespace: machine-shop
 data:
   baseos-setup.yaml: |
-	[{{ .groupName }}]
-	{{ .hostName }}
+    [{{ .groupName }}]
+    {{ .hostName }}
 `
 
 const templateJobManifest = `
@@ -55,8 +55,8 @@ metadata:
   namespace: machine-shop
 data:
   baseos-setup.yaml: |
-	[all]
-	whatever.com
+    [all]
+    whatever.com
 `
 
 const renderedJobManifest = `
@@ -67,7 +67,7 @@ metadata:
   namespace: machine-shop
 `
 
-type test struct {
+type testRender struct {
 	testTemplate string
 	testInput    map[string]interface{}
 	want         string
@@ -84,7 +84,7 @@ var (
 		"namespace": "machine-shop",
 	}
 
-	tests = []test{
+	testsRender = []testRender{
 		{testInput: jobManifestValueData, testTemplate: templateJobManifest, want: renderedJobManifest},
 		{testInput: inventoryConfigMapValueData, testTemplate: templateInventoryConfigMap, want: renderedInventoryConfigMap},
 	}
