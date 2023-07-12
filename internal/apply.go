@@ -5,7 +5,6 @@ Copyright © 2023 PATRICK HERMANN patrick.hermann@sva.de
 package internal
 
 import (
-	"fmt"
 	"os"
 
 	sthingsBase "github.com/stuttgart-things/sthingsBase"
@@ -20,7 +19,6 @@ func ApplyManifest(renderedManifest, namespace string) (manifestCreated bool) {
 	resourceName, _ := sthingsBase.GetRegexSubMatch(renderedManifest, "name:(.*)")
 
 	log.Info("trying to apply " + kind + " w/ the name " + resourceName)
-	fmt.Println(renderedManifest)
 
 	setRedisKV(kind+"-"+resourceName, "rendered")
 

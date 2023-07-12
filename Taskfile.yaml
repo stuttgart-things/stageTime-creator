@@ -22,17 +22,13 @@ vars:
 
 tasks:
 
+# DEFAULT
   build:
     desc: Build the app
     deps: [lint, test]
     cmds:
       - go install -ldflags="-X {{ .MODULE }}/internal.date={{ .DATE }} -X {{ .MODULE }}/internal.version={{ .UPDATED_TAG_VERSION }} -X {{ .MODULE }}/internal.commit={{ .GIT_COMMIT }}"
       - "{{ .PROJECT_NAME }}"
-
-  run-test-producer:
-    desc: Run test-producer
-    cmds:
-      - go run ./tests/test-producer.go
 
   run:
     desc: Run app
@@ -100,8 +96,9 @@ tasks:
       - git add ./helm/*/*
       - yq e -i '.version = "{{ .UPDATED_TAG_VERSION }}"' ./helm/*/Chart.yaml
       - "sed -i 's/appVersion: .*/appVersion: {{ .UPDATED_TAG_VERSION }}/g' ./helm/*/Chart.yaml"
+      - "sed -i 's/helm-chart-tag: .*/helm-chart-tag: {{ .UPDATED_TAG_VERSION }}/g' helm/*/values.yaml"
       - yq e -i '.deployment.containers.{{ lower (.PROJECT_NAME) }}.tag = "{{ .DATE }}-{{ .UPDATED_TAG_VERSION }}"' ./helm/*/values.yaml
-      - yq e -i '.\"tekton-resources\".runs.buildHelmChart.params.helm-chart-tag = "{{ .DATE }}-{{ .UPDATED_TAG_VERSION }}"' ./helm/*/values.yaml
+      - yq e -i '.\"tekton-resources\".runs.buildHelmChart.params.helm-chart-tag = "{{ .UPDATED_TAG_VERSION }}"' ./helm/*/values.yaml
       - helm package ./helm/*/
 
   push-chart:
@@ -111,3 +108,9 @@ tasks:
       - helm push {{ lower (.PROJECT_NAME) }}-{{ .UPDATED_TAG_VERSION }}.tgz oci://{{ .REGISTRY }}/{{ .REPOSITORY_NAME }}
       - rm -rf {{ lower (.PROJECT_NAME) }}-{{ .UPDATED_TAG_VERSION }}.tgz
       - task: push
+
+# PROJECT
+  run-test-producer:
+    desc: Run test-producer
+    cmds:
+      - go run ./tests/test-producer.go

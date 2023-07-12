@@ -20,7 +20,7 @@ func TestRenderManifest(t *testing.T) {
 		fmt.Println(tc.want)
 
 		if rendered != tc.want {
-			t.Errorf("expected: %s\ngot: %s", rendered, renderedJobManifest)
+			t.Errorf("expected: %s\ngot: %s", rendered, tc.want)
 		}
 
 	}
@@ -31,7 +31,7 @@ const templateInventoryConfigMap = `
 kind: ConfigMap
 apiVersion: v1
 metadata:
-  name: ansible
+  name: {{ .name }}
   namespace: machine-shop
 data:
   baseos-setup.yaml: |
@@ -51,7 +51,7 @@ const renderedInventoryConfigMap = `
 kind: ConfigMap
 apiVersion: v1
 metadata:
-  name: ansible
+  name: ansible-inventory
   namespace: machine-shop
 data:
   baseos-setup.yaml: |
@@ -75,6 +75,7 @@ type testRender struct {
 
 var (
 	inventoryConfigMapValueData = map[string]interface{}{
+		"name":      "ansible-inventory",
 		"groupName": "all",
 		"hostName":  "whatever.com",
 	}
@@ -85,7 +86,7 @@ var (
 	}
 
 	testsRender = []testRender{
-		{testInput: jobManifestValueData, testTemplate: templateJobManifest, want: renderedJobManifest},
 		{testInput: inventoryConfigMapValueData, testTemplate: templateInventoryConfigMap, want: renderedInventoryConfigMap},
+		{testInput: jobManifestValueData, testTemplate: templateJobManifest, want: renderedJobManifest},
 	}
 )
