@@ -16,7 +16,7 @@ tekton-resources:
         git-revision: main
         gitWorkspaceSubdirectory: /helm/sws-c
         helm-chart-name: sweatshop-creator
-        helm-chart-tag: raaa
+        helm-chart-tag: v0.1.34
         helm-chart-path: helm
         registry: scr.app.4sthings.tiab.ssc.sva.de
         working-image: "eu.gcr.io/stuttgart-things/sthings-k8s:1.127.2"
@@ -152,7 +152,7 @@ deployment:
       image: eu.gcr.io/stuttgart-things/sweatshop-creator
       replicaCount: 1
       imagePullPolicy: Always
-      tag: 23.0712.1020-v0.1.33
+      tag: 23.0712.1044-v0.1.34
       securityContext:
         capabilities: {}
 # RBAC
