@@ -16,7 +16,7 @@ tekton-resources:
         git-revision: main
         gitWorkspaceSubdirectory: /helm/sws-c
         helm-chart-name: sweatshop-creator
-        helm-chart-tag: v0.1.34
+        helm-chart-tag: v0.1.35
         helm-chart-path: helm
         registry: scr.app.4sthings.tiab.ssc.sva.de
         working-image: "eu.gcr.io/stuttgart-things/sthings-k8s:1.127.2"
@@ -30,7 +30,7 @@ tekton-resources:
         dockerconfig:
           workspaceKind: secret
           workspaceRef: scr-labda-vsphere
-    buildKanikoImageGithub:
+    buildKanikoImage:
       name: sws-creator-kaniko
       addRandomDateToRunName: false
       namespace: tekton-cd
@@ -55,7 +55,6 @@ tekton-resources:
         dockerconfig:
           workspaceKind: secret
           workspaceRef: scr-labda-vsphere
-
 redis:
   enabled: false
   # sentinel:
@@ -178,7 +177,7 @@ deployment:
       image: eu.gcr.io/stuttgart-things/sweatshop-creator
       replicaCount: 1
       imagePullPolicy: Always
-      tag: 23.0712.1044-v0.1.34
+      tag: 23.0712.1053-v0.1.35
       securityContext:
         capabilities: {}
 # RBAC
