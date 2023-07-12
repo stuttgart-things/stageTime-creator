@@ -1,8 +1,8 @@
 # Default values for sweatShop-creator.
 namespace: sweatshop
 tektonResources:
-  enabled: false
-tekton-resources:
+  enabled: true
+pipelineRuns:
   enableRuns: true
   runs:
     buildHelmChart:

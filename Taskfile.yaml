@@ -96,7 +96,11 @@ tasks:
       - git add ./helm/*/*
       - yq e -i '.version = "{{ .UPDATED_TAG_VERSION }}"' ./helm/*/Chart.yaml
       - "sed -i 's/appVersion: .*/appVersion: {{ .UPDATED_TAG_VERSION }}/g' ./helm/*/Chart.yaml"
-      - "sed -i 's/helm-chart-tag: .*/helm-chart-tag: {{ .UPDATED_TAG_VERSION }}/g' ./helm/*/values.yaml"
+      #- "sed -i 's/helm-chart-tag: .*/helm-chart-tag: {{ .UPDATED_TAG_VERSION }}/g' ./helm/*/values.yaml"
+      - yq e -i '.pipelineRuns.runs.buildHelmChart.helm-chart-tag = "{{ .UPDATED_TAG_VERSION }}"' ./helm/*/values.yaml
+      - yq e -i '.pipelineRuns.runs.buildKanikoImage.tag = "{{ .DATE }}-{{ .UPDATED_TAG_VERSION }}{{ .BRANCH }}"' ./helm/*/values.yaml
+      - yq e -i '.version = "{{ .UPDATED_TAG_VERSION }}"' ./helm/*/Chart.yaml
+
       - yq e -i '.deployment.containers.{{ lower (.PROJECT_NAME) }}.tag = "{{ .DATE }}-{{ .UPDATED_TAG_VERSION }}"' ./helm/*/values.yaml
       - helm package ./helm/*/
 

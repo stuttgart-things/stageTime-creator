@@ -13,6 +13,7 @@ dependencies:
     repository: https://charts.bitnami.com/bitnami
     condition: redis.enabled
   - name: tekton-resources
+    alias: pipelineRuns
     version: v0.47.11
     repository: oci://eu.gcr.io/stuttgart-things
-    condition: tektonResources.enabled
+    condition: pipelineRuns.enabled
