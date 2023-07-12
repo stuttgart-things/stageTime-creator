@@ -54,7 +54,7 @@ tasks:
 
   tag:
     desc: Commit, push & tag the module
-    deps: [push, lint, test]
+    deps: [lint, test]
     cmds:
       - rm -rf dist
       - go mod tidy
@@ -104,7 +104,7 @@ tasks:
 
   push-chart:
     desc: Push to registry
-    deps: [build-image, package, push]
+    deps: [push, build-image, package, push]
     cmds:
       - helm push {{ lower (.PROJECT_NAME) }}-{{ .UPDATED_TAG_VERSION }}.tgz oci://{{ .REGISTRY }}/{{ .REPOSITORY_NAME }}
       - rm -rf {{ lower (.PROJECT_NAME) }}-{{ .UPDATED_TAG_VERSION }}.tgz
