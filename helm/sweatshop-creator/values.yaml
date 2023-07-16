@@ -89,8 +89,11 @@ configmaps:
         namespace: {{`{{ .namespace }}`}}
       data:
         inventory: |
-          [{{`{{ .groupName }}`}}]
-          {{`{{ .hostName }}`}}
+          {{`{{ range $name, $value := .data }}`}}
+          [{{`{{ $name }}`}}]{{`{{ range $value }}`}}
+          {{`{{ . }}`}}{{ end }}`}}
+          {{`{{ end }}`}}
+
     ansible-job.yaml.gotmpl: |
       apiVersion: batch/v1
       kind: Job
