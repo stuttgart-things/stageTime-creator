@@ -1,137 +1,141 @@
 package main
 
-import (
-	"context"
-	"fmt"
-	"os"
-	"time"
+// import (
+// 	"context"
+// 	"fmt"
+// 	"os"
+// 	"time"
 
-	"github.com/redis/go-redis/v9"
-	"github.com/stuttgart-things/redisqueue"
-)
+// 	"github.com/redis/go-redis/v9"
+// 	"github.com/stuttgart-things/redisqueue"
+// )
 
-var (
-	redisServer   = os.Getenv("REDIS_SERVER")
-	redisPort     = os.Getenv("REDIS_PORT")
-	redisPassword = os.Getenv("REDIS_PASSWORD")
-	redisStream   = os.Getenv("REDIS_STREAM")
+// var (
+// 	redisServer   = os.Getenv("REDIS_SERVER")
+// 	redisPort     = os.Getenv("REDIS_PORT")
+// 	redisPassword = os.Getenv("REDIS_PASSWORD")
+// 	redisStream   = os.Getenv("REDIS_STREAM")
 
-	valuesConfigMap = map[string]interface{}{
-		"template":  "inventory.gotmpl",
-		"name":      "ansible-inventory",
-		"namespace": "machine-shop",
-		"groupName": "all",
-		"hostName":  "whatever.com",
-	}
+// 	groupHosts = map[string][]interface{
+// 		"all":    {"localhost"},
+// 		"master": {"rt.rancher.com", "rt-2.rancher.com", "rt-3.rancher.com"},
+// 		"worker": {"rt-4.rancher.com", "rt-5.rancher.com"},
+// 	}
 
-	ValuesJob = map[string]interface{}{
-		"template":  "ansible-job.yaml.gotmpl",
-		"name":      "run-packer-rocky9",
-		"namespace": "machine-shop",
-	}
+// 	valuesConfigMap = map[string]interface{}{
+// 		"template": "inventory.gotmpl",
+// 		"name":     "ansible-inventory",
+// 		// "data":     groupHosts,
+// 	}
 
-	tests = []test{
-		{testValues: valuesConfigMap, testKey: "ConfigMap-ansible-inventory"},
-		{testValues: ValuesJob, testKey: "Job-2023-07-02-configure-rke-node-19mv"},
-	}
-)
+// 	ValuesJob = map[string]interface{}{
+// 		"template":  "ansible-job.yaml.gotmpl",
+// 		"name":      "run-packer-rocky9",
+// 		"namespace": "machine-shop",
+// 	}
 
-type test struct {
-	testValues map[string]interface{}
-	testKey    string
-}
+// 	tests = []test{
+// 		{testValues: valuesConfigMap, testKey: "ConfigMap-ansible-inventory"},
+// 		{testValues: ValuesJob, testKey: "Job-2023-07-02-configure-rke-node-19mv"},
+// 	}
+// )
 
-func main() {
-	p, err := redisqueue.NewProducerWithOptions(&redisqueue.ProducerOptions{
-		ApproximateMaxLength: true,
-		RedisClient: redis.NewClient(&redis.Options{
-			Addr:     redisServer + ":" + redisPort,
-			Password: redisPassword,
-			DB:       0,
-		}),
-	})
+// type test struct {
+// 	testValues map[string]interface{}
+// 	testKey    string
+// }
 
-	if err != nil {
-		panic(err)
-	}
+// func main() {
+// 	p, err := redisqueue.NewProducerWithOptions(&redisqueue.ProducerOptions{
+// 		ApproximateMaxLength: true,
+// 		RedisClient: redis.NewClient(&redis.Options{
+// 			Addr:     redisServer + ":" + redisPort,
+// 			Password: redisPassword,
+// 			DB:       0,
+// 		}),
+// 	})
 
-	// CREATE RESOURCES IN REDIS
-	for _, tc := range tests {
+// 	if err != nil {
+// 		panic(err)
+// 	}
 
-		err2 := p.Enqueue(&redisqueue.Message{
-			Stream: redisStream,
-			Values: tc.testValues,
-		})
+// 	// CREATE RESOURCES IN REDIS
+// 	for _, tc := range tests {
 
-		if err2 != nil {
-			panic(err)
-		}
+// 		err2 := p.Enqueue(&redisqueue.Message{
+// 			Stream: redisStream,
+// 			Values: tc.testValues,
+// 		})
 
-	}
+// 		if err2 != nil {
+// 			panic(err)
+// 		}
 
-	// CHECK FOR VALUES IN REDIS
-	for _, tc := range tests {
+// 	}
 
-		fmt.Println(tc.testKey)
+// 	// CHECK FOR VALUES IN REDIS
+// 	for _, tc := range tests {
 
-		retries := 0
+// 		fmt.Println(tc.testKey)
 
-		for range time.Tick(time.Second * 5) {
+// 		retries := 0
 
-			if retries != 5 {
+// 		for range time.Tick(time.Second * 5) {
 
-				retries = retries + 1
-				if checkForRedisKV(tc.testKey, "created1") {
-					break
-				}
+// 			if retries != 5 {
 
-			} else {
-				fmt.Println("not created!")
+// 				retries = retries + 1
+// 				if checkForRedisKV(tc.testKey, "created1") {
+// 					break
+// 				}
 
-				break
-			}
+// 			} else {
+// 				fmt.Println("not created!")
 
-		}
+// 				break
+// 			}
 
-	}
+// 		}
 
-}
+// 	}
 
-func checkForRedisKV(key, expectedValue string) (keyValueExists bool) {
+// }
 
-	rdb := redis.NewClient(&redis.Options{
-		Addr:     os.Getenv("REDIS_SERVER") + ":" + os.Getenv("REDIS_PORT"),
-		Password: os.Getenv("REDIS_PASSWORD"),
-		DB:       0,
-	})
+// func checkForRedisKV(key, expectedValue string) (keyValueExists bool) {
 
-	// CHECK IF KEY EXISTS IN REDIS
-	fmt.Println("CHECKING IF KEY " + key + " EXISTS..")
-	keyExists, err := rdb.Exists(context.TODO(), key).Result()
-	if err != nil {
-		panic(err)
-	}
+// 	rdb := redis.NewClient(&redis.Options{
+// 		Addr:     os.Getenv("REDIS_SERVER") + ":" + os.Getenv("REDIS_PORT"),
+// 		Password: os.Getenv("REDIS_PASSWORD"),
+// 		DB:       0,
+// 	})
 
-	// CHECK FOR VALUE/STATUS IN REDIS
-	if keyExists == 1 {
+// 	// CHECK IF KEY EXISTS IN REDIS
+// 	fmt.Println("CHECKING IF KEY " + key + " EXISTS..")
+// 	keyExists, err := rdb.Exists(context.TODO(), key).Result()
+// 	if err != nil {
+// 		panic(err)
+// 	}
 
-		fmt.Println("KEY " + key + " EXISTS..CHECKING FOR IT'S VALUE")
+// 	// CHECK FOR VALUE/STATUS IN REDIS
+// 	if keyExists == 1 {
 
-		value, err := rdb.Get(context.TODO(), key).Result()
-		if err != nil {
-			panic(err)
-		}
+// 		fmt.Println("KEY " + key + " EXISTS..CHECKING FOR IT'S VALUE")
 
-		if value == expectedValue {
-			keyValueExists = true
-		}
+// 		value, err := rdb.Get(context.TODO(), key).Result()
+// 		if err != nil {
+// 			panic(err)
+// 		}
 
-		fmt.Println("STATUS", value)
+// 		if value == expectedValue {
+// 			keyValueExists = true
+// 		}
 
-	} else {
+// 		fmt.Println("STATUS", value)
 
-		fmt.Println("KEY " + key + " DOES NOT EXIST)")
-	}
+// 	} else {
 
-	return
-}
+// 		fmt.Println("KEY " + key + " DOES NOT EXIST)")
+// 	}
+
+// 	return
+// }

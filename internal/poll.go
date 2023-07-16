@@ -22,6 +22,7 @@ var (
 	templatePath  = os.Getenv("TEMPLATE_PATH")
 	log           = sthingsBase.StdOutFileLogger(logfilePath, "2006-01-02 15:04:05", 50, 3, 28)
 	logfilePath   = "/tmp/sweatShop-creator.log"
+	namespace     = "default" // just a default value
 )
 
 func PollRedisStreams() {
@@ -67,10 +68,12 @@ func processStreams(msg *redisqueue.Message) error {
 	if msg.Values["template"] != nil {
 
 		templateName := msg.Values["template"].(string)
-		namespace := msg.Values["namespace"].(string)
+		namespace = msg.Values["namespace"].(string)
 
 		log.Info("templateName: ", templateName)
 		log.Info("namespace: ", namespace)
+
+		// verify values
 
 		template, templateFileExists := ReadTemplateFromFilesystem(templatePath, templateName)
 
