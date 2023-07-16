@@ -91,7 +91,7 @@ configmaps:
         inventory: |
           {{`{{ range $name, $value := .data }}`}}
           [{{`{{ $name }}`}}]{{`{{ range $value }}`}}
-          {{`{{ . }}`}}{{ end }}`}}
+          {{`{{ . }}`}}{{`{{ end }}`}}
           {{`{{ end }}`}}
 
     ansible-job.yaml.gotmpl: |
