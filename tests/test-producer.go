@@ -20,7 +20,7 @@ var (
 		"template": "inventory.gotmpl",
 		"name":     "ansible-inventory",
 		//"all":      "localhost",
-		// "loop-master":                   "rt.rancher.com;rt-2.rancher.com;rt-3.rancher.com",
+		"loop-data": "rt.rancher.com;rt-2.rancher.com;rt-3.rancher.com",
 		// "loop-worker":                   "rt-4.rancher.com;rt-5.rancher.com",
 		// "merge-inventory;master;worker": "merge",
 	}
@@ -92,12 +92,12 @@ func main() {
 			if retries != 5 {
 
 				retries = retries + 1
-				if checkForRedisKV(tc.testKey, "created1") {
+				if checkForRedisKV(tc.testKey, "created") {
 					break
 				}
 
 			} else {
-				fmt.Println("not created!")
+				fmt.Println("retries are exhausted..exiting")
 
 				break
 			}

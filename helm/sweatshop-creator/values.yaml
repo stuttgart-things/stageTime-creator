@@ -89,7 +89,7 @@ configmaps:
         namespace: {{`{{ .namespace }}`}}
       data:
         inventory: |
-          {{`{{ range $name, $value := .data }}`}}
+          {{`{{ range $name, $value := .inventory }}`}}
           [{{`{{ $name }}`}}]{{`{{ range $value }}`}}
           {{`{{ . }}`}}{{`{{ end }}`}}
           {{`{{ end }}`}}

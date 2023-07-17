@@ -78,12 +78,20 @@ func processStreams(msg *redisqueue.Message) error {
 		template, templateFileExists := ReadTemplateFromFilesystem(templatePath, templateName)
 
 		if templateFileExists {
+
 			log.Info("template " + templateName + " imported")
 
+			log.Info("checking for loopable data..")
+			loopableData, redisKey := validateCreateLoopValues(msg.Values)
+			loopableData = validateMergeLoopValues(loopableData, redisKey)
+			fmt.Println(loopableData)
+
+			log.Info("rendering..")
 			renderedManifest := RenderManifest(msg.Values, template)
 			log.Info("rendered template: ", renderedManifest)
 
 			ApplyManifest(renderedManifest, namespace)
+
 		} else {
 			log.Error("template " + templateName + " does not exist on filesystem")
 		}
