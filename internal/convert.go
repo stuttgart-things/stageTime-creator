@@ -5,21 +5,21 @@ Copyright © 2023 PATRICK HERMANN patrick.hermann@sva.de
 package internal
 
 import (
-	"context"
-	"fmt"
 	"strings"
 	"time"
 
-	"github.com/redis/go-redis/v9"
+	sthingsCli "github.com/stuttgart-things/sthingsCli"
 )
 
-func validateCreateLoopValues(msgValues map[string]interface{}) map[string]interface{} {
+func validateCreateLoopValues(msgValues map[string]interface{}) (map[string]interface{}, string) {
 
-	v, _ := time.Now().UTC().MarshalText()
-	fmt.Println("REDIS KEY:", string(v))
+	// GENERATE KEY FOR THIS SET OPERATIONS
+	redisKey, _ := time.Now().UTC().MarshalText()
 
-	client := createRedisClient()
+	// CREATE REDIS CLIENT
+	client := sthingsCli.CreateRedisClient(redisServer+":"+redisPort, redisPassword)
 
+	// CHECK VALUES FOR DATA BEGINING W/ LOOP
 	for key, value := range msgValues {
 
 		if strings.Contains(key, "loop-") {
@@ -28,16 +28,26 @@ func validateCreateLoopValues(msgValues map[string]interface{}) map[string]inter
 			delete(msgValues, key)
 			msgValues[key] = map[string][]string{key: values}
 
+			// ADD ALL LOOP DATA TO REDIS SETS (W/ THEIR KEYS)
 			for _, value := range values {
-				AddValueToRedisSet(client, string(v)+"-"+key, value)
+				sthingsCli.AddValueToRedisSet(client, string(redisKey)+"-"+key, value)
 			}
 
 		}
 	}
 
+	return msgValues, string(redisKey)
+}
+
+func validateMergeLoopValues(msgValues map[string]interface{}, redisKey string) map[string]interface{} {
+
+	// CREATE REDIS CLIENT
+	client := sthingsCli.CreateRedisClient(redisServer+":"+redisPort, redisPassword)
+
+	// CHECK VALUES FOR DATA BEGINING W/ MERGE
 	for key := range msgValues {
 
-		var newName string
+		var mergeKey string
 
 		if strings.Contains(key, "merge-") {
 
@@ -45,47 +55,21 @@ func validateCreateLoopValues(msgValues map[string]interface{}) map[string]inter
 
 			mergedLoops := make(map[string][]string)
 
+			// MERGE ALL LOOP DATA TO THE VALUES MAP BY THEIR MERGE KEY
 			for i, key := range strings.Split(key, ";") {
 
 				if i == 0 {
-					newName = key
+					mergeKey = key
 
 				} else {
-					mergedLoops[key] = GetValuesFromRedisSet(client, string(v)+"-"+key)
+					mergedLoops[key] = sthingsCli.GetValuesFromRedisSet(client, redisKey+"-"+key)
 				}
 
-				msgValues[newName] = mergedLoops
+				msgValues[mergeKey] = mergedLoops
 			}
 
 		}
 	}
 
 	return msgValues
-}
-
-func AddValueToRedisSet(redisClient *redis.Client, setKey, value string) (isSetValueunique bool) {
-
-	if redisClient.SAdd(context.TODO(), setKey, value).Val() == 1 {
-		isSetValueunique = true
-	}
-
-	return
-}
-
-func GetValuesFromRedisSet(redisClient *redis.Client, setKey string) (values []string) {
-
-	values = redisClient.SMembers(context.TODO(), setKey).Val()
-
-	return
-}
-
-func createRedisClient() (client *redis.Client) {
-
-	client = redis.NewClient(&redis.Options{
-		Addr:     redisServer + ":" + redisPort,
-		Password: redisPassword,
-		DB:       0,
-	})
-
-	return
 }

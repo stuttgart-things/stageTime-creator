@@ -9,7 +9,7 @@ import (
 	"testing"
 )
 
-const inventoryTemplate = `{{ range $name, $value := .master }}
+const inventoryTemplate = `{{ range $name, $value := .inventory }}
 [{{ $name }}]{{range $value }}
 {{.}}{{end}}
 {{ end }}`
@@ -19,12 +19,13 @@ var (
 		"all":                           "localhost",
 		"loop-master":                   "rt.rancher.com;rt-2.rancher.com;rt-3.rancher.com",
 		"loop-worker":                   "rt-4.rancher.com;rt-5.rancher.com",
-		"merge-inventory;master;worker": "rt-4.rancher.com;rt-5.rancher.com",
+		"merge-inventory;master;worker": "",
 	}
 )
 
 func TestCreateLoopValues(t *testing.T) {
-	loopableData := validateCreateLoopValues(ansibleInventory)
+	loopableData, redisKey := validateCreateLoopValues(ansibleInventory)
+	loopableData = validateMergeLoopValues(loopableData, redisKey)
 	fmt.Println(loopableData)
 	rendered := RenderManifest(loopableData, inventoryTemplate)
 	fmt.Println(rendered)
