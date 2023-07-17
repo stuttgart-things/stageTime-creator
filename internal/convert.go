@@ -31,47 +31,34 @@ func validateCreateLoopValues(msgValues map[string]interface{}) map[string]inter
 			for _, value := range values {
 				AddValueToRedisSet(client, string(v)+"-"+key, value)
 			}
-			// merge := make(map[string][]string)
-
-			// if _, ok := msgValues[key]; ok {
-			// 	existingValues := merge["inventory"]
-			// 	fmt.Println("EXISTING", existingValues)
-			// 	addedValues := append(existingValues, values...)
-			// 	msgValues[key] = map[string][]string{key: addedValues}
-			// } else {
-			// 	merge[key] = values
-			// 	msgValues[key] = map[string][]string{key: values}
-			// }
 
 		}
 	}
 
 	for key := range msgValues {
 
+		var newName string
+
 		if strings.Contains(key, "merge-") {
 
 			_, key, _ := strings.Cut(key, "merge-")
 
-			var mergedValues []string
-			var newName string
+			mergedLoops := make(map[string][]string)
+
 			for i, key := range strings.Split(key, ";") {
 
 				if i == 0 {
 					newName = key
+
 				} else {
-					fmt.Println(key)
-					values := GetValuesFromRedisSet(client, string(v)+"-"+key)
-					mergedValues = append(mergedValues, values...)
-					msgValues[newName] = map[string][]string{key: mergedValues}
+					mergedLoops[key] = GetValuesFromRedisSet(client, string(v)+"-"+key)
 				}
 
+				msgValues[newName] = mergedLoops
 			}
 
-			fmt.Println("ALL VALUES", mergedValues)
 		}
 	}
-
-	fmt.Println("INVENTORY!", msgValues["inventory"])
 
 	return msgValues
 }
