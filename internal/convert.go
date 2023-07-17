@@ -25,7 +25,11 @@ func validateCreateLoopValues(msgValues map[string]interface{}) (map[string]inte
 		if strings.Contains(key, "loop-") {
 			_, key, _ = strings.Cut(key, "loop-")
 			values := strings.Split(strings.TrimSpace(value.(string)), ";")
+
+			// REMOVE LOOP- ENTRY FROM VALUES MAP
 			delete(msgValues, key)
+
+			// ADD ALL LOOP DATA TO VALUES MAP
 			msgValues[key] = map[string][]string{key: values}
 
 			// ADD ALL LOOP DATA TO REDIS SETS (W/ THEIR KEYS)
