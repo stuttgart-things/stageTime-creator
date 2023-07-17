@@ -1,141 +1,149 @@
 package main
 
-// import (
-// 	"context"
-// 	"fmt"
-// 	"os"
-// 	"time"
+import (
+	"context"
+	"fmt"
+	"os"
+	"time"
 
-// 	"github.com/redis/go-redis/v9"
-// 	"github.com/stuttgart-things/redisqueue"
-// )
+	"github.com/redis/go-redis/v9"
+	"github.com/stuttgart-things/redisqueue"
+)
 
-// var (
-// 	redisServer   = os.Getenv("REDIS_SERVER")
-// 	redisPort     = os.Getenv("REDIS_PORT")
-// 	redisPassword = os.Getenv("REDIS_PASSWORD")
-// 	redisStream   = os.Getenv("REDIS_STREAM")
+var (
+	redisServer   = os.Getenv("REDIS_SERVER")
+	redisPort     = os.Getenv("REDIS_PORT")
+	redisPassword = os.Getenv("REDIS_PASSWORD")
+	redisStream   = os.Getenv("REDIS_STREAM")
 
-// 	groupHosts = map[string][]interface{
-// 		"all":    {"localhost"},
-// 		"master": {"rt.rancher.com", "rt-2.rancher.com", "rt-3.rancher.com"},
-// 		"worker": {"rt-4.rancher.com", "rt-5.rancher.com"},
-// 	}
+	valuesAnsibleInventory = map[string]interface{}{
+		"template": "inventory.gotmpl",
+		"name":     "ansible-inventory",
+		//"all":      "localhost",
+		// "loop-master":                   "rt.rancher.com;rt-2.rancher.com;rt-3.rancher.com",
+		// "loop-worker":                   "rt-4.rancher.com;rt-5.rancher.com",
+		// "merge-inventory;master;worker": "merge",
+	}
 
-// 	valuesConfigMap = map[string]interface{}{
-// 		"template": "inventory.gotmpl",
-// 		"name":     "ansible-inventory",
-// 		// "data":     groupHosts,
-// 	}
+	valuesConfigMap = map[string]interface{}{
+		"template": "inventory.gotmpl",
+		"name":     "ansible-inventory",
+	}
 
-// 	ValuesJob = map[string]interface{}{
-// 		"template":  "ansible-job.yaml.gotmpl",
-// 		"name":      "run-packer-rocky9",
-// 		"namespace": "machine-shop",
-// 	}
+	ValuesJob = map[string]interface{}{
+		"template":  "ansible-job.yaml.gotmpl",
+		"name":      "run-packer-rocky9",
+		"namespace": "machine-shop",
+	}
 
-// 	tests = []test{
-// 		{testValues: valuesConfigMap, testKey: "ConfigMap-ansible-inventory"},
-// 		{testValues: ValuesJob, testKey: "Job-2023-07-02-configure-rke-node-19mv"},
-// 	}
-// )
+	tests = []test{
+		// {testValues: valuesAnsibleInventory, testKey: "ConfigMap-ansible-inventory"},
+		// {testValues: valuesConfigMap, testKey: "ConfigMap-ansible-inventory"},
+		{testValues: ValuesJob, testKey: "Job-2023-07-02-configure-rke-node-19mv"},
+	}
+)
 
-// type test struct {
-// 	testValues map[string]interface{}
-// 	testKey    string
-// }
+type test struct {
+	testValues map[string]interface{}
+	testKey    string
+}
 
-// func main() {
-// 	p, err := redisqueue.NewProducerWithOptions(&redisqueue.ProducerOptions{
-// 		ApproximateMaxLength: true,
-// 		RedisClient: redis.NewClient(&redis.Options{
-// 			Addr:     redisServer + ":" + redisPort,
-// 			Password: redisPassword,
-// 			DB:       0,
-// 		}),
-// 	})
+func main() {
 
-// 	if err != nil {
-// 		panic(err)
-// 	}
+	fmt.Println("REDIS-SERVER: " + redisServer + ":" + redisPort)
+	fmt.Println("REDIS-STREAM: " + redisStream)
 
-// 	// CREATE RESOURCES IN REDIS
-// 	for _, tc := range tests {
+	p, err := redisqueue.NewProducerWithOptions(&redisqueue.ProducerOptions{
+		ApproximateMaxLength: true,
+		RedisClient: redis.NewClient(&redis.Options{
+			Addr:     redisServer + ":" + redisPort,
+			Password: redisPassword,
+			DB:       0,
+		}),
+	})
 
-// 		err2 := p.Enqueue(&redisqueue.Message{
-// 			Stream: redisStream,
-// 			Values: tc.testValues,
-// 		})
+	if err != nil {
+		panic(err)
+	}
 
-// 		if err2 != nil {
-// 			panic(err)
-// 		}
+	// CREATE RESOURCES IN REDIS
+	for _, tc := range tests {
 
-// 	}
+		err2 := p.Enqueue(&redisqueue.Message{
+			Stream: redisStream,
+			Values: tc.testValues,
+		})
 
-// 	// CHECK FOR VALUES IN REDIS
-// 	for _, tc := range tests {
+		if err2 != nil {
+			panic(err)
+		}
 
-// 		fmt.Println(tc.testKey)
+	}
 
-// 		retries := 0
+	// CHECK FOR VALUES IN REDIS
+	for _, tc := range tests {
 
-// 		for range time.Tick(time.Second * 5) {
+		fmt.Println(tc.testKey)
 
-// 			if retries != 5 {
+		retries := 0
 
-// 				retries = retries + 1
-// 				if checkForRedisKV(tc.testKey, "created1") {
-// 					break
-// 				}
+		for range time.Tick(time.Second * 5) {
 
-// 			} else {
-// 				fmt.Println("not created!")
+			if retries != 5 {
 
-// 				break
-// 			}
+				retries = retries + 1
+				if checkForRedisKV(tc.testKey, "created1") {
+					break
+				}
 
-// 		}
+			} else {
+				fmt.Println("not created!")
 
-// 	}
+				break
+			}
 
-// }
+		}
 
-// func checkForRedisKV(key, expectedValue string) (keyValueExists bool) {
+	}
 
-// 	rdb := redis.NewClient(&redis.Options{
-// 		Addr:     os.Getenv("REDIS_SERVER") + ":" + os.Getenv("REDIS_PORT"),
-// 		Password: os.Getenv("REDIS_PASSWORD"),
-// 		DB:       0,
-// 	})
+}
 
-// 	// CHECK IF KEY EXISTS IN REDIS
-// 	fmt.Println("CHECKING IF KEY " + key + " EXISTS..")
-// 	keyExists, err := rdb.Exists(context.TODO(), key).Result()
-// 	if err != nil {
-// 		panic(err)
-// 	}
+func checkForRedisKV(key, expectedValue string) (keyValueExists bool) {
 
-// 	// CHECK FOR VALUE/STATUS IN REDIS
-// 	if keyExists == 1 {
+	rdb := redis.NewClient(&redis.Options{
+		Addr:     os.Getenv("REDIS_SERVER") + ":" + os.Getenv("REDIS_PORT"),
+		Password: os.Getenv("REDIS_PASSWORD"),
+		DB:       0,
+	})
 
-// 		fmt.Println("KEY " + key + " EXISTS..CHECKING FOR IT'S VALUE")
+	// CHECK IF KEY EXISTS IN REDIS
+	fmt.Println("CHECKING IF KEY " + key + " EXISTS..")
+	keyExists, err := rdb.Exists(context.TODO(), key).Result()
+	if err != nil {
+		panic(err)
+	}
 
-// 		value, err := rdb.Get(context.TODO(), key).Result()
-// 		if err != nil {
-// 			panic(err)
-// 		}
+	// CHECK FOR VALUE/STATUS IN REDIS
+	if keyExists == 1 {
 
-// 		if value == expectedValue {
-// 			keyValueExists = true
-// 		}
+		fmt.Println("KEY " + key + " EXISTS..CHECKING FOR IT'S VALUE")
 
-// 		fmt.Println("STATUS", value)
+		value, err := rdb.Get(context.TODO(), key).Result()
+		if err != nil {
+			panic(err)
+		}
 
-// 	} else {
+		if value == expectedValue {
+			fmt.Println("STATUS", value)
+			keyValueExists = true
+		}
 
-// 		fmt.Println("KEY " + key + " DOES NOT EXIST)")
-// 	}
+		fmt.Println("STATUS", value)
 
-// 	return
-// }
+	} else {
+
+		fmt.Println("KEY " + key + " DOES NOT EXIST)")
+	}
+
+	return
+}

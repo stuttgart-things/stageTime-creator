@@ -63,7 +63,7 @@ func PollRedisStreams() {
 func processStreams(msg *redisqueue.Message) error {
 
 	log.Info("templatePath: ", templatePath)
-	fmt.Println(msg.Values["template"])
+	// fmt.Println(msg.Values["template"])
 
 	if msg.Values["template"] != nil {
 
