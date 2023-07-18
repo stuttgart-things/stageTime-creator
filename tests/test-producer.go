@@ -16,18 +16,14 @@ var (
 	redisPassword = os.Getenv("REDIS_PASSWORD")
 	redisStream   = os.Getenv("REDIS_STREAM")
 
-	valuesAnsibleInventory = map[string]interface{}{
-		"template": "inventory.gotmpl",
-		"name":     "ansible-inventory",
-		//"all":      "localhost",
-		"loop-data": "rt.rancher.com;rt-2.rancher.com;rt-3.rancher.com",
-		// "loop-worker":                   "rt-4.rancher.com;rt-5.rancher.com",
-		// "merge-inventory;master;worker": "merge",
-	}
-
 	valuesConfigMap = map[string]interface{}{
-		"template": "inventory.gotmpl",
-		"name":     "ansible-inventory",
+		"template":                      "inventory.gotmpl",
+		"name":                          "ansible-inventory",
+		"namespace":                     "machine-shop",
+		"all":                           "localhost",
+		"loop-master":                   "rt.rancher.com;rt-2.rancher.com;rt-3.rancher.com",
+		"loop-worker":                   "rt-4.rancher.com;rt-5.rancher.com",
+		"merge-inventory;master;worker": "",
 	}
 
 	ValuesJob = map[string]interface{}{
@@ -37,8 +33,7 @@ var (
 	}
 
 	tests = []test{
-		// {testValues: valuesAnsibleInventory, testKey: "ConfigMap-ansible-inventory"},
-		// {testValues: valuesConfigMap, testKey: "ConfigMap-ansible-inventory"},
+		{testValues: valuesConfigMap, testKey: "ConfigMap-ansible-inventory"},
 		{testValues: ValuesJob, testKey: "Job-2023-07-02-configure-rke-node-19mv"},
 	}
 )
