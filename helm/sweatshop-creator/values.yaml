@@ -16,7 +16,7 @@ pipelineRuns:
         git-revision: main
         gitWorkspaceSubdirectory: /helm/sws-c
         helm-chart-name: sweatshop-creator
-        helm-chart-tag: v0.1.41
+        helm-chart-tag: v0.1.40
         helm-chart-path: helm
         registry: scr.app.4sthings.tiab.ssc.sva.de
         working-image: "eu.gcr.io/stuttgart-things/sthings-k8s:1.127.2"
@@ -42,7 +42,7 @@ pipelineRuns:
         context: /kaniko/sws-creator
         gitWorkspaceSubdirectory: /kaniko/sws-creator
         image: scr.app.4sthings.tiab.ssc.sva.de/sweatshop/creator
-        tag: 23.0724.0556-v0.1.41
+        tag: 23.0718.1247-v0.1.40
         registry: eu.gcr.io
         dockerfile: Dockerfile
       workspaces:
@@ -100,16 +100,16 @@ configmaps:
         namespace: machine-shop
       data:
         prepare-env.yaml: |
-        ---
-        - hosts: localhost
-          become: false
+          ---
+          - hosts: localhost
+            become: false
 
-          vars:
-            home_dir: {{`{{ "{{ lookup('env','HOME') }}" }}`}}
-            inv_path: {{`{{ "{{ lookup('env','INV_PATH') }}" }}`}}
-            vault_approle_id: {{`{{ "{{ lookup('env', 'VAULT_ROLE_ID') }}" }}`}}
-            vault_approle_secret: {{`{{ "{{ lookup('env', 'VAULT_SECRET_ID') }}" }}`}}
-            vault_url: {{`{{ "{{ lookup('env', 'VAULT_ADDR') }}" }}`}}
+            vars:
+              home_dir: {{`{{ "{{ lookup('env','HOME') }}" }}`}}
+              inv_path: {{`{{ "{{ lookup('env','INV_PATH') }}" }}`}}
+              vault_approle_id: {{`{{ "{{ lookup('env', 'VAULT_ROLE_ID') }}" }}`}}
+              vault_approle_secret: {{`{{ "{{ lookup('env', 'VAULT_SECRET_ID') }}" }}`}}
+              vault_url: {{`{{ "{{ lookup('env', 'VAULT_ADDR') }}" }}`}}
     ansible-job.yaml.gotmpl: |
       apiVersion: batch/v1
       kind: Job
@@ -196,7 +196,7 @@ deployment:
       image: eu.gcr.io/stuttgart-things/sweatshop-creator
       replicaCount: 1
       imagePullPolicy: Always
-      tag: 23.0724.0556-v0.1.41
+      tag: 23.0718.1247-v0.1.40
       securityContext:
         capabilities: {}
 # RBAC
