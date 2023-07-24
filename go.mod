@@ -7,7 +7,7 @@ require (
 	github.com/redis/go-redis/v9 v9.0.5
 	github.com/stuttgart-things/redisqueue v0.0.0-20230628084515-1d31f7874df7
 	github.com/stuttgart-things/sthingsBase v0.1.15
-	github.com/stuttgart-things/sthingsCli v0.1.11
+	github.com/stuttgart-things/sthingsCli v0.1.13
 	github.com/stuttgart-things/sthingsK8s v0.1.6
 	go.hein.dev/go-version v0.1.0
 )
