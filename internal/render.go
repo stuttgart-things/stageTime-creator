@@ -6,7 +6,7 @@ package internal
 
 import (
 	"bytes"
-	"html/template"
+	"text/template"
 
 	sthingsBase "github.com/stuttgart-things/sthingsBase"
 )

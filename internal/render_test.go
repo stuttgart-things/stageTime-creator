@@ -11,6 +11,9 @@ import (
 
 func TestRenderManifest(t *testing.T) {
 
+	rendered := RenderManifest(playbookConfigMapValueData, templatePlaybookConfigMap)
+	fmt.Println(rendered)
+
 	for _, tc := range testsRender {
 
 		// TEST RENDER
@@ -67,6 +70,26 @@ metadata:
   namespace: machine-shop
 `
 
+const templatePlaybookConfigMap = `
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ .name }}
+  namespace: machine-shop
+data:
+  prepare-env.yaml: |
+  ---
+  - hosts: localhost
+    become: false
+
+    vars:
+      home_dir: {{ "{{ lookup('env','HOME') }}" }}
+      inv_path: {{ "{{ lookup('env','INV_PATH') }}" }}
+      vault_approle_id: {{ "{{ lookup('env', 'VAULT_ROLE_ID') }}" }}
+      vault_approle_secret: {{ "{{ lookup('env', 'VAULT_SECRET_ID') }}" }}
+      vault_url: {{ "{{ lookup('env', 'VAULT_ADDR') }}" }}
+`
+
 type testRender struct {
 	testTemplate string
 	testInput    map[string]interface{}
@@ -83,6 +106,10 @@ var (
 	jobManifestValueData = map[string]interface{}{
 		"name":      "test-job",
 		"namespace": "machine-shop",
+	}
+
+	playbookConfigMapValueData = map[string]interface{}{
+		"name": "ansible-playbook",
 	}
 
 	testsRender = []testRender{
