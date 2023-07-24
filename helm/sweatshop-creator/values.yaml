@@ -96,8 +96,8 @@ configmaps:
       kind: ConfigMap
       apiVersion: v1
       metadata:
-        name: {{ .name }}
-        namespace: machine-shop
+        name: {{`{{ .name }}`}}
+        namespace: {{`{{ .namespace }}`}}
       data:
         prepare-env.yaml: |
           ---
