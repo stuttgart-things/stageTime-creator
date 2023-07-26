@@ -4,13 +4,65 @@ dynamic rendering and creation of k8s-resources polled from redis streams
 
 ## DEPLOY TO CLUSTER
 
-<details><summary><b>REDIS</b></summary>
+<details><summary><b>DEPLOYMENT INCLUDING REDIS</b></summary>
+
+```
+helm pull oci://eu.gcr.io/stuttgart-things/sweatshop-creator --version v0.1.44
+
+cat <<EOF > creator.yaml
+---
+namespace: sweatshop
+
+tektonResources:
+  enabled: false
+pipelineRuns:
+  enableRuns: false
+
+redis:
+  enabled: true
+  sentinel:
+    enabled: true
+  master:
+    service:
+      type: ClusterIP
+    persistence:
+      enabled: false
+      medium: ""
+  replica:
+    replicaCount: 1
+    persistence:
+      enabled: false
+      medium: ""
+  auth:
+    password: ankit
+
+configmaps:
+  creator:
+    TEMPLATE_PATH: /templates
+    TEMPLATE_NAME: ansible-job.yaml.gotmpl
+    REDIS_STREAM: sweatshop:manifests
+    REDIS_SERVER: creator-redis-headless.sweatshop.svc.cluster.local
+    REDIS_PORT: "6379"
+    REDIS_PASSWORD: ankit
+EOF
+
+helm upgrade --install creator oci://eu.gcr.io/stuttgart-things/sweatshop-creator --version v0.1.44 --values ankit.yaml -n sweatshop --create-namespace
+```
 
 </details>
 
-<details><summary><b>DEPLOYMENT</b></summary>
+<details><summary><b>CHECK REDIS DATA w/ CLI</b></summary>
+
+```
+kubectl -n sweatshop port-forward creator-redis-node-0 28015:6379
+redis-cli -h 127.0.0.1 -p 28015 -a ankit
+KEYS * # CHECK ALL REDIS KEYS
+XREAD COUNT 2 STREAMS sweatshop:manifests writers 0-0 0-0 # READ STREAM
+DEL sweatshop:manifests # DELETE STREAM
+```
 
 </details>
+
 
 ## TEST SERVICE LOCALLY (OUTSIDE CLUSTER)
 
