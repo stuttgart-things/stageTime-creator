@@ -47,11 +47,11 @@ configmaps:
 
 clusterRoleBindings:
   sweatshop-creator:
-    subjects[0]:
+    subjects:
       namespace: sweatshop-creator
 roleBindings:
   sweatshop-creator:
-    subjects[0]:
+    subjects:
       namespace: sweatshop-creator
 EOF
 
