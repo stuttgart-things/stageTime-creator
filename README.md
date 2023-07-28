@@ -2,9 +2,9 @@
 
 dynamic rendering and creation of k8s-resources polled from redis streams
 
-## DEPLOY TO CLUSTER
+## DEPLOY DEV CODE TO CLUSTER
 
-<details><summary><b>DEPLOYMENT INCLUDING REDIS + TO DIFFRENT NAMESPACE</b></summary>
+<details><summary><b>DEPLOYMENT INCLUDING REDIS + TO DIFFERENT NAMESPACE</b></summary>
 
 ```
 helm pull oci://eu.gcr.io/stuttgart-things/sweatshop-creator --version v0.1.44
