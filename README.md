@@ -11,7 +11,7 @@ helm pull oci://eu.gcr.io/stuttgart-things/sweatshop-creator --version v0.1.44
 
 cat <<EOF > creator.yaml
 ---
-namespace: sweatshop
+namespace: sweatshop-creator
 
 tektonResources:
   enabled: false
@@ -41,12 +41,21 @@ configmaps:
     TEMPLATE_PATH: /templates
     TEMPLATE_NAME: ansible-job.yaml.gotmpl
     REDIS_STREAM: sweatshop:manifests
-    REDIS_SERVER: creator-redis-headless.sweatshop.svc.cluster.local
+    REDIS_SERVER: sweatshop-creator-redis-headless.sweatshop-creator.svc.cluster.local
     REDIS_PORT: "6379"
     REDIS_PASSWORD: ankit
+
+clusterRoleBindings:
+  sweatshop-creator:
+    subjects[0]:
+      namespace: sweatshop-creator
+roleBindings:
+  sweatshop-creator:
+    subjects[0]:
+      namespace: sweatshop-creator
 EOF
 
-helm upgrade --install creator oci://eu.gcr.io/stuttgart-things/sweatshop-creator --version v0.1.44 --values ankit.yaml -n sweatshop --create-namespace
+helm upgrade --install sweatshop-creator oci://eu.gcr.io/stuttgart-things/sweatshop-creator --version v0.1.44 --values ankit.yaml -n sweatshop-creator --create-namespace
 ```
 
 </details>
@@ -54,11 +63,18 @@ helm upgrade --install creator oci://eu.gcr.io/stuttgart-things/sweatshop-creato
 <details><summary><b>CHECK REDIS DATA w/ CLI</b></summary>
 
 ```
+# Install redis-cli #
+sudo apt-get update
+sudo apt-get install redis
+
 kubectl -n sweatshop port-forward creator-redis-node-0 28015:6379
 redis-cli -h 127.0.0.1 -p 28015 -a ankit
-KEYS * # CHECK ALL REDIS KEYS
-XREAD COUNT 2 STREAMS sweatshop:manifests writers 0-0 0-0 # READ STREAM
-DEL sweatshop:manifests # DELETE STREAM
+# CHECK ALL REDIS KEYS
+KEYS * 
+# READ STREAM
+XREAD COUNT 2 STREAMS sweatshop:manifests writers 0-0 0-0
+# DELETE STREAM
+DEL sweatshop:manifests 
 ```
 
 </details>
