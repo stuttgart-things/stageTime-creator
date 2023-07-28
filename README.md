@@ -4,7 +4,7 @@ dynamic rendering and creation of k8s-resources polled from redis streams
 
 ## DEPLOY TO CLUSTER
 
-<details><summary><b>DEPLOYMENT INCLUDING REDIS</b></summary>
+<details><summary><b>DEPLOYMENT INCLUDING REDIS + TO DIFFRENT NAMESPACE</b></summary>
 
 ```
 helm pull oci://eu.gcr.io/stuttgart-things/sweatshop-creator --version v0.1.44
@@ -48,11 +48,15 @@ configmaps:
 clusterRoleBindings:
   sweatshop-creator:
     subjects:
-      namespace: sweatshop-creator
+      - kind: ServiceAccount
+        name: sweatshop-creator
+        namespace: sweatshop-creator
 roleBindings:
   sweatshop-creator:
     subjects:
-      namespace: sweatshop-creator
+      - kind: ServiceAccount
+        name: sweatshop-creator
+        namespace: sweatshop-creator
 EOF
 
 helm upgrade --install sweatshop-creator oci://eu.gcr.io/stuttgart-things/sweatshop-creator --version v0.1.44 --values ankit.yaml -n sweatshop-creator --create-namespace
@@ -70,11 +74,11 @@ sudo apt-get install redis
 kubectl -n sweatshop port-forward creator-redis-node-0 28015:6379
 redis-cli -h 127.0.0.1 -p 28015 -a ankit
 # CHECK ALL REDIS KEYS
-KEYS * 
+KEYS *
 # READ STREAM
 XREAD COUNT 2 STREAMS sweatshop:manifests writers 0-0 0-0
 # DELETE STREAM
-DEL sweatshop:manifests 
+DEL sweatshop:manifests
 ```
 
 </details>

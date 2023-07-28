@@ -27,20 +27,20 @@ var (
 	}
 
 	ValuesPlaybook = map[string]interface{}{
-		"template":  "ansible-job.yaml.gotmpl",
-		"name":      "run-packer-rocky9",
+		"template":  "playbook.gotmpl",
+		"name":      "play",
 		"namespace": "machine-shop",
 	}
 
-	ValuesJob = map[string]interface{}{
-		"template":  "playbook.gotmpl",
-		"name":      "playy",
-		"namespace": "machine-shop",
-	}
+	// ValuesJob = map[string]interface{}{
+	// 	"template":  "playbook.gotmpl",
+	// 	"name":      "playy",
+	// 	"namespace": "machine-shop",
+	// }
 
 	tests = []test{
-		{testValues: valuesConfigMap, testKey: "ConfigMap-ansible-inventory"},
-		{testValues: ValuesJob, testKey: "Job-2023-07-02-configure-rke-node-19mv"},
+		// {testValues: valuesConfigMap, testKey: "ConfigMap-ansible-inventory"},
+		// {testValues: ValuesJob, testKey: "Job-2023-07-02-configure-rke-node-19mv"},
 		{testValues: ValuesPlaybook, testKey: "Job-2023-07-02-configure-rke-node-19mv"},
 	}
 )
