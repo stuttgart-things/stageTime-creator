@@ -45,16 +45,20 @@ redis:
       enabled: false
       medium: ""
   auth:
-    password: ankit
+    password: <path:apps/data/sweatshop#redisPassword>
 
 configmaps:
   creator:
     TEMPLATE_PATH: /templates
-    TEMPLATE_NAME: ansible-job.yaml.gotmpl
     REDIS_STREAM: sweatshop:manifests
     REDIS_SERVER: sweatshop-creator-redis-headless.sweatshop-creator.svc.cluster.local
     REDIS_PORT: "6379"
-    REDIS_PASSWORD: ankit
+
+secrets:
+  redis:
+    name: redis
+    secretKVs:
+      REDIS_PASSWORD: <path:apps/data/sweatshop#redisPassword>
 
 clusterRoleBindings:
   sweatshop-creator:
