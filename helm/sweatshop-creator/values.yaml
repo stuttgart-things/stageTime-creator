@@ -73,12 +73,7 @@ redis:
   # auth:
   #   password: just4dev
 
-  #configmaps:
-  #   creator:
-  #     TEMPLATE_PATH: /templates
-  #     REDIS_STREAM: sweatshop:manifests
-  #     REDIS_SERVER: sweatshop-informer-redis-headless.sweatshop.svc.cluster.local
-  #     REDIS_PORT: "6379"
+
 
   # secrets:
   #   redis:
@@ -89,6 +84,12 @@ redis:
   #       app.kubernetes.io/part-of: sweatshop
   #     secretKVs:
   #       REDIS_PASSWORD: <path:apps/data/sweatshop#redisPassword>
+configmaps:
+  # creator:
+  #   TEMPLATE_PATH: /templates
+  #   REDIS_STREAM: sweatshop:manifests
+  #   REDIS_SERVER: sweatshop-informer-redis-headless.sweatshop.svc.cluster.local
+  #   REDIS_PORT: "6379"
   manifest-templates:
     inventory.gotmpl: |
       kind: ConfigMap
