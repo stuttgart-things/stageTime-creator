@@ -2,6 +2,17 @@
 
 dynamic rendering and creation of k8s-resources polled from redis streams
 
+<details><summary><b>DEPLOYMENT TOOLS</b></summary>
+
+* golang
+* helm
+* nerdctl
+* kubectl
+* redis-cli
+* taskfile
+
+</details>
+
 ## DEPLOY DEV CODE TO CLUSTER
 
 <details><summary><b>DEPLOYMENT INCLUDING REDIS + TO DIFFERENT NAMESPACE</b></summary>
