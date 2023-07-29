@@ -16,7 +16,7 @@ pipelineRuns:
         git-revision: main
         gitWorkspaceSubdirectory: /helm/sws-c
         helm-chart-name: sweatshop-creator
-        helm-chart-tag: v0.1.48
+        helm-chart-tag: v0.1.49
         helm-chart-path: helm
         registry: scr.app.4sthings.tiab.ssc.sva.de
         working-image: "eu.gcr.io/stuttgart-things/sthings-k8s:1.127.2"
@@ -42,7 +42,7 @@ pipelineRuns:
         context: /kaniko/sws-creator
         gitWorkspaceSubdirectory: /kaniko/sws-creator
         image: scr.app.4sthings.tiab.ssc.sva.de/sweatshop/creator
-        tag: 23.0729.0902-v0.1.48
+        tag: 23.0729.0909-v0.1.49
         registry: eu.gcr.io
         dockerfile: Dockerfile
       workspaces:
@@ -72,18 +72,16 @@ redis:
   #     medium: ""
   # auth:
   #   password: just4dev
+# secrets:
+#   redis:
+#     name: redis
+#     labels:
+#       app.kubernetes.io/component: creator
+#       app.kubernetes.io/created-by: sweatshop-creator
+#       app.kubernetes.io/part-of: sweatshop
+#     secretKVs:
+#       REDIS_PASSWORD: <path:apps/data/sweatshop#redisPassword>
 
-
-
-  # secrets:
-  #   redis:
-  #     name: redis
-  #     labels:
-  #       app.kubernetes.io/component: creator
-  #       app.kubernetes.io/created-by: sweatshop-creator
-  #       app.kubernetes.io/part-of: sweatshop
-  #     secretKVs:
-  #       REDIS_PASSWORD: <path:apps/data/sweatshop#redisPassword>
 configmaps:
   # creator:
   #   TEMPLATE_PATH: /templates
@@ -214,7 +212,7 @@ deployment:
       image: eu.gcr.io/stuttgart-things/sweatshop-creator
       replicaCount: 1
       imagePullPolicy: Always
-      tag: 23.0729.0902-v0.1.48
+      tag: 23.0729.0909-v0.1.49
       securityContext:
         capabilities: {}
 # RBAC
