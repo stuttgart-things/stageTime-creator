@@ -118,12 +118,10 @@ task run
 
 <details><summary><b>START TEST PRODUCING (EXTERNAL REDIS)</b></summary>
 
+
 ```
-export REDIS_STREAM=sweatshop:manifests
-export REDIS_PASSWORD=<SETME>
-export REDIS_SERVER=redis-pve.labul.sva.de
-export REDIS_PORT=6379
-task run-test-producer
+# kubectl -n sweatshop-redis port-forward redis-sweatshop-deployment-node-0 28015:6379
+task run-test
 ```
 
 </details>

@@ -126,6 +126,25 @@ configmaps:
                   dest: {{`{{ "{{ home_dir }}/.ssh/id_rsa" }}`}}
                   content: {{`{{printf "%q" "{{ ssh_key | b64decode }}" }}`}}
                   mode: '0600'
+              - ansible.builtin.meta: refresh_inventory
+              - name: Wait for SSH
+                ansible.builtin.wait_for:
+                  host: {{`{{ "{{ item }}" }}`}}
+                  port: 22
+                  delay: 1
+                  timeout: 1200
+                  sleep: 10
+                with_items:
+                  - {{`{{ "{{ groups['all']}}" }}`}}
+
+          - hosts: all
+            become: true
+            gather_facts: true
+
+            vars:
+              manage_filesystem: {{`{{ .manageFilesystem }}`}}
+              update_packages: {{`{{ .updateOS }}`}}
+
     ansible-job.yaml.gotmpl: |
       apiVersion: batch/v1
       kind: Job
