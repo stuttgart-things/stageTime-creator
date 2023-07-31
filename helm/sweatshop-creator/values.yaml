@@ -111,7 +111,7 @@ configmaps:
           - hosts: localhost
             become: false
             vars:
-              home_dir: {{`{{ "{{printf "%q" lookup('env','HOME') }}" }}`}}
+              home_dir: "{{`{{ "{{printf "%q" lookup('env','HOME') }}" }}`}}"
               inv_path: {{`{{ "{{printf "%q" lookup('env','INV_PATH') }}" }}`}}
               vault_approle_id: {{`{{printf "%q" "{{ lookup('env', 'VAULT_ROLE_ID') }}" }}`}}
               vault_approle_secret: {{`{{printf "%q" "{{ lookup('env', 'VAULT_SECRET_ID') }}" }}`}}
