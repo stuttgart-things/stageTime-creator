@@ -83,7 +83,7 @@ data:
     become: false
 
     vars:
-      home_dir: {{ "{{ lookup('env','HOME') }}" }}
+      home_dir: "{{ "{{ lookup('env','HOME') }}" }}"
       inv_path: {{ "{{ lookup('env','INV_PATH') }}" }}
       vault_approle_id: {{ "{{ lookup('env', 'VAULT_ROLE_ID') }}" }}
       vault_approle_secret: {{ "{{ lookup('env', 'VAULT_SECRET_ID') }}" }}
