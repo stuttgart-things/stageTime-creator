@@ -107,6 +107,16 @@ configmaps:
         name: {{`{{ .name }}`}}
         namespace: {{`{{ .namespace }}`}}
       data:
+        play.yaml: |
+          ---
+          - name: Prepare env
+            ansible.builtin.import_playbook: prepare-env.yaml
+            when: prepare_env|bool
+
+          - name: Run baseos playbook
+            ansible.builtin.import_playbook: baseos-setup.yaml
+            when: execute_baseos|bool
+
         prepare-env.yaml: |
           - hosts: localhost
             become: false
@@ -145,6 +155,18 @@ configmaps:
           - hosts: all
             become: true
             gather_facts: true
+            vars:
+              manage_filesystem: {{`{{ .manageFilesystem }}`}}
+              install_requirements {{`{{ .installRequirements }}`}}
+              update_packages: {{`{{ .updateOS }}`}}
+              install_motd: {{`{{ .installMotd }}`}}
+              username: {{`{{ .username }}`}}
+              lvm_home_sizing: {{`{{ .lvmHomeSizing }}`}}%
+              lvm_root_sizing: {{`{{ .lvmRootSizing }}`}}%
+              lvm_var_sizing: {{`{{ .lvmVarSizing }}`}}%
+              send_to_msteams: {{`{{ .sendToMSteams }}`}}
+              msteams_webhook_url: {{`{{ .msteamsWebhhookURL }}`}}
+              reboot_all: {{`{{ .rebootAll }}`}}
 
             roles:
               - role: manage-filesystem
