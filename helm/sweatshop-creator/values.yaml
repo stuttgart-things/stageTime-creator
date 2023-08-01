@@ -120,8 +120,16 @@ configmaps:
             tasks:
               - name: Creating ssh directory
                 ansible.builtin.file:
-                  path: {{`"{{ "{{ home_dir }}/.ssh/}}" }}"`}}
+                  path: {{`"{{ "{{ home_dir }}/.ssh/" }}"`}}
                   state: directory
+
+              - name: Creating ssh private key file
+                ansible.builtin.copy:
+                  dest: {{`"{{ "{{ home_dir }}/.ssh/id_rsa" }}"`}}
+                  content: {{`"{{ "{{ ssh_key | b64decode }}" }}"`}}
+                  mode: '0600'
+
+              - ansible.builtin.meta: refresh_inventory
     ansible-job.yaml.gotmpl: |
       apiVersion: batch/v1
       kind: Job
