@@ -161,9 +161,9 @@ configmaps:
               update_packages: {{`{{ .updateOS }}`}}
               install_motd: {{`{{ .installMotd }}`}}
               username: {{`{{ .username }}`}}
-              lvm_home_sizing: {{`{{ .lvmHomeSizing }}`}}%
-              lvm_root_sizing: {{`{{ .lvmRootSizing }}`}}%
-              lvm_var_sizing: {{`{{ .lvmVarSizing }}`}}%
+              lvm_home_sizing: {{`{{ .lvmHomeSizing }}`}}
+              lvm_root_sizing: {{`{{ .lvmRootSizing }}`}}
+              lvm_var_sizing: {{`{{ .lvmVarSizing }}`}}
               send_to_msteams: {{`{{ .sendToMSteams }}`}}
               msteams_webhook_url: {{`{{ .msteamsWebhhookURL }}`}}
               reboot_all: {{`{{ .rebootAll }}`}}
