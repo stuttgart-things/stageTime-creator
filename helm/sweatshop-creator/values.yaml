@@ -112,8 +112,6 @@ configmaps:
             become: false
             vars:
               home_dir: {{`"{{ "{{ lookup('env','HOME') }}" }}"`}}
-              inv_path: {{`{{ "{{printf "%q" lookup('env','INV_PATH') }}" }}`}}
-
     ansible-job.yaml.gotmpl: |
       apiVersion: batch/v1
       kind: Job
