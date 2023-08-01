@@ -108,7 +108,6 @@ configmaps:
         namespace: {{`{{ .namespace }}`}}
       data:
         play.yaml: |
-          ---
           - name: Prepare env
             ansible.builtin.import_playbook: prepare-env.yaml
             when: prepare_env|bool
