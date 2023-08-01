@@ -111,39 +111,9 @@ configmaps:
           - hosts: localhost
             become: false
             vars:
-              home_dir: {{`{{ "{{ lookup('env','HOME') }}" }}`}}
+              home_dir: {{`"{{ "{{ lookup('env','HOME') }}" }}"`}}
               inv_path: {{`{{ "{{printf "%q" lookup('env','INV_PATH') }}" }}`}}
-              vault_approle_id: {{`{{printf "%q" "{{ lookup('env', 'VAULT_ROLE_ID') }}" }}`}}
-              vault_approle_secret: {{`{{printf "%q" "{{ lookup('env', 'VAULT_SECRET_ID') }}" }}`}}
-              vault_url: {{`{{printf "%q" "{{ lookup('env', 'VAULT_ADDR') }}" }}`}}
-            tasks:
-              - name: Creating ssh directory
-                ansible.builtin.file:
-                  path: {{`{{printf "%q" "{{ home_dir }}/.ssh/" }}`}}
-                  state: directory
-              - name: Creating ssh private key file
-                ansible.builtin.copy:
-                  dest: {{`{{printf "%q" "{{ home_dir }}/.ssh/id_rsa" }}`}}
-                  content: {{`{{printf "%q" "{{ ssh_key | b64decode }}" }}`}}
-                  mode: '0600'
-              - ansible.builtin.meta: refresh_inventory
-              - name: Wait for SSH
-                ansible.builtin.wait_for:
-                  host: {{`{{ "{{ item }}" }}`}}
-                  port: 22
-                  delay: 1
-                  timeout: 1200
-                  sleep: 10
-                with_items:
-                  - {{`{{ "{{ groups['all']}}" }}`}}
 
-          - hosts: all
-            become: true
-            gather_facts: true
-
-            vars:
-              manage_filesystem: {{`{{ .manageFilesystem }}`}}
-              update_packages: {{`{{ .updateOS }}`}}
     ansible-job.yaml.gotmpl: |
       apiVersion: batch/v1
       kind: Job
