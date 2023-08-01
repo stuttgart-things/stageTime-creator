@@ -157,7 +157,7 @@ configmaps:
             gather_facts: true
             vars:
               manage_filesystem: {{`{{ .manageFilesystem }}`}}
-              install_requirements {{`{{ .installRequirements }}`}}
+              install_requirements: {{`{{ .installRequirements }}`}}
               update_packages: {{`{{ .updateOS }}`}}
               install_motd: {{`{{ .installMotd }}`}}
               username: {{`{{ .username }}`}}
