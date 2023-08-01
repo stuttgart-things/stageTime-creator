@@ -130,6 +130,32 @@ configmaps:
                   mode: '0600'
 
               - ansible.builtin.meta: refresh_inventory
+
+              - name: Wait for SSH
+                ansible.builtin.wait_for:
+                  host: {{`"{{ "{{ item }}" }}"`}}
+                  port: 22
+                  delay: 1
+                  timeout: 1200
+                  sleep: 10
+                with_items:
+                  - {{`"{{ "{{ groups['all'] }}" }}"`}}
+
+        baseos-setup.yaml: |
+          - hosts: all
+            become: true
+            gather_facts: true
+
+            roles:
+              - role: manage-filesystem
+                when: manage_filesystem|bool
+
+              - role: install-requirements
+                when: install_requirements|bool
+
+            pre_tasks:
+              - ansible.builtin.reboot:
+                when: reboot_all|bool
     ansible-job.yaml.gotmpl: |
       apiVersion: batch/v1
       kind: Job
