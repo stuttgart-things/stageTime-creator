@@ -111,7 +111,6 @@ configmaps:
           - name: Prepare env
             ansible.builtin.import_playbook: prepare-env.yaml
             when: prepare_env|bool
-
           - name: Run baseos playbook
             ansible.builtin.import_playbook: baseos-setup.yaml
             when: execute_baseos|bool
