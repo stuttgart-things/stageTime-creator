@@ -11,7 +11,7 @@ import (
 	sthingsBase "github.com/stuttgart-things/sthingsBase"
 )
 
-func RenderManifest(resource map[string]interface{}, manifestTemplate string) string {
+func RenderManifest(resource interface{}, manifestTemplate string) string {
 
 	var buf bytes.Buffer
 

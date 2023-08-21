@@ -31,7 +31,7 @@ func SetObjectToRedisJSON(redisJSONHandler *rejson.Handler, jsonObject interface
 func main() {
 
 	//INITALIZE REDIS
-	var addr = flag.String("Server", "10.100.136.56:31678", "Redis server address")
+	var addr = flag.String("Server", "10.100.136.56:31868", "Redis server address")
 
 	pipelineParams := make(map[string]string)
 	var pipelineWorkspaces []server.Workspace

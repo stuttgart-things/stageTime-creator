@@ -5,8 +5,13 @@ Copyright © 2023 PATRICK HERMANN patrick.hermann@sva.de
 package internal
 
 import (
+	"flag"
 	"fmt"
 
+	"github.com/nitishm/go-rejson/v4"
+	server "github.com/stuttgart-things/sweatShop-server/server"
+
+	goredis "github.com/redis/go-redis/v9"
 	"github.com/stuttgart-things/redisqueue"
 )
 
@@ -16,6 +21,16 @@ func processStreams(msg *redisqueue.Message) error {
 
 	if msg.Values["stage"] != nil {
 		fmt.Println("found stage!")
+		var addr = flag.String("Server", "10.100.136.56:31868", "Redis server address")
+		redisJSONHandler := rejson.NewReJSONHandler()
+		flag.Parse()
+		redisClient := goredis.NewClient(&goredis.Options{Addr: *addr, DB: 0})
+		redisJSONHandler.SetGoRedisClient(redisClient)
+		pr := GetPipelineRunFromRedis(redisJSONHandler, "pipelineRun")
+
+		renderedManifest := RenderManifest(pr, server.PipelineRunTemplate)
+		log.Info("rendered template: ", renderedManifest)
+
 	} else if msg.Values["template"] != nil {
 
 		templateName := msg.Values["template"].(string)
