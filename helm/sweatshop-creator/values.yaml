@@ -180,22 +180,22 @@ configmaps:
       apiVersion: batch/v1
       kind: Job
       metadata:
-        name: 2023-07-02-configure-rke-node-19mv
-        namespace: {{`{{ .Namespace }}`}}
+        name: {{`{{ .jobName }}`}}
+        namespace: {{`{{ .namespace }}`}}
         labels:
           app: machine-shop-operator
           machine-shop-operator: ansible
       spec:
         template:
           metadata:
-            name: 2023-07-02-configure-rke-node-19mv
+            name: {{`{{ .jobName }}`}}
             labels:
               app: machine-shop-operator
               machine-shop-operator: ansible
           spec:
             containers:
               - name: manager
-                image: eu.gcr.io/stuttgart-things/sthings-ansible:8.0.0-4
+                image: eu.gcr.io/stuttgart-things/sthings-ansible:8.2.0-3
                 imagePullPolicy: Always
                 securityContext:
                   allowPrivilegeEscalation: true
@@ -206,13 +206,11 @@ configmaps:
                 env:
                   - name: ANSIBLE_HOST_KEY_CHECKING
                     value: "False"
-                  - name: INV_PATH
-                    value: "/tmp/inv"
-                  - name: TARGETS
-                    value: "mso-vm2.tiab.labda.sva.de"
                 envFrom:
                   - secretRef:
                       name: vault
+                  - configMapRef:
+                      name: play
                 resources:
                   requests:
                     cpu: 150m
@@ -223,15 +221,21 @@ configmaps:
                 command:
                   - /bin/sh
                   - -ec
-                  - touch ${INV_PATH} && ansible-playbook -i $INV_PATH $HOME/ansible/play.yaml -vv -e prepare_env=true -e execute_baseos=true -e target_play=configure-rke-node
+                  - ansible-playbook $HOME/ansible/play.yaml -vv
                 volumeMounts:
-                  - name: ansible
+                  - name: play
                     mountPath: /home/nonroot/ansible
+                volumeMounts:
+                  - name: inv
+                    mountPath: /home/nonroot/inv
             restartPolicy: Never
             volumes:
-              - name: ansible
+              - name: play
                 configMap:
-                  name: ansible
+                  name: ansible-sample-play
+              - name: inv
+                configMap:
+                  name: ansible-sample-inv
 deployment:
   name: sweatshop-creator
   volumes:

@@ -86,8 +86,8 @@ helm upgrade --install sweatshop-creator oci://eu.gcr.io/stuttgart-things/sweats
 sudo apt-get update
 sudo apt-get install redis
 
-kubectl -n sweatshop port-forward creator-redis-node-0 28015:6379
-redis-cli -h 127.0.0.1 -p 28015 -a ankit
+kubectl -n sweatshop port-forward redis-sweatshop-deployment-node-0 28015:6379 -n sweatshop-redis
+redis-cli -h 127.0.0.1 -p 28015 -a ${PASSWORD}
 # CHECK ALL REDIS KEYS
 KEYS *
 # READ STREAM
