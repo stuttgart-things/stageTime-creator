@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"os"
 
 	rejson "github.com/nitishm/go-rejson/v4"
 	goredis "github.com/redis/go-redis/v9"
@@ -31,7 +32,7 @@ func SetObjectToRedisJSON(redisJSONHandler *rejson.Handler, jsonObject interface
 func main() {
 
 	//INITALIZE REDIS
-	var addr = flag.String("Server", "10.100.136.56:31868", "Redis server address")
+	var addr = flag.String("Server", "127.0.0.1:28015", "Redis server address")
 
 	pipelineParams := make(map[string]string)
 	var pipelineWorkspaces []server.Workspace
@@ -59,7 +60,7 @@ func main() {
 	redisJSONHandler := rejson.NewReJSONHandler()
 	flag.Parse()
 
-	redisClient := goredis.NewClient(&goredis.Options{Addr: *addr, DB: 0})
+	redisClient := goredis.NewClient(&goredis.Options{Addr: *addr, Password: os.Getenv("REDIS_PASSWORD"), DB: 0})
 
 	redisJSONHandler.SetGoRedisClient(redisClient)
 

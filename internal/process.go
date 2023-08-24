@@ -5,7 +5,6 @@ Copyright © 2023 PATRICK HERMANN patrick.hermann@sva.de
 package internal
 
 import (
-	"flag"
 	"fmt"
 
 	"github.com/nitishm/go-rejson/v4"
@@ -21,10 +20,9 @@ func processStreams(msg *redisqueue.Message) error {
 
 	if msg.Values["stage"] != nil {
 		fmt.Println("found stage!")
-		var addr = flag.String("Server", "10.100.136.56:31868", "Redis server address")
+
 		redisJSONHandler := rejson.NewReJSONHandler()
-		flag.Parse()
-		redisClient := goredis.NewClient(&goredis.Options{Addr: *addr, DB: 0})
+		redisClient := goredis.NewClient(&goredis.Options{Addr: redisServer + ":" + redisPort, Password: redisPassword, DB: 0})
 		redisJSONHandler.SetGoRedisClient(redisClient)
 		pr := GetPipelineRunFromRedis(redisJSONHandler, "pipelineRun")
 

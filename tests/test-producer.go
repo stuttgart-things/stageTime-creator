@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 
+	sthingsCli "github.com/stuttgart-things/sthingsCli"
+
 	"github.com/redis/go-redis/v9"
 	"github.com/stuttgart-things/redisqueue"
 )
@@ -58,6 +60,10 @@ func main() {
 
 	fmt.Println("REDIS-SERVER: " + redisServer + ":" + redisPort)
 	fmt.Println("REDIS-STREAM: " + redisStream)
+
+	// CREATE SET
+	redisClient := sthingsCli.CreateRedisClient(redisServer+":"+redisPort, redisPassword)
+	sthingsCli.AddValueToRedisSet(redisClient, "revisionrun-2432", "build-this-image")
 
 	// CREATE RESOURCES IN REDIS
 	p, err := redisqueue.NewProducerWithOptions(&redisqueue.ProducerOptions{
