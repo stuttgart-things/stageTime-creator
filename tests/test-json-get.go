@@ -6,14 +6,22 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"os"
+
+	sthingsCli "github.com/stuttgart-things/sthingsCli"
 
 	"github.com/gomodule/redigo/redis"
 	"github.com/nitishm/go-rejson/v4"
-	goredis "github.com/redis/go-redis/v9"
 	server "github.com/stuttgart-things/sweatShop-server/server"
 )
 
-var ctx = context.Background()
+var (
+	redisServer   = os.Getenv("REDIS_SERVER")
+	redisPort     = os.Getenv("REDIS_PORT")
+	redisPassword = os.Getenv("REDIS_PASSWORD")
+	redisStream   = os.Getenv("REDIS_STREAM")
+	ctx           = context.Background()
+)
 
 func GetJSONFromRedis(redisJSONHandler *rejson.Handler) {
 
@@ -36,12 +44,13 @@ func GetJSONFromRedis(redisJSONHandler *rejson.Handler) {
 func main() {
 
 	// INITALIZE REDIS
-	var addr = flag.String("Server", "localhost:6379", "Redis server address")
+	redisClient := sthingsCli.CreateRedisClient(redisServer+":"+redisPort, redisPassword)
+
+	prs := sthingsCli.GetValuesFromRedisSet(redisClient, "revisionrun-2432")
+	fmt.Println(prs)
 
 	redisJSONHandler := rejson.NewReJSONHandler()
 	flag.Parse()
-
-	redisClient := goredis.NewClient(&goredis.Options{Addr: *addr, DB: 0})
 
 	redisJSONHandler.SetGoRedisClient(redisClient)
 

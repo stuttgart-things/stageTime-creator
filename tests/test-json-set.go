@@ -2,44 +2,31 @@ package main
 
 import (
 	"context"
-	"flag"
-	"fmt"
-	"log"
 	"os"
 
+	sthingsCli "github.com/stuttgart-things/sthingsCli"
+
 	rejson "github.com/nitishm/go-rejson/v4"
-	goredis "github.com/redis/go-redis/v9"
 	server "github.com/stuttgart-things/sweatShop-server/server"
 )
 
-var ctx = context.Background()
-
-func SetObjectToRedisJSON(redisJSONHandler *rejson.Handler, jsonObject interface{}, jsonKey string) {
-
-	res, err := redisJSONHandler.JSONSet(jsonKey, ".", jsonObject)
-	if err != nil {
-		log.Fatalf("Failed to JSONSet")
-		return
-	}
-
-	if res.(string) == "OK" {
-		fmt.Printf("Success: %s\n", res)
-	} else {
-		fmt.Println("Failed to Set: ")
-	}
-}
+var (
+	redisServer        = os.Getenv("REDIS_SERVER")
+	redisPort          = os.Getenv("REDIS_PORT")
+	redisPassword      = os.Getenv("REDIS_PASSWORD")
+	redisStream        = os.Getenv("REDIS_STREAM")
+	ctx                = context.Background()
+	pipelineParams     = make(map[string]string)
+	pipelineWorkspaces []server.Workspace
+	revisionRunID      = "7a6481c"
+	prList             = []string{"build-machineshop-image-1", "build-helm"}
+)
 
 func main() {
 
-	//INITALIZE REDIS
-	var addr = flag.String("Server", "127.0.0.1:28015", "Redis server address")
-
-	pipelineParams := make(map[string]string)
-	var pipelineWorkspaces []server.Workspace
-
 	pr := server.PipelineRun{
-		Name:                "pipelinerun.Name",
-		RevisionRunAuthor:   "pipelinerun.Name",
+		Name:                "build-machineshop-image-1",
+		RevisionRunAuthor:   "patrick.hermann@sva.de",
 		RevisionRunCreation: "pipelinerun.Name",
 		RevisionRunCommitId: "pipelinerun.Name",
 		RevisionRunRepoUrl:  "pipelinerun.Name",
@@ -55,14 +42,18 @@ func main() {
 		NameSuffix:          "pipelinerun.Name",
 	}
 
-	fmt.Println(pr)
+	// PUT PRS ON A LIST LOOP OVER AND USE pr.Name
 
+	// CREATE REDIS CLIENT
+	redisClient := sthingsCli.CreateRedisClient(redisServer+":"+redisPort, redisPassword)
+
+	// CREATE PIPELINERUNS ON REVISION RUN SET
+	for _, pr := range prList {
+		sthingsCli.AddValueToRedisSet(redisClient, revisionRunID, pr)
+	}
+
+	// PIPELINERUN ON REDIS JSON
 	redisJSONHandler := rejson.NewReJSONHandler()
-	flag.Parse()
-
-	redisClient := goredis.NewClient(&goredis.Options{Addr: *addr, Password: os.Getenv("REDIS_PASSWORD"), DB: 0})
-
 	redisJSONHandler.SetGoRedisClient(redisClient)
-
-	SetObjectToRedisJSON(redisJSONHandler, pr, "pipelineRun")
+	sthingsCli.SetObjectToRedisJSON(redisJSONHandler, pr, pr.Name)
 }
