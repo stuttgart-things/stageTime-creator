@@ -19,12 +19,10 @@ var (
 	pipelineParams     = make(map[string]string)
 	pipelineWorkspaces []server.Workspace
 	revisionRunID      = "7a6481c"
-	prList             = []string{"build-machineshop-image-1", "build-helm"}
-)
+	// prList             = []string{"build-machineshop-image-1", "build-helm"}
+	prs = []server.PipelineRun{}
 
-func main() {
-
-	pr := server.PipelineRun{
+	pr1 = server.PipelineRun{
 		Name:                "build-machineshop-image-1",
 		RevisionRunAuthor:   "patrick.hermann@sva.de",
 		RevisionRunCreation: "pipelinerun.Name",
@@ -42,18 +40,41 @@ func main() {
 		NameSuffix:          "pipelinerun.Name",
 	}
 
-	// PUT PRS ON A LIST LOOP OVER AND USE pr.Name
+	pr2 = server.PipelineRun{
+		Name:                "package-machineshop-chart-1",
+		RevisionRunAuthor:   "patrick.hermann@sva.de",
+		RevisionRunCreation: "pipelinerun.Name",
+		RevisionRunCommitId: "pipelinerun.Name",
+		RevisionRunRepoUrl:  "pipelinerun.Name",
+		RevisionRunRepoName: "pipelinerun.Name",
+		Namespace:           "pipelinerun.Name",
+		PipelineRef:         "pipelinerun.Name",
+		ServiceAccount:      "default",
+		Timeout:             "1h",
+		Params:              pipelineParams,
+		Stage:               "pipelinerun.Name",
+		Workspaces:          pipelineWorkspaces,
+		NamePrefix:          "y",
+		NameSuffix:          "pipelinerun.Name",
+	}
+)
+
+func main() {
+
+	// PUT PRS ON A LIST
+	prs = append(prs, pr1)
+	prs = append(prs, pr2)
 
 	// CREATE REDIS CLIENT
 	redisClient := sthingsCli.CreateRedisClient(redisServer+":"+redisPort, redisPassword)
 
-	// CREATE PIPELINERUNS ON REVISION RUN SET
-	for _, pr := range prList {
-		sthingsCli.AddValueToRedisSet(redisClient, revisionRunID, pr)
-	}
-
-	// PIPELINERUN ON REDIS JSON
+	// PIPELINERUN ON REDIS JSON (LOOP OVER PRS AND USE pr.Name)
 	redisJSONHandler := rejson.NewReJSONHandler()
 	redisJSONHandler.SetGoRedisClient(redisClient)
-	sthingsCli.SetObjectToRedisJSON(redisJSONHandler, pr, pr.Name)
+
+	// CREATE PR REFERENCES (SET) AND OBJECTS (JSON) ON REDIS
+	for _, pr := range prs {
+		sthingsCli.AddValueToRedisSet(redisClient, revisionRunID, pr.Name)
+		sthingsCli.SetObjectToRedisJSON(redisJSONHandler, pr, pr.Name)
+	}
 }
