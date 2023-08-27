@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -16,44 +15,48 @@ import (
 )
 
 var (
-	redisServer   = os.Getenv("REDIS_SERVER")
-	redisPort     = os.Getenv("REDIS_PORT")
-	redisPassword = os.Getenv("REDIS_PASSWORD")
-	redisStream   = os.Getenv("REDIS_STREAM")
-	ctx           = context.Background()
+	redisServer        = os.Getenv("REDIS_SERVER")
+	redisPort          = os.Getenv("REDIS_PORT")
+	redisPassword      = os.Getenv("REDIS_PASSWORD")
+	redisStream        = os.Getenv("REDIS_STREAM")
+	ctx                = context.Background()
+	revisionRunStageID = "7a6481c1-0"
 )
 
-func GetJSONFromRedis(redisJSONHandler *rejson.Handler) {
+func GetJSONFromRedis(pipelineRunName string, redisJSONHandler *rejson.Handler) (pipelineRun server.PipelineRun) {
 
-	studentJSON, err := redis.Bytes(redisJSONHandler.JSONGet("pipelineRun", "."))
+	pipelineRunJSON, err := redis.Bytes(redisJSONHandler.JSONGet(pipelineRunName, "."))
 	if err != nil {
 		log.Fatalf("Failed to JSONGet")
 		return
 	}
 
-	pipelineRun := server.PipelineRun{}
-	err = json.Unmarshal(studentJSON, &pipelineRun)
+	pipelineRun = server.PipelineRun{}
+	err = json.Unmarshal(pipelineRunJSON, &pipelineRun)
 	if err != nil {
-		log.Fatalf("Failed to JSON Unmarshal")
+		log.Fatalf("Failed to JSON Unmarshal ", pipelineRunName)
 		return
 	}
 
-	fmt.Printf("PipelineRun read from redis : %#v\n", pipelineRun)
+	fmt.Printf("PipelineRun read from redis: %#v\n", pipelineRun)
+
+	return
 }
 
 func main() {
 
 	// INITALIZE REDIS
 	redisClient := sthingsCli.CreateRedisClient(redisServer+":"+redisPort, redisPassword)
-
-	prs := sthingsCli.GetValuesFromRedisSet(redisClient, "revisionrun-2432")
-	fmt.Println(prs)
-
 	redisJSONHandler := rejson.NewReJSONHandler()
-	flag.Parse()
-
 	redisJSONHandler.SetGoRedisClient(redisClient)
 
-	GetJSONFromRedis(redisJSONHandler)
+	// GET ALL PIPELINERUS FOR REVISION(ID)
+	prs := sthingsCli.GetValuesFromRedisSet(redisClient, revisionRunStageID)
 
+	for _, pr := range prs {
+
+		fmt.Println(pr)
+		GetJSONFromRedis(pr, redisJSONHandler)
+
+	}
 }

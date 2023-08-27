@@ -18,7 +18,7 @@ var (
 	ctx                = context.Background()
 	pipelineParams     = make(map[string]string)
 	pipelineWorkspaces []server.Workspace
-	revisionRunID      = "7a6481c"
+	revisionRunStageID = "7a6481c1-0"
 	// prList             = []string{"build-machineshop-image-1", "build-helm"}
 	prs = []server.PipelineRun{}
 
@@ -74,7 +74,7 @@ func main() {
 
 	// CREATE PR REFERENCES (SET) AND OBJECTS (JSON) ON REDIS
 	for _, pr := range prs {
-		sthingsCli.AddValueToRedisSet(redisClient, revisionRunID, pr.Name)
+		sthingsCli.AddValueToRedisSet(redisClient, revisionRunStageID, pr.Name)
 		sthingsCli.SetObjectToRedisJSON(redisJSONHandler, pr, pr.Name)
 	}
 }
