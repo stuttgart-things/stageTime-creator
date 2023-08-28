@@ -489,8 +489,8 @@ github.com/stuttgart-things/sthingsCli v0.1.28 h1:RelVy47faRkX0p0KZqCn+fXXJGo4bI
 github.com/stuttgart-things/sthingsCli v0.1.28/go.mod h1:b4NrA8L2SFi+Qtn+1WX4gI1Bu2N/K9OQ4pPQLaaBe2g=
 github.com/stuttgart-things/sthingsK8s v0.1.6 h1:ts4lGgg1+1wIhzNQz4qb28cSZzwmBgDz9aYvILMySNk=
 github.com/stuttgart-things/sthingsK8s v0.1.6/go.mod h1:uk8z78bbeJ8gcYEMDa3M2X8+6wRWT5cBza24LNBCEY0=
-github.com/stuttgart-things/sweatShop-server v0.0.0-20230818150504-8444a41d2a81 h1:JIpFRRkKzC2mH5RpVNjgRdRlblQSszPoI5ZjyN9f610=
-github.com/stuttgart-things/sweatShop-server v0.0.0-20230818150504-8444a41d2a81/go.mod h1:ybU0d0Cm+qFfvJGJFW7QQsaDmiXXRNaoHxiLsbEgWpE=
+github.com/stuttgart-things/sweatShop-server v0.0.0-20230828185514-3f3c7e29265f h1:f4WphldsySmj4Q50COoHHBal5dmi8NtHZfI7qH4hcNk=
+github.com/stuttgart-things/sweatShop-server v0.0.0-20230828185514-3f3c7e29265f/go.mod h1:ybU0d0Cm+qFfvJGJFW7QQsaDmiXXRNaoHxiLsbEgWpE=
 github.com/subosito/gotenv v1.4.2 h1:X1TuBLAMDFbaTAChgCBLu3DU3UPyELpnF2jjJ2cz/S8=
 github.com/subosito/gotenv v1.4.2/go.mod h1:ayKnFf/c6rvx/2iiLrJUk1e6plDbT3edrFNGqEflhK0=
 github.com/tmc/grpc-websocket-proxy v0.0.0-20190109142713-0ad062ec5ee5/go.mod h1:ncp9v5uamzpCO7NfCPTXjqaC+bZgJeR0sMTm6dMHP7U=

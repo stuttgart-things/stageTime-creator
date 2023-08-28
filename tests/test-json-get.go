@@ -1,11 +1,13 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
 	"log"
 	"os"
+	"text/template"
 
 	sthingsCli "github.com/stuttgart-things/sthingsCli"
 
@@ -57,6 +59,24 @@ func main() {
 
 		fmt.Println(pr)
 		GetJSONFromRedis(pr, redisJSONHandler)
+		RenderManifest(pr, server.PipelineRunTemplate)
 
 	}
+}
+
+func RenderManifest(resource interface{}, manifestTemplate string) string {
+
+	var buf bytes.Buffer
+
+	tmpl, err := template.New("manifest").Parse(manifestTemplate)
+	if err != nil {
+		panic(err)
+	}
+
+	err = tmpl.Execute(&buf, resource)
+	if err != nil {
+		panic(err)
+	}
+
+	return buf.String()
 }

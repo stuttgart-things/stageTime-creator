@@ -1,8 +1,11 @@
 package main
 
 import (
+	"bytes"
 	"context"
+	"fmt"
 	"os"
+	"text/template"
 
 	sthingsCli "github.com/stuttgart-things/sthingsCli"
 
@@ -17,6 +20,7 @@ var (
 	redisStream        = os.Getenv("REDIS_STREAM")
 	ctx                = context.Background()
 	pipelineParams     = make(map[string]string)
+	listPipelineParams = make(map[string]string)
 	pipelineWorkspaces []server.Workspace
 	revisionRunStageID = "7a6481c1-0"
 	// prList             = []string{"build-machineshop-image-1", "build-helm"}
@@ -34,10 +38,11 @@ var (
 		ServiceAccount:      "default",
 		Timeout:             "1h",
 		Params:              pipelineParams,
-		Stage:               "pipelinerun.Name",
+		ListParams:          listPipelineParams,
+		Stage:               "1",
+		NamePrefix:          "stageTime",
+		NameSuffix:          "1",
 		Workspaces:          pipelineWorkspaces,
-		NamePrefix:          "y",
-		NameSuffix:          "pipelinerun.Name",
 	}
 
 	pr2 = server.PipelineRun{
@@ -52,18 +57,25 @@ var (
 		ServiceAccount:      "default",
 		Timeout:             "1h",
 		Params:              pipelineParams,
-		Stage:               "pipelinerun.Name",
+		Stage:               "0",
+		NameSuffix:          "0",
+		NamePrefix:          "stageTime",
+		ListParams:          listPipelineParams,
 		Workspaces:          pipelineWorkspaces,
-		NamePrefix:          "y",
-		NameSuffix:          "pipelinerun.Name",
 	}
 )
 
 func main() {
 
+	pipelineParams["image"] = "build-image"
+	pipelineParams["tag"] = "123"
+	listPipelineParams["gude"] = "123"
 	// PUT PRS ON A LIST
 	prs = append(prs, pr1)
 	prs = append(prs, pr2)
+
+	g := RenderManifest2(pr1, server.PipelineRunTemplate)
+	fmt.Println(g)
 
 	// CREATE REDIS CLIENT
 	redisClient := sthingsCli.CreateRedisClient(redisServer+":"+redisPort, redisPassword)
@@ -76,5 +88,23 @@ func main() {
 	for _, pr := range prs {
 		sthingsCli.AddValueToRedisSet(redisClient, revisionRunStageID, pr.Name)
 		sthingsCli.SetObjectToRedisJSON(redisJSONHandler, pr, pr.Name)
+		fmt.Println(pr)
 	}
+}
+
+func RenderManifest2(resource interface{}, manifestTemplate string) string {
+
+	var buf bytes.Buffer
+
+	tmpl, err := template.New("manifest").Parse(manifestTemplate)
+	if err != nil {
+		panic(err)
+	}
+
+	err = tmpl.Execute(&buf, resource)
+	if err != nil {
+		panic(err)
+	}
+
+	return buf.String()
 }

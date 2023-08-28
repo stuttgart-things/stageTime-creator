@@ -11,7 +11,7 @@ require (
 	github.com/stuttgart-things/sthingsBase v0.1.15
 	github.com/stuttgart-things/sthingsCli v0.1.28
 	github.com/stuttgart-things/sthingsK8s v0.1.6
-	github.com/stuttgart-things/sweatShop-server v0.0.0-20230818150504-8444a41d2a81
+	github.com/stuttgart-things/sweatShop-server v0.0.0-20230828185514-3f3c7e29265f
 	go.hein.dev/go-version v0.1.0
 )
 

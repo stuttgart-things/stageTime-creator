@@ -15,14 +15,14 @@ import (
 
 func GetPipelineRunFromRedis(redisJSONHandler *rejson.Handler, stageID string) (pipelineRun server.PipelineRun) {
 
-	studentJSON, err := redis.Bytes(redisJSONHandler.JSONGet(stageID, "."))
+	pipelineRunJSON, err := redis.Bytes(redisJSONHandler.JSONGet(stageID, "."))
 	if err != nil {
 		log.Fatalf("Failed to get pipelinRun from redis")
 		return
 	}
 
 	pipelineRun = server.PipelineRun{}
-	err = json.Unmarshal(studentJSON, &pipelineRun)
+	err = json.Unmarshal(pipelineRunJSON, &pipelineRun)
 	if err != nil {
 		log.Fatalf("Failed to JSON Unmarshal")
 		return
