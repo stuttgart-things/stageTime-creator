@@ -21,29 +21,12 @@ var (
 	ctx                = context.Background()
 	pipelineParams     = make(map[string]string)
 	listPipelineParams = make(map[string]string)
-	pipelineWorkspaces []server.Workspace
 	revisionRunStageID = "7a6481c1-0"
+	pipelineWorkspaces []server.Workspace
+	tektonPvc          = server.Workspace{"ssh-credentials", "secret", "codehub-ssh", "secretName"}
+
 	// prList             = []string{"build-machineshop-image-1", "build-helm"}
 	prs = []server.PipelineRun{}
-
-	pr1 = server.PipelineRun{
-		Name:                "build-machineshop-image-1",
-		RevisionRunAuthor:   "patrick.hermann@sva.de",
-		RevisionRunCreation: "pipelinerun.Name",
-		RevisionRunCommitId: "pipelinerun.Name",
-		RevisionRunRepoUrl:  "pipelinerun.Name",
-		RevisionRunRepoName: "pipelinerun.Name",
-		Namespace:           "pipelinerun.Name",
-		PipelineRef:         "pipelinerun.Name",
-		ServiceAccount:      "default",
-		Timeout:             "1h",
-		Params:              pipelineParams,
-		ListParams:          listPipelineParams,
-		Stage:               "1",
-		NamePrefix:          "stageTime",
-		NameSuffix:          "1",
-		Workspaces:          pipelineWorkspaces,
-	}
 
 	pr2 = server.PipelineRun{
 		Name:                "package-machineshop-chart-1",
@@ -52,8 +35,8 @@ var (
 		RevisionRunCommitId: "pipelinerun.Name",
 		RevisionRunRepoUrl:  "pipelinerun.Name",
 		RevisionRunRepoName: "pipelinerun.Name",
-		Namespace:           "pipelinerun.Name",
-		PipelineRef:         "pipelinerun.Name",
+		Namespace:           "tekton",
+		PipelineRef:         "create-kaniko-image",
 		ServiceAccount:      "default",
 		Timeout:             "1h",
 		Params:              pipelineParams,
@@ -67,12 +50,35 @@ var (
 
 func main() {
 
+	pipelineWorkspaces = append(pipelineWorkspaces, tektonPvc)
+
+	pr1 := server.PipelineRun{
+		Name:                "build-machineshop-image-1",
+		RevisionRunAuthor:   "patrick.hermann@sva.de",
+		RevisionRunCreation: "pipelinerun.Name",
+		RevisionRunCommitId: "pipelinerun.Name",
+		RevisionRunRepoUrl:  "pipelinerun.Name",
+		RevisionRunRepoName: "pipelinerun.Name",
+		Namespace:           "tekton",
+		PipelineRef:         "create-kaniko-image",
+		ServiceAccount:      "default",
+		Timeout:             "1h",
+		Params:              pipelineParams,
+		ListParams:          listPipelineParams,
+		Stage:               "1",
+		NamePrefix:          "stageTime",
+		NameSuffix:          "1",
+		Workspaces:          pipelineWorkspaces,
+	}
+
 	pipelineParams["image"] = "build-image"
 	pipelineParams["tag"] = "123"
 	listPipelineParams["gude"] = "123"
 	// PUT PRS ON A LIST
 	prs = append(prs, pr1)
 	prs = append(prs, pr2)
+
+	fmt.Println(pipelineWorkspaces)
 
 	g := RenderManifest2(pr1, server.PipelineRunTemplate)
 	fmt.Println(g)
