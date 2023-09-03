@@ -21,7 +21,7 @@ var (
 	redisStream   = os.Getenv("REDIS_STREAM")
 	templatePath  = os.Getenv("TEMPLATE_PATH")
 	log           = sthingsBase.StdOutFileLogger(logfilePath, "2006-01-02 15:04:05", 50, 3, 28)
-	logfilePath   = "/tmp/sweatShop-creator.log"
+	logfilePath   = "/tmp/stageTime-creator.log"
 	namespace     = "default" // just a default value
 )
 

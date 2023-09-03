@@ -1,5 +1,5 @@
 apiVersion: v2
-name: sweatshop-creator
+name: stagetime-creator
 description: Helm chart for Kubernetes
 type: application
 version: v0.1.55

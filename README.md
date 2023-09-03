@@ -1,4 +1,4 @@
-# stuttgart-things/sweatShop-creator
+# stuttgart-things/stageTime-creator
 
 dynamic rendering and creation of k8s manifests/resources polled from redis streams/json
 
@@ -18,11 +18,11 @@ dynamic rendering and creation of k8s manifests/resources polled from redis stre
 <details><summary><b>DEPLOYMENT INCLUDING REDIS + TO DIFFERENT NAMESPACE</b></summary>
 
 ```
-helm pull oci://eu.gcr.io/stuttgart-things/sweatshop-creator --version v0.1.44
+helm pull oci://eu.gcr.io/stuttgart-things/stagetime-creator --version v0.1.44
 
 cat <<EOF > creator.yaml
 ---
-namespace: sweatshop-creator
+namespace: stagetime-creator
 
 tektonResources:
   enabled: false
@@ -51,7 +51,7 @@ configmaps:
   creator:
     TEMPLATE_PATH: /templates
     REDIS_STREAM: sweatshop:manifests
-    REDIS_SERVER: sweatshop-creator-redis-headless.sweatshop-creator.svc.cluster.local
+    REDIS_SERVER: stagetime-creator-redis-headless.stagetime-creator.svc.cluster.local
     REDIS_PORT: "6379"
 
 secrets:
@@ -61,20 +61,20 @@ secrets:
       REDIS_PASSWORD: <path:apps/data/sweatshop#redisPassword>
 
 clusterRoleBindings:
-  sweatshop-creator:
+  stagetime-creator:
     subjects:
       - kind: ServiceAccount
-        name: sweatshop-creator
-        namespace: sweatshop-creator
+        name: stagetime-creator
+        namespace: stagetime-creator
 roleBindings:
-  sweatshop-creator:
+  stagetime-creator:
     subjects:
       - kind: ServiceAccount
-        name: sweatshop-creator
-        namespace: sweatshop-creator
+        name: stagetime-creator
+        namespace: stagetime-creator
 EOF
 
-helm upgrade --install sweatshop-creator oci://eu.gcr.io/stuttgart-things/sweatshop-creator --version v0.1.44 --values ankit.yaml -n sweatshop-creator --create-namespace
+helm upgrade --install stagetime-creator oci://eu.gcr.io/stuttgart-things/stagetime-creator --version v0.1.44 --values ankit.yaml -n stagetime-creator --create-namespace
 ```
 
 </details>
@@ -105,7 +105,7 @@ DEL sweatshop:manifests
 
 ```
 export KUBECONFIG=~/.kube/dev11
-export TEMPLATE_PATH=~/projects/go/src/github/sweatShop-creator/tests
+export TEMPLATE_PATH=~/projects/go/src/github/stageTime-creator/tests
 export TEMPLATE_NAME=job-template.yaml
 export REDIS_STREAM=sweatshop:test
 export REDIS_PASSWORD=<SET-ME>

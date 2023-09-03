@@ -1,4 +1,4 @@
-# Default values for sweatShop-creator.
+# Default values for stageTime-creator.
 namespace: sweatshop
 tektonResources:
   enabled: false
@@ -12,10 +12,10 @@ pipelineRuns:
       kind: Pipeline
       ref: package-publish-helmchart
       params:
-        git-repo-url: git@github.com:stuttgart-things/sweatShop-creator.git
+        git-repo-url: git@github.com:stuttgart-things/stageTime-creator.git
         git-revision: main
         gitWorkspaceSubdirectory: /helm/sws-c
-        helm-chart-name: sweatshop-creator
+        helm-chart-name: stagetime-creator
         helm-chart-tag: v0.1.55
         helm-chart-path: helm
         registry: scr.app.4sthings.tiab.ssc.sva.de
@@ -37,7 +37,7 @@ pipelineRuns:
       kind: Pipeline
       ref: build-kaniko-image
       params:
-        gitRepoUrl: git@github.com:stuttgart-things/sweatShop-creator.git
+        gitRepoUrl: git@github.com:stuttgart-things/stageTime-creator.git
         git-revision: main
         context: /kaniko/sws-creator
         gitWorkspaceSubdirectory: /kaniko/sws-creator
@@ -77,7 +77,7 @@ redis:
 #     name: redis
 #     labels:
 #       app.kubernetes.io/component: creator
-#       app.kubernetes.io/created-by: sweatshop-creator
+#       app.kubernetes.io/created-by: stagetime-creator
 #       app.kubernetes.io/part-of: sweatshop
 #     secretKVs:
 #       REDIS_PASSWORD: <path:apps/data/sweatshop#redisPassword>
@@ -102,19 +102,19 @@ configmaps:
           {{`{{ end }}`}}
 
 deployment:
-  name: sweatshop-creator
+  name: stagetime-creator
   volumes:
     manifest-templates:
       volumeKind: configMap
   labels:
-    app: sweatshop-creator
+    app: stagetime-creator
   selectorLabels:
-    app: sweatshop-creator
+    app: stagetime-creator
   allowPrivilegeEscalation: "false"
   privileged: "false"
   runAsNonRoot: "false"
   readOnlyRootFilesystem: "true"
-  serviceAccount: sweatshop-creator
+  serviceAccount: stagetime-creator
   resources:
     requests:
       cpu: 50m
@@ -123,12 +123,12 @@ deployment:
       cpu: 100m
       memory: 128Mi
   containers:
-    sweatshop-creator:
+    stagetime-creator:
       volumeMounts:
         manifest-templates:
           mountPath: /templates/
           volumeKind: emptyDir
-      image: eu.gcr.io/stuttgart-things/sweatshop-creator
+      image: eu.gcr.io/stuttgart-things/stagetime-creator
       replicaCount: 1
       imagePullPolicy: Always
       tag: 23.0731.1856-v0.1.55
@@ -136,13 +136,13 @@ deployment:
         capabilities: {}
 # RBAC
 serviceAccounts:
-  sweatshop-creator:
+  stagetime-creator:
     labels:
-      app: sweatshop-creator
+      app: stagetime-creator
 roles:
-  sweatshop-creator:
+  stagetime-creator:
     labels:
-      app: sweatshop-creator
+      app: stagetime-creator
     rules:
       - apiGroups:
           - ""
@@ -179,21 +179,21 @@ roles:
           - patch
           - delete
 roleBindings:
-  sweatshop-creator:
+  stagetime-creator:
     labels:
-      app: sweatshop-creator
+      app: stagetime-creator
     roleRef:
       kind: Role
-      name: sweatshop-creator
+      name: stagetime-creator
       apiGroup: rbac.authorization.k8s.io
     subjects:
       - kind: ServiceAccount
-        name: sweatshop-creator
+        name: stagetime-creator
         namespace: sweatshop
 clusterRoles:
-  sweatshop-creator:
+  stagetime-creator:
     labels:
-      app: sweatshop-creator
+      app: stagetime-creator
     rules:
       - apiGroups:
           - ""
@@ -225,12 +225,12 @@ clusterRoles:
           - patch
           - delete
 clusterRoleBindings:
-  sweatshop-creator:
+  stagetime-creator:
     roleRef:
       kind: ClusterRole
-      name: sweatshop-creator
+      name: stagetime-creator
       apiGroup: rbac.authorization.k8s.io
     subjects:
       - kind: ServiceAccount
-        name: sweatshop-creator
+        name: stagetime-creator
         namespace: sweatshop

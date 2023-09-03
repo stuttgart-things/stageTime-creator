@@ -1,4 +1,4 @@
-module github.com/stuttgart-things/sweatShop-creator
+module github.com/stuttgart-things/stageTime-creator
 
 go 1.20
 
