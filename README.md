@@ -1,6 +1,6 @@
 # stuttgart-things/sweatShop-creator
 
-dynamic rendering and creation of k8s-resources polled from redis streams
+dynamic rendering and creation of k8s manifests/resources polled from redis streams/json
 
 <details><summary><b>DEPLOYMENT TOOLS</b></summary>
 
