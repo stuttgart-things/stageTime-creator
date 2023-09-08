@@ -93,7 +93,7 @@ func main() {
 	// CREATE PR REFERENCES (SET) AND OBJECTS (JSON) ON REDIS
 	for _, pr := range prs {
 		sthingsCli.AddValueToRedisSet(redisClient, revisionRunStageID, pr.Name)
-		sthingsCli.SetObjectToRedisJSON(redisJSONHandler, pr, pr.Name)
+		sthingsCli.SetRedisJSON(redisJSONHandler, pr, pr.Name)
 		fmt.Println(pr)
 	}
 }

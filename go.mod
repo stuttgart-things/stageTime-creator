@@ -8,8 +8,8 @@ require (
 	github.com/nitishm/go-rejson/v4 v4.1.1-0.20230331060235-d2aa875760e4
 	github.com/redis/go-redis/v9 v9.0.5
 	github.com/stuttgart-things/redisqueue v0.0.0-20230628084515-1d31f7874df7
-	github.com/stuttgart-things/sthingsBase v0.1.15
-	github.com/stuttgart-things/sthingsCli v0.1.28
+	github.com/stuttgart-things/sthingsBase v0.1.23
+	github.com/stuttgart-things/sthingsCli v0.1.36
 	github.com/stuttgart-things/sthingsK8s v0.1.6
 	github.com/stuttgart-things/sweatShop-server v0.0.0-20230828185514-3f3c7e29265f
 	go.hein.dev/go-version v0.1.0
