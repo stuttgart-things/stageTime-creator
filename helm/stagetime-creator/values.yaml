@@ -1,93 +1,22 @@
 # Default values for stageTime-creator.
-namespace: sweatshop
+namespace: stagetime
 tektonResources:
   enabled: false
 pipelineRuns:
   enableRuns: false
   runs:
     buildHelmChart:
-      name: sws-creator-helm
-      addRandomDateToRunName: false
-      namespace: tekton-cd
-      kind: Pipeline
-      ref: package-publish-helmchart
       params:
-        git-repo-url: git@github.com:stuttgart-things/stageTime-creator.git
-        git-revision: main
-        gitWorkspaceSubdirectory: /helm/sws-c
-        helm-chart-name: stagetime-creator
-        helm-chart-tag: v0.1.55
-        helm-chart-path: helm
-        registry: scr.app.4sthings.tiab.ssc.sva.de
-        working-image: "eu.gcr.io/stuttgart-things/sthings-k8s:1.127.2"
-      workspaces:
-        ssh-credentials:
-          workspaceKind: secret
-          workspaceRef: github-ssh
-        source:
-          workspaceKind: persistentVolumeClaim
-          workspaceRef: helm-workspace
-        dockerconfig:
-          workspaceKind: secret
-          workspaceRef: scr-labda-vsphere
+        helm-chart-tag: v0.1.56
     buildKanikoImage:
-      name: sws-creator-kaniko
-      addRandomDateToRunName: false
-      namespace: tekton-cd
-      kind: Pipeline
-      ref: build-kaniko-image
       params:
-        gitRepoUrl: git@github.com:stuttgart-things/stageTime-creator.git
-        git-revision: main
-        context: /kaniko/sws-creator
-        gitWorkspaceSubdirectory: /kaniko/sws-creator
-        image: scr.app.4sthings.tiab.ssc.sva.de/sweatshop/creator
-        tag: 23.0731.1856-v0.1.55
-        registry: eu.gcr.io
-        dockerfile: Dockerfile
-      workspaces:
-        ssh-credentials:
-          workspaceKind: secret
-          workspaceRef: github-ssh
-        shared-workspace:
-          workspaceKind: persistentVolumeClaim
-          workspaceRef: kaniko-workspace
-        dockerconfig:
-          workspaceKind: secret
-          workspaceRef: scr-labda-vsphere
-redis:
-  enabled: false
-  # sentinel:
-  #   enabled: true
-  # master:
-  #   service:
-  #     type: ClusterIP
-  #   persistence:
-  #     enabled: false
-  #     medium: ""
-  # replica:
-  #   replicaCount: 1
-  #   persistence:
-  #     enabled: false
-  #     medium: ""
-  # auth:
-  #   password: just4dev
-# secrets:
-#   redis:
-#     name: redis
-#     labels:
-#       app.kubernetes.io/component: creator
-#       app.kubernetes.io/created-by: stagetime-creator
-#       app.kubernetes.io/part-of: sweatshop
-#     secretKVs:
-#       REDIS_PASSWORD: <path:apps/data/sweatshop#redisPassword>
-
+        tag: 23.0917.1952-v0.1.56
 configmaps:
-  # creator:
-  #   TEMPLATE_PATH: /templates
-  #   REDIS_STREAM: sweatshop:manifests
-  #   REDIS_SERVER: sweatshop-informer-redis-headless.sweatshop.svc.cluster.local
-  #   REDIS_PORT: "6379"
+  creator:
+    TEMPLATE_PATH: /templates
+    REDIS_STREAM: stagetime:manifests
+    REDIS_SERVER: stagetime-informer-redis-headless.stagetime.svc.cluster.local
+    REDIS_PORT: "6379"
   manifest-templates:
     inventory.gotmpl: |
       kind: ConfigMap
@@ -100,7 +29,6 @@ configmaps:
           [{{`{{ $name }}`}}]{{`{{ range $value }}`}}
           {{`{{ . }}`}}{{`{{ end }}`}}
           {{`{{ end }}`}}
-
 deployment:
   name: stagetime-creator
   volumes:
@@ -131,7 +59,7 @@ deployment:
       image: eu.gcr.io/stuttgart-things/stagetime-creator
       replicaCount: 1
       imagePullPolicy: Always
-      tag: 23.0731.1856-v0.1.55
+      tag: 23.0917.1952-v0.1.56
       securityContext:
         capabilities: {}
 # RBAC
@@ -189,7 +117,7 @@ roleBindings:
     subjects:
       - kind: ServiceAccount
         name: stagetime-creator
-        namespace: sweatshop
+        namespace: stagetime
 clusterRoles:
   stagetime-creator:
     labels:
@@ -233,4 +161,4 @@ clusterRoleBindings:
     subjects:
       - kind: ServiceAccount
         name: stagetime-creator
-        namespace: sweatshop
+        namespace: stagetime

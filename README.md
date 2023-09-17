@@ -2,79 +2,32 @@
 
 dynamic rendering and creation of k8s manifests/resources polled from redis streams/json
 
-<details><summary><b>DEPLOYMENT TOOLS</b></summary>
-
-* golang
-* helm
-* nerdctl
-* kubectl
-* redis-cli
-* taskfile
-
-</details>
-
 ## DEPLOY DEV CODE TO CLUSTER
 
-<details><summary><b>DEPLOYMENT INCLUDING REDIS + TO DIFFERENT NAMESPACE</b></summary>
+<details><summary><b>DEPLOYMENT</b></summary>
 
-```
+```bash
 helm pull oci://eu.gcr.io/stuttgart-things/stagetime-creator --version v0.1.44
+```
 
-cat <<EOF > creator.yaml
+```yaml
+cat <<EOF > stageTime-creator.yaml
 ---
-namespace: stagetime-creator
-
-tektonResources:
-  enabled: false
-pipelineRuns:
-  enableRuns: false
-
-redis:
-  enabled: true
-  sentinel:
-    enabled: true
-  master:
-    service:
-      type: ClusterIP
-    persistence:
-      enabled: false
-      medium: ""
-  replica:
-    replicaCount: 1
-    persistence:
-      enabled: false
-      medium: ""
-  auth:
-    password: <path:apps/data/sweatshop#redisPassword>
-
-configmaps:
-  creator:
-    TEMPLATE_PATH: /templates
-    REDIS_STREAM: sweatshop:manifests
-    REDIS_SERVER: stagetime-creator-redis-headless.stagetime-creator.svc.cluster.local
-    REDIS_PORT: "6379"
-
 secrets:
-  redis:
-    name: redis
+  redis-connection:
+    name: redis-connection
+    labels:
+      app: stagetime-server
+    dataType: stringData
     secretKVs:
-      REDIS_PASSWORD: <path:apps/data/sweatshop#redisPassword>
-
-clusterRoleBindings:
-  stagetime-creator:
-    subjects:
-      - kind: ServiceAccount
-        name: stagetime-creator
-        namespace: stagetime-creator
-roleBindings:
-  stagetime-creator:
-    subjects:
-      - kind: ServiceAccount
-        name: stagetime-creator
-        namespace: stagetime-creator
+      REDIS_SERVER: redis-stack-deployment-headless.redis-stack.svc.cluster.local
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: <PASSWORD>
 EOF
+```
 
-helm upgrade --install stagetime-creator oci://eu.gcr.io/stuttgart-things/stagetime-creator --version v0.1.44 --values ankit.yaml -n stagetime-creator --create-namespace
+```bash
+helm upgrade --install stagetime-creator oci://eu.gcr.io/stuttgart-things/stagetime-creator --version v0.1.44 --values stageTime-creator.yaml -n stagetime-creator --create-namespace
 ```
 
 </details>
