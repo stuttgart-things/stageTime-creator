@@ -35,7 +35,7 @@ func main() {
 	redisJSONHandler := rejson.NewReJSONHandler()
 	redisJSONHandler.SetGoRedisClient(redisClient)
 
-	pr := GetPipelineRunYAMLFromRedis("stageTime-server-test2", redisJSONHandler)
+	pr := GetPipelineRunYAMLFromRedis("st-0-execute-ansible-rke2-cluster-1807283c5a", redisJSONHandler)
 	fmt.Println(pr)
 	// GET ALL PIPELINERUS FOR REVISION(ID)
 	// prs := sthingsCli.GetValuesFromRedisSet(redisClient, revisionRunStageID)

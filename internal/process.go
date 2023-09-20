@@ -8,10 +8,15 @@ import (
 	"fmt"
 
 	"github.com/nitishm/go-rejson/v4"
-	server "github.com/stuttgart-things/sweatShop-server/server"
+	sthingsCli "github.com/stuttgart-things/sthingsCli"
 
 	goredis "github.com/redis/go-redis/v9"
 	"github.com/stuttgart-things/redisqueue"
+)
+
+var (
+	redisClient      = goredis.NewClient(&goredis.Options{Addr: redisServer + ":" + redisPort, Password: redisPassword, DB: 0})
+	redisJSONHandler = rejson.NewReJSONHandler()
 )
 
 func processStreams(msg *redisqueue.Message) error {
@@ -20,14 +25,13 @@ func processStreams(msg *redisqueue.Message) error {
 
 	if msg.Values["stage"] != nil {
 		fmt.Println("found stage!")
-
-		redisJSONHandler := rejson.NewReJSONHandler()
-		redisClient := goredis.NewClient(&goredis.Options{Addr: redisServer + ":" + redisPort, Password: redisPassword, DB: 0})
+		fmt.Println(msg.Values)
 		redisJSONHandler.SetGoRedisClient(redisClient)
-		pr := GetPipelineRunFromRedis(redisJSONHandler, "pipelineRun")
 
-		renderedManifest := RenderManifest(pr, server.PipelineRunTemplate)
-		log.Info("rendered template: ", renderedManifest)
+		allManifests := GetManifestFilesFromRedis(msg.Values["stage"].(string), redisJSONHandler)
+		fmt.Println(allManifests)
+
+		ApplyManifest(allManifests[0], "tekton")
 
 	} else if msg.Values["template"] != nil {
 
@@ -65,4 +69,17 @@ func processStreams(msg *redisqueue.Message) error {
 	}
 
 	return nil
+}
+
+func GetManifestFilesFromRedis(stageKey string, redisJSONHandler *rejson.Handler) (allManifests []string) {
+
+	allManifestKeys := sthingsCli.GetValuesFromRedisSet(redisClient, stageKey)
+
+	for _, manifestKey := range allManifestKeys {
+		manifestJSON := sthingsCli.GetRedisJSON(redisJSONHandler, manifestKey)
+		allManifests = append(allManifests, sthingsCli.ConvertJSONToYAML(string(manifestJSON)))
+	}
+
+	return
+
 }
