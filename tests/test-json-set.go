@@ -23,43 +23,18 @@ var (
 	listPipelineParams = make(map[string][]string)
 	revisionRunStageID = "7a6481c1-0"
 	pipelineWorkspaces []server.Workspace
-	tektonPvc          = server.Workspace{"ssh-credentials", "secret", "codehub-ssh", "secretName"}
 
+	tektonPvc = server.Workspace{"ssh-credentials", "secret", "codehub-ssh", "secretName"}
+	workspace = server.Workspace{"source", "secret", "acr", "secretName"}
 	// prList             = []string{"build-machineshop-image-1", "build-helm"}
 	prs []string
-
-	pr2 = server.PipelineRun{
-		Name:                "package-machineshop-chart-1",
-		RevisionRunAuthor:   "patrick.hermann@sva.de",
-		RevisionRunCreation: "pipelinerun.Name",
-		RevisionRunCommitId: "pipelinerun.Name",
-		RevisionRunRepoUrl:  "pipelinerun.Name",
-		RevisionRunRepoName: "pipelinerun.Name",
-		Namespace:           "tekton",
-		PipelineRef:         "create-kaniko-image",
-		ServiceAccount:      "default",
-		Timeout:             "1h",
-		Params:              pipelineParams,
-		Stage:               "0",
-		NameSuffix:          "0",
-		NamePrefix:          "stageTime",
-		ListParams:          listPipelineParams,
-		Workspaces:          pipelineWorkspaces,
-	}
 )
 
 func main() {
 
 	pipelineWorkspaces = append(pipelineWorkspaces, tektonPvc)
 
-	listPipelineParams := make(map[string][]string)
-	pipelineParams := make(map[string]string)
-
-	var pipelineWorkspaces []server.Workspace
-
-	workspace := server.Workspace{"source", "secret", "acr", "secretName"}
-
-	pipelineWorkspaces = append(pipelineWorkspaces, workspace)
+	var pipelineWorkspaces = append(pipelineWorkspaces, workspace)
 	pr1 := server.PipelineRun{
 		Name:                "build-machineshop-image-1",
 		RevisionRunAuthor:   "patrick.hermann@sva.de",
@@ -79,17 +54,17 @@ func main() {
 		Workspaces:          pipelineWorkspaces,
 	}
 
+	// SET PARAMETERS
 	pipelineParams["image"] = "build-image"
 	pipelineParams["tag"] = "123"
 	listPipelineParams["gude"] = []string{"123"}
 
-	fmt.Println(pipelineWorkspaces)
-
-	g := RenderManifest2(pr1, server.PipelineRunTemplate)
-	fmt.Println(g)
+	// TEST RENDER
+	renderedPr := RenderPipelineRun(pr1, server.PipelineRunTemplate)
+	fmt.Println(renderedPr)
 
 	// PUT PRS ON A LIST
-	prs = append(prs, g)
+	prs = append(prs, renderedPr)
 
 	// CREATE REDIS CLIENT
 	redisClient := sthingsCli.CreateRedisClient(redisServer+":"+redisPort, redisPassword)
@@ -104,9 +79,19 @@ func main() {
 		sthingsCli.SetRedisJSON(redisJSONHandler, sthingsCli.ConvertYAMLToJSON(pr), "hello")
 		fmt.Println(pr)
 	}
+
+	// CREATE DATA ON REDIS STREAMS
+	ValuesStage := map[string]interface{}{
+		"stage":         "stage0",
+		"kind":          "pipelinRun",
+		"revisionRunId": "7a6481c1-0",
+	}
+
+	sthingsCli.EnqueueDataInRedisStreams(redisServer+":"+redisPort, redisPassword, redisStream, ValuesStage)
+
 }
 
-func RenderManifest2(resource interface{}, manifestTemplate string) string {
+func RenderPipelineRun(resource interface{}, manifestTemplate string) string {
 
 	var buf bytes.Buffer
 
@@ -122,53 +107,3 @@ func RenderManifest2(resource interface{}, manifestTemplate string) string {
 
 	return buf.String()
 }
-
-// apiVersion: tekton.dev/v1beta1
-// kind: PipelineRun
-// metadata:
-//   labels:
-//     argocd.argoproj.io/instance: tekton-runs
-//     stagetime/author: patrick
-//     stagetime/commit: 3c5ac44c6fec00989c7e27b36630a82cdfd26e3b0
-//     stagetime/repo: stuttgart-things
-//     stagetime/stage: "0"
-//     tekton.dev/pipeline: build-kaniko-image
-//   name: st-0-build-kaniko-image-0940483c5a
-//   namespace: stagetime-tekton
-// spec:
-//   params:
-//   - name: context
-//     value: /kaniko/decksman
-//   - name: dockerfile
-//     value: ./Dockerfile
-//   - name: git-revision
-//     value: main
-//   - name: gitRepoUrl
-//     value: git@codehub.sva.de:Lab/stuttgart-things/dev/decksman.git
-//   - name: gitWorkspaceSubdirectory
-//     value: /kaniko/decksman
-//   - name: image
-//     value: scr.tiab.labda.sva.de/decksman/decksman
-//   - name: registry
-//     value: scr.tiab.labda.sva.de
-//   - name: tag
-//     value: 0.8.66
-//   - name: git-revision
-//     value:
-//     - master
-//     - hello
-//     - whatever
-//   pipelineRef:
-//     name: build-kaniko-image
-//   serviceAccountName: default
-//   timeout: 1h
-//   workspaces:
-//   - name: ssh-credentials
-//     secret:
-//       secretName: codehub-ssh
-//   - name: shared-workspace
-//     persistentVolumeClaim:
-//       claimName: sthings-kaniko-workspace
-//   - name: dockerconfig
-//     secret:
-//       secretName: scr-labda
