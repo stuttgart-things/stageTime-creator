@@ -17,7 +17,7 @@ var (
 	tests = []test{
 		// {testValues: valuesConfigMap, testKey: "ConfigMap-ansible-inventory"},
 		// {testValues: ValuesJob, testKey: "Job-2023-07-02-configure-rke-node-19mv"},
-		{testValues: ValuesPlaybook, testKey: "tbd"},
+		// {testValues: ValuesPlaybook, testKey: "tbd"},
 		{testValues: ValuesStage, testKey: "tbd"},
 	}
 
@@ -38,7 +38,9 @@ var (
 	}
 
 	ValuesStage = map[string]interface{}{
-		"stage": "stage0",
+		"stage":         "stage0",
+		"kind":          "pipelinRun",
+		"revisionRunId": "7a6481c1-0",
 	}
 
 	// ValuesJob = map[string]interface{}{

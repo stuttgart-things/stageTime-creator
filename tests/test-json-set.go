@@ -10,7 +10,7 @@ import (
 	sthingsCli "github.com/stuttgart-things/sthingsCli"
 
 	rejson "github.com/nitishm/go-rejson/v4"
-	server "github.com/stuttgart-things/sweatShop-server/server"
+	server "github.com/stuttgart-things/stageTime-server/server"
 )
 
 var (
@@ -20,13 +20,13 @@ var (
 	redisStream        = os.Getenv("REDIS_STREAM")
 	ctx                = context.Background()
 	pipelineParams     = make(map[string]string)
-	listPipelineParams = make(map[string]string)
+	listPipelineParams = make(map[string][]string)
 	revisionRunStageID = "7a6481c1-0"
 	pipelineWorkspaces []server.Workspace
 	tektonPvc          = server.Workspace{"ssh-credentials", "secret", "codehub-ssh", "secretName"}
 
 	// prList             = []string{"build-machineshop-image-1", "build-helm"}
-	prs = []server.PipelineRun{}
+	prs []string
 
 	pr2 = server.PipelineRun{
 		Name:                "package-machineshop-chart-1",
@@ -52,6 +52,14 @@ func main() {
 
 	pipelineWorkspaces = append(pipelineWorkspaces, tektonPvc)
 
+	listPipelineParams := make(map[string][]string)
+	pipelineParams := make(map[string]string)
+
+	var pipelineWorkspaces []server.Workspace
+
+	workspace := server.Workspace{"source", "secret", "acr", "secretName"}
+
+	pipelineWorkspaces = append(pipelineWorkspaces, workspace)
 	pr1 := server.PipelineRun{
 		Name:                "build-machineshop-image-1",
 		RevisionRunAuthor:   "patrick.hermann@sva.de",
@@ -73,15 +81,15 @@ func main() {
 
 	pipelineParams["image"] = "build-image"
 	pipelineParams["tag"] = "123"
-	listPipelineParams["gude"] = "123"
-	// PUT PRS ON A LIST
-	prs = append(prs, pr1)
-	prs = append(prs, pr2)
+	listPipelineParams["gude"] = []string{"123"}
 
 	fmt.Println(pipelineWorkspaces)
 
 	g := RenderManifest2(pr1, server.PipelineRunTemplate)
 	fmt.Println(g)
+
+	// PUT PRS ON A LIST
+	prs = append(prs, g)
 
 	// CREATE REDIS CLIENT
 	redisClient := sthingsCli.CreateRedisClient(redisServer+":"+redisPort, redisPassword)
@@ -92,8 +100,8 @@ func main() {
 
 	// CREATE PR REFERENCES (SET) AND OBJECTS (JSON) ON REDIS
 	for _, pr := range prs {
-		sthingsCli.AddValueToRedisSet(redisClient, revisionRunStageID, pr.Name)
-		sthingsCli.SetRedisJSON(redisJSONHandler, pr, pr.Name)
+		sthingsCli.AddValueToRedisSet(redisClient, revisionRunStageID, "hello")
+		sthingsCli.SetRedisJSON(redisJSONHandler, sthingsCli.ConvertYAMLToJSON(pr), "hello")
 		fmt.Println(pr)
 	}
 }
@@ -114,3 +122,53 @@ func RenderManifest2(resource interface{}, manifestTemplate string) string {
 
 	return buf.String()
 }
+
+// apiVersion: tekton.dev/v1beta1
+// kind: PipelineRun
+// metadata:
+//   labels:
+//     argocd.argoproj.io/instance: tekton-runs
+//     stagetime/author: patrick
+//     stagetime/commit: 3c5ac44c6fec00989c7e27b36630a82cdfd26e3b0
+//     stagetime/repo: stuttgart-things
+//     stagetime/stage: "0"
+//     tekton.dev/pipeline: build-kaniko-image
+//   name: st-0-build-kaniko-image-0940483c5a
+//   namespace: stagetime-tekton
+// spec:
+//   params:
+//   - name: context
+//     value: /kaniko/decksman
+//   - name: dockerfile
+//     value: ./Dockerfile
+//   - name: git-revision
+//     value: main
+//   - name: gitRepoUrl
+//     value: git@codehub.sva.de:Lab/stuttgart-things/dev/decksman.git
+//   - name: gitWorkspaceSubdirectory
+//     value: /kaniko/decksman
+//   - name: image
+//     value: scr.tiab.labda.sva.de/decksman/decksman
+//   - name: registry
+//     value: scr.tiab.labda.sva.de
+//   - name: tag
+//     value: 0.8.66
+//   - name: git-revision
+//     value:
+//     - master
+//     - hello
+//     - whatever
+//   pipelineRef:
+//     name: build-kaniko-image
+//   serviceAccountName: default
+//   timeout: 1h
+//   workspaces:
+//   - name: ssh-credentials
+//     secret:
+//       secretName: codehub-ssh
+//   - name: shared-workspace
+//     persistentVolumeClaim:
+//       claimName: sthings-kaniko-workspace
+//   - name: dockerconfig
+//     secret:
+//       secretName: scr-labda

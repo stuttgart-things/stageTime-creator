@@ -28,10 +28,13 @@ func processStreams(msg *redisqueue.Message) error {
 		fmt.Println(msg.Values)
 		redisJSONHandler.SetGoRedisClient(redisClient)
 
-		allManifests := GetManifestFilesFromRedis(msg.Values["stage"].(string), redisJSONHandler)
+		revisionRunID := fmt.Sprintf("%v", msg.Values["revisionRunId"])
+		fmt.Println(revisionRunID)
+		allManifests := GetManifestFilesFromRedis(revisionRunID, redisJSONHandler)
 		fmt.Println(allManifests)
+		// fmt.Println("PR0" + allManifests[0])
 
-		ApplyManifest(allManifests[0], "tekton")
+		// ApplyManifest(allManifests[0], "tekton")
 
 	} else if msg.Values["template"] != nil {
 
@@ -74,12 +77,27 @@ func processStreams(msg *redisqueue.Message) error {
 func GetManifestFilesFromRedis(stageKey string, redisJSONHandler *rejson.Handler) (allManifests []string) {
 
 	allManifestKeys := sthingsCli.GetValuesFromRedisSet(redisClient, stageKey)
+	fmt.Println("ALL KEYS", allManifestKeys)
 
 	for _, manifestKey := range allManifestKeys {
+
+		// pr := GetPipelineRunYAMLFromRedis(manifestKey, redisJSONHandler)
+		// fmt.Println(pr)
+
 		manifestJSON := sthingsCli.GetRedisJSON(redisJSONHandler, manifestKey)
+		// fmt.Println(sthingsCli.ConvertJSONToYAML(string(manifestJSON)))
 		allManifests = append(allManifests, sthingsCli.ConvertJSONToYAML(string(manifestJSON)))
 	}
 
 	return
+
+}
+
+func GetPipelineRunYAMLFromRedis(pipelineRunName string, redisJSONHandler *rejson.Handler) (pipelineRunYAML string) {
+
+	pipelineRunJSON := sthingsCli.GetRedisJSON(redisJSONHandler, pipelineRunName)
+	pipelineRunYAML = sthingsCli.ConvertJSONToYAML(string(pipelineRunJSON))
+
+	return pipelineRunYAML
 
 }
