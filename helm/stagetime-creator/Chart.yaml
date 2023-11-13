@@ -14,6 +14,6 @@ dependencies:
     condition: redis.enabled
   - name: tekton-resources
     alias: pipelineRuns
-    version: v0.47.35
+    version: v0.47.36
     repository: oci://eu.gcr.io/stuttgart-things
     condition: pipelineRuns.enabled
