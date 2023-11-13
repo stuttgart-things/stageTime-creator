@@ -15,17 +15,22 @@ import (
 )
 
 var (
-	redisServer        = os.Getenv("REDIS_SERVER")
-	redisPort          = os.Getenv("REDIS_PORT")
-	redisPassword      = os.Getenv("REDIS_PASSWORD")
-	redisStream        = os.Getenv("REDIS_STREAM")
-	ctx                = context.Background()
-	pipelineParams     = make(map[string]string)
+	redisServer    = os.Getenv("REDIS_SERVER")
+	redisPort      = os.Getenv("REDIS_PORT")
+	redisPassword  = os.Getenv("REDIS_PASSWORD")
+	redisStream    = os.Getenv("REDIS_STREAM")
+	ctx            = context.Background()
+	pipelineParams = make(map[string]string)
+	resolverParams = make(map[string]string)
+
 	listPipelineParams = make(map[string][]string)
 	revisionRunStageID = "385e2f8-0"
-	pipelineWorkspaces []server.Workspace
+	// pipelineWorkspaces   []server.Workspace
+	volumeClaimTemplates []server.VolumeClaimTemplate
 
-	tektonPvc = server.Workspace{"ssh-credentials", "secret", "codehub-ssh", "secretName"}
+	volumeClaimTemplate = server.VolumeClaimTemplate{"shared-workspace", "openebs-hostpath", "ReadWriteOnce", "250Mi"}
+
+	tektonPvc = server.Workspace{"volumeClaimTemplate", "volumeClaimTemplate", "codehub-ssh", "secretName"}
 	workspace = server.Workspace{"source", "secret", "acr", "secretName"}
 	// prList             = []string{"build-machineshop-image-1", "build-helm"}
 	prs []string
@@ -33,32 +38,53 @@ var (
 
 func main() {
 
-	pipelineWorkspaces = append(pipelineWorkspaces, tektonPvc)
+	// GET REVISION RUN ID
+	if os.Getenv("REVSIONRUN_STAGE_ID") != "" {
+		revisionRunStageID = os.Getenv("REVSIONRUN_STAGE_ID")
+	}
 
-	var pipelineWorkspaces = append(pipelineWorkspaces, workspace)
+	// pipelineWorkspaces = append(pipelineWorkspaces, tektonPvc)
+	volumeClaimTemplates = append(volumeClaimTemplates, volumeClaimTemplate)
+
+	// var pipelineWorkspaces = append(pipelineWorkspaces, workspace)
 	pr1 := server.PipelineRun{
-		Name:                "build-machineshop-image-0",
-		RevisionRunAuthor:   "patrick.hermann@sva.de",
+		Name:                "create-pdns-entry-pve-cd43",
+		RevisionRunAuthor:   "patrick.hermann",
 		RevisionRunCreation: "23.1113.1007",
 		RevisionRunCommitId: revisionRunStageID,
 		RevisionRunRepoUrl:  "https://github.com/stuttgart-things/stuttgart-things.git",
 		RevisionRunRepoName: "stuttgart-things",
-		Namespace:           "tekton",
-		PipelineRef:         "create-kaniko-image",
-		ServiceAccount:      "default",
-		Timeout:             "1h",
-		Params:              pipelineParams,
-		ListParams:          listPipelineParams,
-		Stage:               "0",
-		NamePrefix:          "stageTime",
-		NameSuffix:          "0",
-		Workspaces:          pipelineWorkspaces,
+		Namespace:           "tektoncd",
+		// PipelineRef:         "create-kaniko-image",
+		TimeoutPipeline: "0h12m0s",
+		Params:          pipelineParams,
+		ListParams:      listPipelineParams,
+		ResolverParams:  resolverParams,
+		Stage:           "0",
+		NamePrefix:      "stagetime",
+		NameSuffix:      "0",
+		// Workspaces:           pipelineWorkspaces,
+		VolumeClaimTemplates: volumeClaimTemplates,
 	}
 
-	// SET PARAMETERS
-	pipelineParams["image"] = "build-image"
-	pipelineParams["tag"] = "123"
-	listPipelineParams["gude"] = []string{"123"}
+	resolverParams["url"] = "https://github.com/stuttgart-things/stuttgart-things.git"
+	resolverParams["revision"] = "main"
+	resolverParams["pathInRepo"] = "stageTime/pipelines/execute-ansible-playbooks.yaml"
+
+	// SET KEY/VALUE PARAMETERS
+	pipelineParams["ansibleWorkingImage"] = "eu.gcr.io/stuttgart-things/sthings-ansible:8.5.0"
+	pipelineParams["createInventory"] = "false"
+	pipelineParams["gitRepoUrl"] = "https://github.com/stuttgart-things/stuttgart-things.git"
+	pipelineParams["gitRevision"] = "main"
+	pipelineParams["gitWorkspaceSubdirectory"] = "/ansible/pdns"
+	pipelineParams["vaultSecretName"] = "vault"
+	pipelineParams["installExtraRoles"] = "true"
+
+	// SET LIST PARAMETERS
+	listPipelineParams["ansibleExtraRoles"] = []string{"https://github.com/stuttgart-things/install-configure-powerdns.git"}
+	listPipelineParams["ansiblePlaybooks"] = []string{"ansible/playbooks/pdns-ingress-entry.yaml"}
+	listPipelineParams["ansibleVarsFile"] = []string{"pdns_url+-https://pdns-pve.labul.sva.de:8443", "entry_zone+-sthings-pve.labul.sva.de.", "ip_address+-10.31.101.10", "hostname+-cd43"}
+	listPipelineParams["ansibleVarsInventory"] = []string{"localhost"}
 
 	// TEST RENDER
 	renderedPr := RenderPipelineRun(pr1, server.PipelineRunTemplate)
@@ -76,6 +102,7 @@ func main() {
 	// CREATE PR REFERENCES (SET) AND OBJECTS (JSON) ON REDIS
 	for _, pr := range prs {
 		resourceName, _ := sthingsBase.GetRegexSubMatch(pr, `name: "(.*?)"`)
+		fmt.Println(resourceName)
 		sthingsCli.AddValueToRedisSet(redisClient, revisionRunStageID, resourceName)
 		sthingsCli.SetRedisJSON(redisJSONHandler, sthingsCli.ConvertYAMLToJSON(pr), resourceName)
 		fmt.Println(pr)

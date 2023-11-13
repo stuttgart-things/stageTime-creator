@@ -8,11 +8,10 @@ require (
 	github.com/nitishm/go-rejson/v4 v4.1.1-0.20230331060235-d2aa875760e4
 	github.com/redis/go-redis/v9 v9.0.5
 	github.com/stuttgart-things/redisqueue v0.0.0-20230628084515-1d31f7874df7
-	github.com/stuttgart-things/stageTime-server v0.0.0-20231109140716-c195f12436d9
+	github.com/stuttgart-things/stageTime-server v0.0.0-20231113180141-f3dc0179f715
 	github.com/stuttgart-things/sthingsBase v0.1.30
-	github.com/stuttgart-things/sthingsCli v0.1.39
+	github.com/stuttgart-things/sthingsCli v0.1.44
 	github.com/stuttgart-things/sthingsK8s v0.1.6
-	github.com/stuttgart-things/sweatShop-server v0.0.0-20230828185514-3f3c7e29265f
 	go.hein.dev/go-version v0.1.0
 )
 
@@ -94,7 +93,6 @@ require (
 	github.com/pjbgf/sha1cd v0.3.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
-	github.com/robinjoseph08/redisqueue/v2 v2.1.0 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/ryanuber/go-glob v1.0.0 // indirect
 	github.com/schollz/progressbar/v3 v3.13.1 // indirect

@@ -10,7 +10,7 @@ import (
 
 	"github.com/gomodule/redigo/redis"
 	"github.com/nitishm/go-rejson/v4"
-	server "github.com/stuttgart-things/sweatShop-server/server"
+	server "github.com/stuttgart-things/stageTime-server/server"
 )
 
 func GetPipelineRunFromRedis(redisJSONHandler *rejson.Handler, stageID string) (pipelineRun server.PipelineRun) {

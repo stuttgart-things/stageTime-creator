@@ -21,7 +21,7 @@ var (
 
 func main() {
 
-	// Check env vor given server port
+	// GET REVISION RUN ID
 	if os.Getenv("REVSIONRUN_STAGE_ID") != "" {
 		revisionRunStageID = os.Getenv("REVSIONRUN_STAGE_ID")
 	}
@@ -37,15 +37,11 @@ func main() {
 
 	// GET ALL PIPELINERUN MANIFESTS FROM REDIS SET
 	for _, prName := range allPipelineRunNamesFromStage {
+		fmt.Println(prName)
+
 		manifestJSON := sthingsCli.GetRedisJSON(redisJSONHandler, prName)
+		fmt.Println(string(manifestJSON))
 		manifestYAML := sthingsCli.ConvertJSONToYAML(string(manifestJSON))
 		fmt.Println("RENDERED YAML FOR PR " + prName + ":\n" + manifestYAML)
 	}
-}
-
-func GetPipelineRunYAMLFromRedis(pipelineRunName string, redisJSONHandler *rejson.Handler) (pipelineRunYAML string) {
-	pipelineRunJSON := sthingsCli.GetRedisJSON(redisJSONHandler, pipelineRunName)
-	fmt.Println(string(pipelineRunJSON))
-	pipelineRunYAML = sthingsCli.ConvertJSONToYAML(string(pipelineRunJSON))
-	return pipelineRunYAML
 }
