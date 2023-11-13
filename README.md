@@ -2,6 +2,53 @@
 
 dynamic rendering and creation of k8s manifests/resources polled from redis streams/json
 
+## DEV-TASKS
+
+```bash
+task --list: Available tasks for this project:
+* build:               Build the app
+* build-image:         Build image
+* git-push:            Commit & push the module
+* lint:                Lint code
+* package:             Update Chart.yaml and package archive
+* push:                Push to registry
+* release:             Build amd release to github w/ goreleaser
+* run:                 Run app
+* run-container:       Run container
+* run-test:            Run test-producer
+* tag:                 Commit, push & tag the module
+* test:                Test code
+```
+
+## HELMFILE-DEPLOYMENTS
+
+<details><summary>SET VAULT CONNECTION</summary>
+
+```bash
+export VAULT_ADDR=https://${VAULT_FQDN}}
+export VAULT_NAMESPACE=root
+
+# APPROLE AUTH
+export VAULT_AUTH_METHOD=approle
+export VAULT_ROLE_ID=${VAULT_ROLE_ID}
+export VAULT_SECRET_ID=${VAULT_SECRET_ID}
+
+# TOKEN AUTH
+export VAULT_AUTH_METHOD=token #default
+export VAULT_TOKEN=${VAULT_TOKEN}
+```
+
+</details>
+
+<details><summary>RENDER/APPLY</summary>
+
+```bash
+helmfile template --environment labul-pve-dev
+helmfile sync --environment labul-pve-dev
+```
+
+</details>
+
 ## DEPLOY DEV CODE TO CLUSTER
 
 <details><summary><b>DEPLOYMENT</b></summary>
