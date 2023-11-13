@@ -7,6 +7,7 @@ import (
 	"os"
 	"text/template"
 
+	sthingsBase "github.com/stuttgart-things/sthingsBase"
 	sthingsCli "github.com/stuttgart-things/sthingsCli"
 
 	rejson "github.com/nitishm/go-rejson/v4"
@@ -36,21 +37,21 @@ func main() {
 
 	var pipelineWorkspaces = append(pipelineWorkspaces, workspace)
 	pr1 := server.PipelineRun{
-		Name:                "build-machineshop-image-1",
+		Name:                "build-machineshop-image-0",
 		RevisionRunAuthor:   "patrick.hermann@sva.de",
-		RevisionRunCreation: "pipelinerun.Name",
-		RevisionRunCommitId: "pipelinerun.Name",
-		RevisionRunRepoUrl:  "pipelinerun.Name",
-		RevisionRunRepoName: "pipelinerun.Name",
+		RevisionRunCreation: "23.1113.1007",
+		RevisionRunCommitId: "385e2f8",
+		RevisionRunRepoUrl:  "https://github.com/stuttgart-things/stuttgart-things.git",
+		RevisionRunRepoName: "stuttgart-things",
 		Namespace:           "tekton",
 		PipelineRef:         "create-kaniko-image",
 		ServiceAccount:      "default",
 		Timeout:             "1h",
 		Params:              pipelineParams,
 		ListParams:          listPipelineParams,
-		Stage:               "1",
+		Stage:               "0",
 		NamePrefix:          "stageTime",
-		NameSuffix:          "1",
+		NameSuffix:          "0",
 		Workspaces:          pipelineWorkspaces,
 	}
 
@@ -61,7 +62,6 @@ func main() {
 
 	// TEST RENDER
 	renderedPr := RenderPipelineRun(pr1, server.PipelineRunTemplate)
-	fmt.Println(renderedPr)
 
 	// PUT PRS ON A LIST
 	prs = append(prs, renderedPr)
@@ -75,9 +75,12 @@ func main() {
 
 	// CREATE PR REFERENCES (SET) AND OBJECTS (JSON) ON REDIS
 	for _, pr := range prs {
-		sthingsCli.AddValueToRedisSet(redisClient, revisionRunStageID, "hello")
-		sthingsCli.SetRedisJSON(redisJSONHandler, sthingsCli.ConvertYAMLToJSON(pr), "hello")
+		resourceName, _ := sthingsBase.GetRegexSubMatch(pr, `name: "(.*?)"`)
+		sthingsCli.AddValueToRedisSet(redisClient, revisionRunStageID, resourceName)
+		sthingsCli.SetRedisJSON(redisJSONHandler, sthingsCli.ConvertYAMLToJSON(pr), resourceName)
 		fmt.Println(pr)
+		fmt.Println("STORED PR " + resourceName + " ON SET " + revisionRunStageID)
+		fmt.Println("STORED PR " + resourceName + " AS JSON ON " + resourceName)
 	}
 
 	// CREATE DATA ON REDIS STREAMS
@@ -88,7 +91,7 @@ func main() {
 	}
 
 	sthingsCli.EnqueueDataInRedisStreams(redisServer+":"+redisPort, redisPassword, redisStream, ValuesStage)
-
+	fmt.Println("STORED PR DATA ON STREAM", redisStream)
 }
 
 func RenderPipelineRun(resource interface{}, manifestTemplate string) string {
