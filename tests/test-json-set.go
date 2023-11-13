@@ -22,7 +22,7 @@ var (
 	ctx                = context.Background()
 	pipelineParams     = make(map[string]string)
 	listPipelineParams = make(map[string][]string)
-	revisionRunStageID = "7a6481c1-0"
+	revisionRunStageID = "385e2f8-0"
 	pipelineWorkspaces []server.Workspace
 
 	tektonPvc = server.Workspace{"ssh-credentials", "secret", "codehub-ssh", "secretName"}
@@ -40,7 +40,7 @@ func main() {
 		Name:                "build-machineshop-image-0",
 		RevisionRunAuthor:   "patrick.hermann@sva.de",
 		RevisionRunCreation: "23.1113.1007",
-		RevisionRunCommitId: "385e2f8",
+		RevisionRunCommitId: revisionRunStageID,
 		RevisionRunRepoUrl:  "https://github.com/stuttgart-things/stuttgart-things.git",
 		RevisionRunRepoName: "stuttgart-things",
 		Namespace:           "tekton",
@@ -87,7 +87,7 @@ func main() {
 	ValuesStage := map[string]interface{}{
 		"stage":         "stage0",
 		"kind":          "pipelinRun",
-		"revisionRunId": "7a6481c1-0",
+		"revisionRunId": revisionRunStageID,
 	}
 
 	sthingsCli.EnqueueDataInRedisStreams(redisServer+":"+redisPort, redisPassword, redisStream, ValuesStage)
