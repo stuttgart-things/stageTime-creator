@@ -7,10 +7,10 @@ pipelineRuns:
   runs:
     buildHelmChart:
       params:
-        helm-chart-tag: v0.1.56
+        helm-chart-tag: v0.1.59
     buildKanikoImage:
       params:
-        tag: 23.0917.1952-v0.1.56
+        tag: 23.1113.1939-v0.1.59
 configmaps:
   creator:
     TEMPLATE_PATH: /templates
@@ -59,7 +59,7 @@ deployment:
       image: eu.gcr.io/stuttgart-things/stagetime-creator
       replicaCount: 1
       imagePullPolicy: Always
-      tag: 23.0917.1952-v0.1.56
+      tag: 23.1113.1939-v0.1.59
       securityContext:
         capabilities: {}
 # RBAC

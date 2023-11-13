@@ -1,12 +1,12 @@
 dependencies:
 - name: sthings-helm-toolkit
   repository: oci://eu.gcr.io/stuttgart-things
-  version: 2.4.42
+  version: 2.4.58
 - name: redis
   repository: https://charts.bitnami.com/bitnami
   version: 17.11.6
 - name: tekton-resources
   repository: oci://eu.gcr.io/stuttgart-things
-  version: v0.47.11
-digest: sha256:f7054bb719c620d58128dd24a4d9cc0d203ea94e544d56c9c5ff028652dacca7
-generated: "2023-09-17T20:01:27.064435327Z"
+  version: v0.47.36
+digest: sha256:e885e87e6ccdb28ef226d461ab3e0efe17ac70d05559057a275658ed8da2a2b4
+generated: "2023-11-13T19:39:58.008277046Z"
