@@ -5,6 +5,9 @@ import (
 	"fmt"
 	"os"
 
+	sthingsBase "github.com/stuttgart-things/sthingsBase"
+	sthingsK8s "github.com/stuttgart-things/sthingsK8s"
+
 	sthingsCli "github.com/stuttgart-things/sthingsCli"
 
 	"github.com/nitishm/go-rejson/v4"
@@ -40,8 +43,18 @@ func main() {
 		fmt.Println(prName)
 
 		manifestJSON := sthingsCli.GetRedisJSON(redisJSONHandler, prName)
-		fmt.Println(string(manifestJSON))
 		manifestYAML := sthingsCli.ConvertJSONToYAML(string(manifestJSON))
 		fmt.Println("RENDERED YAML FOR PR " + prName + ":\n" + manifestYAML)
+
+		// CREATE PIPELINERUN ON THE CLUSTER
+		clusterConfig, _ := sthingsK8s.GetKubeConfig(os.Getenv("KUBECONFIG"))
+
+		kind, _ := sthingsBase.GetRegexSubMatch(manifestYAML, "kind:(.*)")
+		resourceName, _ := sthingsBase.GetRegexSubMatch(manifestYAML, "name:(.*)")
+		namespace, _ := sthingsBase.GetRegexSubMatch(manifestYAML, "namespace:(.*)")
+
+		fmt.Println("APPLING " + kind + ": " + resourceName + "..")
+		sthingsK8s.CreateDynamicResourcesFromTemplate(clusterConfig, []byte(manifestYAML), namespace)
+
 	}
 }

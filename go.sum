@@ -476,8 +476,8 @@ github.com/stuttgart-things/stageTime-server v0.0.0-20231113180141-f3dc0179f715 
 github.com/stuttgart-things/stageTime-server v0.0.0-20231113180141-f3dc0179f715/go.mod h1:BLfBWGK1DaM5r/ZnxVj6/m8Hh+t1Z8NCW9cggHv9Qp4=
 github.com/stuttgart-things/sthingsBase v0.1.30 h1:VUZxJIDGG/FnOZGDOH+VnjVfatK4nntGHBv+W3YyZUE=
 github.com/stuttgart-things/sthingsBase v0.1.30/go.mod h1:W5FmSsDZBfm1wfD/RO91N/nbB8ACGbC4eBBd1ALqIx8=
-github.com/stuttgart-things/sthingsCli v0.1.44 h1:T+CNuq6igFPcazSRopSulOJDF2X0NVORgysTcvzcTx8=
-github.com/stuttgart-things/sthingsCli v0.1.44/go.mod h1:1dUqOarvR91b8BVoS0ebo6W9ekIk0Q8p9IJyaQDaXBE=
+github.com/stuttgart-things/sthingsCli v0.1.45 h1:VOXtmzfil8hSQJhCYKY1/9V/WXBgz8ia67UNL3AZUUI=
+github.com/stuttgart-things/sthingsCli v0.1.45/go.mod h1:1dUqOarvR91b8BVoS0ebo6W9ekIk0Q8p9IJyaQDaXBE=
 github.com/stuttgart-things/sthingsK8s v0.1.6 h1:ts4lGgg1+1wIhzNQz4qb28cSZzwmBgDz9aYvILMySNk=
 github.com/stuttgart-things/sthingsK8s v0.1.6/go.mod h1:uk8z78bbeJ8gcYEMDa3M2X8+6wRWT5cBza24LNBCEY0=
 github.com/subosito/gotenv v1.4.2 h1:X1TuBLAMDFbaTAChgCBLu3DU3UPyELpnF2jjJ2cz/S8=

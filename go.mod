@@ -10,7 +10,7 @@ require (
 	github.com/stuttgart-things/redisqueue v0.0.0-20230628084515-1d31f7874df7
 	github.com/stuttgart-things/stageTime-server v0.0.0-20231113180141-f3dc0179f715
 	github.com/stuttgart-things/sthingsBase v0.1.30
-	github.com/stuttgart-things/sthingsCli v0.1.44
+	github.com/stuttgart-things/sthingsCli v0.1.45
 	github.com/stuttgart-things/sthingsK8s v0.1.6
 	go.hein.dev/go-version v0.1.0
 )
