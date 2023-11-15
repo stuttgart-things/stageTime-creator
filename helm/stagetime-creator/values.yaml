@@ -1,6 +1,5 @@
 # Default values for stageTime-creator.
 namespace: stagetime
-
 configmaps:
   creator:
     TEMPLATE_PATH: /templates
@@ -19,7 +18,6 @@ configmaps:
           [{{`{{ $name }}`}}]{{`{{ range $value }}`}}
           {{`{{ . }}`}}{{`{{ end }}`}}
           {{`{{ end }}`}}
-
 deployment:
   name: stagetime-creator
   volumes:
@@ -50,7 +48,7 @@ deployment:
       image: eu.gcr.io/stuttgart-things/stagetime-creator
       replicaCount: 1
       imagePullPolicy: Always
-      tag: 23.1113.1939-v0.1.59
+      tag: 23.1115.1721-v0.1.61
       securityContext:
         capabilities: {}
 # RBAC
