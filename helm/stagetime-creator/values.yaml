@@ -1,16 +1,6 @@
 # Default values for stageTime-creator.
 namespace: stagetime
-tektonResources:
-  enabled: false
-pipelineRuns:
-  enableRuns: false
-  runs:
-    buildHelmChart:
-      params:
-        helm-chart-tag: v0.1.59
-    buildKanikoImage:
-      params:
-        tag: 23.1113.1939-v0.1.59
+
 configmaps:
   creator:
     TEMPLATE_PATH: /templates
@@ -29,6 +19,7 @@ configmaps:
           [{{`{{ $name }}`}}]{{`{{ range $value }}`}}
           {{`{{ . }}`}}{{`{{ end }}`}}
           {{`{{ end }}`}}
+
 deployment:
   name: stagetime-creator
   volumes:
