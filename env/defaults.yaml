@@ -1,2 +1,6 @@
 ---
-enablePersistence: false
+persistenceEnabled: false
+redisStack:
+  port: 6379
+  serviceName: redis-stack-headless
+  namespace: stagetime-creator-redis

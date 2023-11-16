@@ -1,4 +1,4 @@
 ---
-ingressDomain: cd43.sthings-pve.labul.sva.de
+persistenceEnabled: true
 redisPassword: ref+vault://stagetime/redis/password
-redisServer: redis-stack-headless.stagetime-redis.svc.cluster.local
+redisServer: redis-stack-headless.stagetime-creator-redis.svc.cluster.local

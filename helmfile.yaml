@@ -1,22 +1,33 @@
 ---
 releases:
   - name: redis-stack
-    installed: true
+    installed: false
     namespace: stagetime-creator-redis
     chart: redis/redis
     version: 17.1.4
     values:
       - "env/redis-stack.yaml.gotmpl"
+  - name: stagetime-creator
+    installed: true
+    namespace: stagetime-creator
+    chart: stagetime-creator/stagetime-creator
+    version: v0.1.61
+    values:
+      - "env/values.yaml.gotmpl"
 
 environments:
   labul-pve-dev:
     values:
       - env/defaults.yaml
       - env/{{ .Environment.Name }}.yaml
+  vcluster:
+    values:
+      - env/defaults.yaml
+      - env/{{ .Environment.Name }}.yaml
 
 repositories:
-  - name: stuttgart-things
-    url: eu.gcr.io/stuttgart-things
+  - name: stagetime-creator
+    url: scr.cd43.sthings-pve.labul.sva.de/stagetime-creator
     oci: true
   - name: redis
     url: https://charts.bitnami.com/bitnami

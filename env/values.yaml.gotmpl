@@ -1,1 +1,25 @@
 ---
+secrets:
+  redis-connection:
+    name: redis-connection
+    labels:
+      app: stagetime-server
+    dataType: stringData
+    secretKVs:
+      REDIS_SERVER: {{ .Values.redisStack.serviceName }}.{{ .Values.redisStack.namespace }}.svc.cluster.local
+      REDIS_PORT: {{ .Values.redisStack.port }}
+      REDIS_PASSWORD: {{ .Values.redisPassword }}
+
+clusterRoleBindings:
+  stagetime-creator:
+    subjects:
+      - kind: ServiceAccount
+        name: stagetime-creator
+        namespace: {{ .Release.Namespace }}
+
+roleBindings:
+  stagetime-creator:
+    subjects:
+      - kind: ServiceAccount
+        name: stagetime-creator
+        namespace: {{ .Release.Namespace }}

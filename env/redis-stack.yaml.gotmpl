@@ -12,7 +12,7 @@ image:
   tag: "6.2.6-v9"
 master:
   persistence:
-    enabled: {{ .Values.enablePersistence }}
+    enabled: {{ .Values.persistenceEnabled }}
   args:
     - -c
     - /opt/bitnami/scripts/merged-start-scripts/start-master.sh
@@ -26,7 +26,7 @@ master:
       mountPath: /opt/bitnami/scripts/merged-start-scripts
 replica:
   persistence:
-    enabled: {{ .Values.enablePersistence }}
+    enabled: {{ .Values.persistenceEnabled }}
   replicaCount: 1
   args:
     - -c

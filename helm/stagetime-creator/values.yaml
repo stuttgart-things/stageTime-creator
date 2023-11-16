@@ -4,8 +4,6 @@ configmaps:
   creator:
     TEMPLATE_PATH: /templates
     REDIS_STREAM: stagetime:manifests
-    REDIS_SERVER: stagetime-informer-redis-headless.stagetime.svc.cluster.local
-    REDIS_PORT: "6379"
   manifest-templates:
     inventory.gotmpl: |
       kind: ConfigMap
