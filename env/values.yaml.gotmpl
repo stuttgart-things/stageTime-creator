@@ -10,7 +10,7 @@ secrets:
     secretKVs:
       REDIS_SERVER: {{ .Values.redisStack.serviceName }}.{{ .Values.redisStack.namespace }}.svc.cluster.local
       REDIS_PORT: {{ .Values.redisStack.port }}
-      REDIS_PASSWORD: {{ .Values.redisPassword }}
+      REDIS_PASSWORD: {{ .Values.redisStack.password }}
 
 clusterRoleBindings:
   stagetime-creator:

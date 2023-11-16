@@ -3,3 +3,4 @@ enableIngress: false
 redisPassword: vlusterR0cks
 redisServer: redis-stack-headless.stagetime-redis.svc.cluster.local
 persistenceEnabled: false
+deployRedisStack: true

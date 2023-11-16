@@ -1,4 +1,8 @@
 ---
+deployRedisStack: false
 persistenceEnabled: true
-redisPassword: ref+vault://stagetime/redis/password
-redisServer: redis-stack-headless.stagetime-creator-redis.svc.cluster.local
+redisStack:
+  port: 6379
+  serviceName: redis-stack-headless
+  namespace: stagetime-redis
+  password: ref+vault://stagetime/redis/password
