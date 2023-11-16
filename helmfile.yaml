@@ -1,7 +1,7 @@
 ---
 releases:
   - name: redis-stack
-    installed: {{ .Values.deployRedisStack }}
+    installed: {? {.Values.deployRedisStack: ''} : ''}
     namespace: stagetime-creator-redis
     chart: redis/redis
     version: 17.1.4
@@ -11,7 +11,7 @@ releases:
     installed: true
     namespace: stagetime-creator
     chart: stagetime-creator/stagetime-creator
-    version: v0.1.64
+    version: v0.1.65
     values:
       - "env/values.yaml.gotmpl"
 environments:
