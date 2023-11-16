@@ -43,10 +43,10 @@ deployment:
         manifest-templates:
           mountPath: /templates/
           volumeKind: emptyDir
-      image: eu.gcr.io/stuttgart-things/stagetime-creator
+      image: scr.cd43.sthings-pve.labul.sva.de/stagetime-creator/stagetime-creator
       replicaCount: 1
       imagePullPolicy: Always
-      tag: 23.1115.1721-v0.1.61
+      tag: 23.1116.1122-v0.1.62
       securityContext:
         capabilities: {}
 # RBAC
