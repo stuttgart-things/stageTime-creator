@@ -11,10 +11,9 @@ releases:
     installed: true
     namespace: stagetime-creator
     chart: stagetime-creator/stagetime-creator
-    version: v0.1.61
+    version: v0.1.63
     values:
       - "env/values.yaml.gotmpl"
-
 environments:
   labul-pve-dev:
     values:
@@ -24,14 +23,12 @@ environments:
     values:
       - env/defaults.yaml
       - env/{{ .Environment.Name }}.yaml
-
 repositories:
   - name: stagetime-creator
     url: scr.cd43.sthings-pve.labul.sva.de/stagetime-creator
     oci: true
   - name: redis
     url: https://charts.bitnami.com/bitnami
-
 helmDefaults:
   verify: false
   wait: false
