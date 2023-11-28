@@ -46,7 +46,7 @@ deployment:
       image: scr.cd43.sthings-pve.labul.sva.de/stagetime-creator/stagetime-creator
       replicaCount: 1
       imagePullPolicy: Always
-      tag: 23.1116.1152-v0.1.65
+      tag: 23.1116.1202-v0.1.66
       securityContext:
         capabilities: {}
 # RBAC
@@ -144,6 +144,15 @@ clusterRoleBindings:
     roleRef:
       kind: ClusterRole
       name: stagetime-creator
+      apiGroup: rbac.authorization.k8s.io
+    subjects:
+      - kind: ServiceAccount
+        name: stagetime-creator
+        namespace: stagetime
+  tekton-pipelines-stc:
+    roleRef:
+      kind: ClusterRole
+      name: tekton-pipelines-controller-cluster-access-stc
       apiGroup: rbac.authorization.k8s.io
     subjects:
       - kind: ServiceAccount
