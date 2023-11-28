@@ -11,6 +11,10 @@ vars:
   CONTAINER_RUNTIME_CMD: sudo nerdctl
   CONTROLLER_GEN_CMD: "./bin/controller-gen"
   KUSTOMIZE_CMD: /usr/bin/kustomize
+  VCLUSTER_NAME: my-vcluster
+  VCLUSTER_NAMESPACE: vcluster-my-vcluster
+  VCLUSTER_STORAGE_CLASS: openebs-hostpath
+  VCLUSTER_HELMFILE_ENV: vcluster
   GIT_COMMIT:
     sh: git log -n 1 --format=%h
   DATE:
@@ -100,8 +104,6 @@ tasks:
       - yq e -i '.deployment.containers.{{ lower (.PROJECT_NAME) }}.image = "{{ .REGISTRY }}/{{ .REPOSITORY_NAME }}/{{ lower (.PROJECT_NAME) }}"' ./helm/*/values.yaml
       - yq e -i '.deployment.containers.{{ lower (.PROJECT_NAME) }}.tag = "{{ .DATE }}-{{ .UPDATED_TAG_VERSION }}"' ./helm/*/values.yaml
       - yq e -i '.releases[1].version = "{{ .UPDATED_TAG_VERSION }}"' ./helmfile.yaml
-      - sed -i 's/{? {./{{ ./g' ./helmfile.yaml
-      - sed -i 's/{? {./{{ ./g' ./helmfile.yaml
       - helm package ./helm/*/
 
   push:
