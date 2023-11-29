@@ -8,7 +8,7 @@ metadata:
 spec:
   containers:
     - name: wget
-      image: scr.cd43.sthings-pve.labul.sva.de/stagetime-creator/stagetime-creator:23.1129.0600-v0.1.68
+      image: scr.cd43.sthings-pve.labul.sva.de/stagetime-creator/stagetime-creator:23.1129.0602-v0.1.69
       command: ['stcTestProducer']
       env:
         - name: STAGETIME_SERVER
