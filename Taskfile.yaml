@@ -114,18 +114,6 @@ tasks:
       - rm -rf {{ lower (.PROJECT_NAME) }}-{{ .UPDATED_TAG_VERSION }}.tgz
       - task: git-push
 
-  run-test:
-    desc: Run test-producer
-    cmds:
-      - |
-        export REDIS_SERVER="127.0.0.1"
-        export REDIS_PORT="28015"
-        export REDIS_STREAM=sweatshop:manifests
-        echo "Enter REDIS PASSWORD:"
-        read REDIS_PASSWORD;
-        export REDIS_PASSWORD=${REDIS_PASSWORD}
-        go run ./tests/test-producer.go
-
   vcluster:
     desc: Test deploy on vcluster
     cmds:

@@ -38,6 +38,9 @@ var (
 
 func main() {
 
+	fmt.Println("CONNECTED TO " + redisServer + ":" + redisPort)
+	fmt.Println("STREAM " + redisStream)
+
 	// GET REVISION RUN ID
 	if os.Getenv("REVSIONRUN_STAGE_ID") != "" {
 		revisionRunStageID = os.Getenv("REVSIONRUN_STAGE_ID")

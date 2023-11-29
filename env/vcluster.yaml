@@ -1,6 +1,10 @@
 ---
 enableIngress: false
-redisPassword: vlusterR0cks
-redisServer: redis-stack-headless.stagetime-redis.svc.cluster.local
 persistenceEnabled: false
 deployRedisStack: true
+
+redisStack:
+  port: 6379
+  serviceName: redis-stack-headless
+  namespace: stagetime-redis
+  password: vlusterR0cks
