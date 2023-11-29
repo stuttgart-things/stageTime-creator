@@ -8,8 +8,8 @@ metadata:
 spec:
   containers:
     - name: wget
-      image: scr.cd43.sthings-pve.labul.sva.de/stagetime-server/stagetime-server:23.1109.1148-0.3.22
-      command: ['grpcCall']
+      image: scr.cd43.sthings-pve.labul.sva.de/stagetime-creator/stagetime-creator:23.1129.0600-v0.1.68
+      command: ['stcTestProducer']
       env:
         - name: STAGETIME_SERVER
           value: "stagetime-server-service.stagetime.svc.cluster.local:80"

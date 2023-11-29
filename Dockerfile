@@ -13,12 +13,12 @@ RUN go mod tidy
 RUN CGO_ENABLED=0 go build -o /bin/stageTime-creator \
     -ldflags="-X ${GO_MODULE}/internal.version=${VERSION} -X ${GO_MODULE}/internal.date=${BUILD_DATE} -X ${GO_MODULE}/internal.commit=${COMMIT}"
 
-RUN CGO_ENABLED=0 go build -o /bin/stc-set-test tests/test-json-set.go
+RUN CGO_ENABLED=0 go build -o /bin/stcTestProducer tests/testProducer.go
 
 FROM alpine:3.18.4
 COPY --from=builder /bin/stageTime-creator /bin/stageTime-creator
 
 # FOR SERVICE TESTING
-COPY --from=builder /bin/stc-set-test /bin/stc-set-test
+COPY --from=builder /bin/stcTestProducer /bin/stcTestProducer
 
 ENTRYPOINT ["stageTime-creator"]
