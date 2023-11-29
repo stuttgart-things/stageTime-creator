@@ -6,14 +6,25 @@ metadata:
   annotations:
     "helm.sh/hook": test
 spec:
-  containers:
-    - name: wget
+  serviceAccountName: stagetime-creator
+  initContainers:
+    - name: test-producer
       image: scr.cd43.sthings-pve.labul.sva.de/stagetime-creator/stagetime-creator:23.1129.0602-v0.1.69
       command: ['stcTestProducer']
       env:
-        - name: STAGETIME_SERVER
-          value: "stagetime-server-service.stagetime.svc.cluster.local:80"
-          #value: "stagetime.cd43.sthings-pve.labul.sva.de:443"
-        - name: STAGETIME_TEST_FILES
-          value: "/tmp/prs.json"
+        - name: REDIS_STREAM
+          value: "stagetime:test-manifests"
+      envFrom:
+        - secretRef:
+            name: redis-connection
+  containers:
+    - name: test-consumer
+      image: scr.cd43.sthings-pve.labul.sva.de/stagetime-creator/stagetime-creator:23.1129.0602-v0.1.69
+      command: ['stcTestProducer']
+      env:
+        - name: REDIS_STREAM
+          value: "stagetime:test-manifests"
+      envFrom:
+        - secretRef:
+            name: redis-connection
   restartPolicy: Never
