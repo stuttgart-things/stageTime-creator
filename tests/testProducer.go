@@ -24,7 +24,7 @@ var (
 	resolverParams = make(map[string]string)
 
 	listPipelineParams = make(map[string][]string)
-	revisionRunStageID = "385e2f8-0"
+	revisionRunStageID = "385e2f8-1"
 	// pipelineWorkspaces   []server.Workspace
 	volumeClaimTemplates []server.VolumeClaimTemplate
 
@@ -51,13 +51,13 @@ func main() {
 
 	// var pipelineWorkspaces = append(pipelineWorkspaces, workspace)
 	pr1 := server.PipelineRun{
-		Name:                "create-pdns-entry-pve-cd43",
+		Name:                "pdns-cd43",
 		RevisionRunAuthor:   "patrick.hermann",
 		RevisionRunCreation: "23.1113.1007",
 		RevisionRunCommitId: revisionRunStageID,
 		RevisionRunRepoUrl:  "https://github.com/stuttgart-things/stuttgart-things.git",
 		RevisionRunRepoName: "stuttgart-things",
-		Namespace:           "tektoncd",
+		Namespace:           "stagetime-creator",
 		// PipelineRef:         "create-kaniko-image",
 		TimeoutPipeline: "0h12m0s",
 		Params:          pipelineParams,

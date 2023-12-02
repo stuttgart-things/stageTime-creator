@@ -4,6 +4,7 @@ configmaps:
   creator:
     TEMPLATE_PATH: /templates
     REDIS_STREAM: stagetime:manifests
+    TEKTON_NAMESPACE: tektoncd
   manifest-templates:
     inventory.gotmpl: |
       kind: ConfigMap

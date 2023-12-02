@@ -6,9 +6,9 @@ package internal
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/nitishm/go-rejson/v4"
-	sthingsBase "github.com/stuttgart-things/sthingsBase"
 	sthingsCli "github.com/stuttgart-things/sthingsCli"
 
 	goredis "github.com/redis/go-redis/v9"
@@ -18,7 +18,7 @@ import (
 var (
 	redisClient      = goredis.NewClient(&goredis.Options{Addr: redisServer + ":" + redisPort, Password: redisPassword, DB: 0})
 	redisJSONHandler = rejson.NewReJSONHandler()
-	targetNamespace  = "stagetime-creator"
+	tektonNamespace  = os.Getenv("TEKTON_NAMESPACE")
 )
 
 func processStreams(msg *redisqueue.Message) error {
@@ -35,8 +35,7 @@ func processStreams(msg *redisqueue.Message) error {
 		allManifests := GetManifestFilesFromRedis(revisionRunID, redisJSONHandler)
 		fmt.Println(allManifests)
 		fmt.Println("PR0" + allManifests[0])
-		targetNamespace, _ := sthingsBase.GetRegexSubMatch(allManifests[0], `namespace: "(.*?)"`)
-		ApplyManifest(allManifests[0], targetNamespace)
+		ApplyManifest(allManifests[0], tektonNamespace)
 
 	} else if msg.Values["template"] != nil {
 

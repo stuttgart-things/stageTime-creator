@@ -1,5 +1,10 @@
 ---
 namespace: {{ .Release.Namespace }}
+configmaps:
+  creator:
+    TEMPLATE_PATH: /templates
+    REDIS_STREAM: stagetime:manifests
+    TEKTON_NAMESPACE: tektoncd
 
 secrets:
   redis-connection:
