@@ -8,6 +8,7 @@ import (
 	"fmt"
 
 	"github.com/nitishm/go-rejson/v4"
+	sthingsBase "github.com/stuttgart-things/sthingsBase"
 	sthingsCli "github.com/stuttgart-things/sthingsCli"
 
 	goredis "github.com/redis/go-redis/v9"
@@ -17,6 +18,7 @@ import (
 var (
 	redisClient      = goredis.NewClient(&goredis.Options{Addr: redisServer + ":" + redisPort, Password: redisPassword, DB: 0})
 	redisJSONHandler = rejson.NewReJSONHandler()
+	targetNamespace  = "default"
 )
 
 func processStreams(msg *redisqueue.Message) error {
@@ -24,7 +26,7 @@ func processStreams(msg *redisqueue.Message) error {
 	log.Info("templatePath: ", templatePath)
 
 	if msg.Values["stage"] != nil {
-		fmt.Println("found stage!")
+		fmt.Println("FOUND STAGE!")
 		fmt.Println(msg.Values)
 		redisJSONHandler.SetGoRedisClient(redisClient)
 
@@ -32,9 +34,9 @@ func processStreams(msg *redisqueue.Message) error {
 		fmt.Println(revisionRunID)
 		allManifests := GetManifestFilesFromRedis(revisionRunID, redisJSONHandler)
 		fmt.Println(allManifests)
-		// fmt.Println("PR0" + allManifests[0])
-
-		// ApplyManifest(allManifests[0], "tekton")
+		fmt.Println("PR0" + allManifests[0])
+		targetNamespace, _ := sthingsBase.GetRegexSubMatch(allManifests[0], `namespace: "(.*?)"`)
+		ApplyManifest(allManifests[0], targetNamespace)
 
 	} else if msg.Values["template"] != nil {
 

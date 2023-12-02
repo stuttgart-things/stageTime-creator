@@ -133,11 +133,11 @@ kubectl -n <REDIS-NS> port-forward redis-sweatshop-deployment-node-0 <HOST-PORT>
 
 # kubectl -n sweatshop-redis port-forward redis-sweatshop-deployment-node-0 28015:6379
 
-export REDIS_STREAM=sweatshop:manifests
+export REDIS_STREAM=stagetime-revisionruns
 export REDIS_PASSWORD=<SETME>
 export REDIS_SERVER=127.0.0.1
 export REDIS_PORT=28015 # HOST-PORT
-task run-test-producer
+go run tests/test-json-set.go
 ```
 
 </details>
