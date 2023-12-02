@@ -18,7 +18,7 @@ import (
 var (
 	redisClient      = goredis.NewClient(&goredis.Options{Addr: redisServer + ":" + redisPort, Password: redisPassword, DB: 0})
 	redisJSONHandler = rejson.NewReJSONHandler()
-	targetNamespace  = "default"
+	targetNamespace  = "stagetime-creator"
 )
 
 func processStreams(msg *redisqueue.Message) error {
