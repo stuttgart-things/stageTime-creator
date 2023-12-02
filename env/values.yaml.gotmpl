@@ -18,6 +18,15 @@ clusterRoleBindings:
       - kind: ServiceAccount
         name: stagetime-creator
         namespace: {{ .Release.Namespace }}
+  tekton-pipelines-stc:
+    roleRef:
+      kind: ClusterRole
+      name: tekton-pipelines-controller-cluster-access
+      apiGroup: rbac.authorization.k8s.io
+    subjects:
+      - kind: ServiceAccount
+        name: stagetime-creator
+        namespace: {{ .Release.Namespace }}
 
 roleBindings:
   stagetime-creator:
