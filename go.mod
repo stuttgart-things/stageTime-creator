@@ -8,7 +8,7 @@ require (
 	github.com/nitishm/go-rejson/v4 v4.1.1-0.20230331060235-d2aa875760e4
 	github.com/redis/go-redis/v9 v9.0.5
 	github.com/stuttgart-things/redisqueue v0.0.0-20230628084515-1d31f7874df7
-	github.com/stuttgart-things/stageTime-server v0.0.0-20231113180141-f3dc0179f715
+	github.com/stuttgart-things/stageTime-server v0.4.0
 	github.com/stuttgart-things/sthingsBase v0.1.30
 	github.com/stuttgart-things/sthingsCli v0.1.45
 	github.com/stuttgart-things/sthingsK8s v0.1.6
@@ -45,7 +45,6 @@ require (
 	github.com/go-openapi/jsonpointer v0.19.6 // indirect
 	github.com/go-openapi/jsonreference v0.20.1 // indirect
 	github.com/go-openapi/swag v0.22.3 // indirect
-	github.com/go-redis/redis/v7 v7.4.1 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang-jwt/jwt/v4 v4.4.2 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
