@@ -26,8 +26,8 @@ func processStreams(msg *redisqueue.Message) error {
 	log.Info("templatePath: ", templatePath)
 
 	if msg.Values["stage"] != nil {
-		fmt.Println("FOUND STAGE!")
-		fmt.Println(msg.Values)
+		log.Info("FOUND STAGE!")
+		log.Info(msg.Values)
 		redisJSONHandler.SetGoRedisClient(redisClient)
 
 		revisionRunID := fmt.Sprintf("%v", msg.Values["revisionRunId"])
@@ -40,13 +40,12 @@ func processStreams(msg *redisqueue.Message) error {
 	} else if msg.Values["template"] != nil {
 
 		templateName := msg.Values["template"].(string)
-		namespace = msg.Values["namespace"].(string)
+		namespace := msg.Values["namespace"].(string)
 
 		log.Info("templateName: ", templateName)
 		log.Info("namespace: ", namespace)
 
-		// verify values
-
+		// VERIFY VALUES
 		template, templateFileExists := ReadTemplateFromFilesystem(templatePath, templateName)
 
 		if templateFileExists {

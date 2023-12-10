@@ -39,7 +39,7 @@ deployment:
       cpu: 100m
       memory: 128Mi
   containers:
-    stagetime-creator:
+    stagetimecreator:
       volumeMounts:
         manifest-templates:
           mountPath: /templates/
@@ -47,9 +47,12 @@ deployment:
       image: scr.cd43.sthings-pve.labul.sva.de/stagetime-creator/stagetime-creator
       replicaCount: 1
       imagePullPolicy: Always
-      tag: 23.1202.2035-v0.1.75
+      tag: 23.1210.1420-v0.1.76
       securityContext:
         capabilities: {}
+    stagetime-creator:
+      image: scr.cd43.sthings-pve.labul.sva.de/stagetime-creator/stagetime-creator
+      tag: 23.1210.1442-v0.1.76
 # RBAC
 serviceAccounts:
   stagetime-creator:

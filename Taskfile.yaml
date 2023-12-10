@@ -122,9 +122,3 @@ tasks:
       - vcluster connect {{ .VCLUSTER_NAME }} -n {{ .VCLUSTER_NAMESPACE }}
       - helmfile sync --environment {{ .VCLUSTER_HELMFILE_ENV }}
       - helmfile test --environment {{ .VCLUSTER_HELMFILE_ENV }}
-      - vcluster disconnect
-
-
-
-    # installed: {{ Values.deployRedisStack: ''} : ''}
-#sed -i 's/appVersion: .*/appVersion: {{ .UPDATED_TAG_VERSION }}/g' ./helm/*/Chart.yaml

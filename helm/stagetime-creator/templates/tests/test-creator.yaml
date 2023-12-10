@@ -9,7 +9,7 @@ spec:
   serviceAccountName: stagetime-creator
   initContainers:
     - name: test-producer
-      image: scr.cd43.sthings-pve.labul.sva.de/stagetime-creator/stagetime-creator:23.1129.1048-v0.1.71
+      image: {{ .Values.deployment.containers.stagetimecreator.image }}:{{ .Values.deployment.containers.stagetimecreator.tag }}
       command: ['stcTestProducer']
       env:
         - name: REDIS_STREAM
@@ -19,7 +19,7 @@ spec:
             name: redis-connection
   containers:
     - name: test-consumer
-      image: scr.cd43.sthings-pve.labul.sva.de/stagetime-creator/stagetime-creator:23.1129.1048-v0.1.71
+      image: {{ .Values.deployment.containers.stagetimecreator.image }}:{{ .Values.deployment.containers.stagetimecreator.tag }}
       command: ['stcTestConsumer']
       env:
         - name: REDIS_STREAM
