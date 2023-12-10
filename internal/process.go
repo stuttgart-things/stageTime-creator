@@ -28,10 +28,13 @@ func processStreams(msg *redisqueue.Message) error {
 	log.Info("templatePath: ", templatePath)
 
 	if msg.Values["stage"] != nil {
+
 		log.Info(msg.Values)
+
+		// TESTPRINT
 		redisJSONHandler.SetGoRedisClient(redisClient)
 
-		manifestJSON := sthingsCli.GetRedisJSON(redisJSONHandler, "hello")
+		manifestJSON := sthingsCli.GetRedisJSON(redisJSONHandler, "3c5ac44c6fec00989c7e27b36630a82cdfd26e3b0-1")
 
 		revisionRunFromRedis := server.RevisionRunStatus{}
 		err := json.Unmarshal(manifestJSON, &revisionRunFromRedis)
@@ -39,6 +42,7 @@ func processStreams(msg *redisqueue.Message) error {
 			log.Fatalf("Failed to JSON Unmarshal")
 		}
 		server.PrintTable(revisionRunFromRedis)
+		// TESTPRINT
 
 		revisionRunID := fmt.Sprintf("%v", msg.Values["revisionRunId"])
 		fmt.Println(revisionRunID)
