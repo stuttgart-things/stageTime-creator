@@ -25,16 +25,14 @@ var (
 
 func processStreams(msg *redisqueue.Message) error {
 
-	log.Info("templatePath: ", templatePath)
-
 	if msg.Values["stage"] != nil {
 
 		log.Info(msg.Values)
 
-		// TESTPRINT
+		// BEGIN TESTPRINT
 		redisJSONHandler.SetGoRedisClient(redisClient)
 
-		manifestJSON := sthingsCli.GetRedisJSON(redisJSONHandler, "3c5ac44c6fec00989c7e27b36630a82cdfd26e3b0-1")
+		manifestJSON := sthingsCli.GetRedisJSON(redisJSONHandler, "3c5ac44c6fec00989c7e27b36630a82cdfd26e3b0-status")
 
 		revisionRunFromRedis := server.RevisionRunStatus{}
 		err := json.Unmarshal(manifestJSON, &revisionRunFromRedis)
@@ -42,7 +40,7 @@ func processStreams(msg *redisqueue.Message) error {
 			log.Fatalf("Failed to JSON Unmarshal")
 		}
 		server.PrintTable(revisionRunFromRedis)
-		// TESTPRINT
+		// END TESTPRINT
 
 		revisionRunID := fmt.Sprintf("%v", msg.Values["revisionRunId"])
 		fmt.Println(revisionRunID)
@@ -50,40 +48,39 @@ func processStreams(msg *redisqueue.Message) error {
 		fmt.Println(allManifests)
 		fmt.Println("PR0" + allManifests[0])
 		ApplyManifest(allManifests[0], tektonNamespace)
-
-	} else if msg.Values["template"] != nil {
-
-		templateName := msg.Values["template"].(string)
-		namespace := msg.Values["namespace"].(string)
-
-		log.Info("templateName: ", templateName)
-		log.Info("namespace: ", namespace)
-
-		// VERIFY VALUES
-		template, templateFileExists := ReadTemplateFromFilesystem(templatePath, templateName)
-
-		if templateFileExists {
-
-			log.Info("template " + templateName + " imported")
-
-			log.Info("checking for loopable data..")
-			loopableData, redisKey := validateCreateLoopValues(msg.Values)
-			loopableData = validateMergeLoopValues(loopableData, redisKey)
-			fmt.Println(loopableData)
-
-			log.Info("rendering..")
-			renderedManifest := RenderManifest(msg.Values, template)
-			log.Info("rendered template: ", renderedManifest)
-
-			ApplyManifest(renderedManifest, namespace)
-
-		} else {
-			log.Error("template " + templateName + " does not exist on filesystem")
-		}
-
-	} else {
-		log.Error("templateName not defined in stream!")
 	}
+
+	// else if msg.Values["template"] != nil {
+
+	// 	templateName := msg.Values["template"].(string)
+	// 	namespace := msg.Values["namespace"].(string)
+
+	// 	log.Info("templateName: ", templateName)
+	// 	log.Info("namespace: ", namespace)
+
+	// 	// VERIFY VALUES
+	// 	template, templateFileExists := ReadTemplateFromFilesystem(templatePath, templateName)
+
+	// 	if templateFileExists {
+
+	// 		log.Info("template " + templateName + " imported")
+
+	// 		log.Info("checking for loopable data..")
+	// 		loopableData, redisKey := validateCreateLoopValues(msg.Values)
+	// 		loopableData = validateMergeLoopValues(loopableData, redisKey)
+	// 		fmt.Println(loopableData)
+
+	// 		log.Info("rendering..")
+	// 		renderedManifest := RenderManifest(msg.Values, template)
+	// 		log.Info("rendered template: ", renderedManifest)
+
+	// 		ApplyManifest(renderedManifest, namespace)
+
+	// 	} else {
+	// 		log.Error("template " + templateName + " does not exist on filesystem")
+	// 	}
+
+	// }
 
 	return nil
 }
