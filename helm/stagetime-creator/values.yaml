@@ -50,9 +50,7 @@ deployment:
       tag: 23.1210.1420-v0.1.76
       securityContext:
         capabilities: {}
-    stagetime-creator:
-      image: scr.cd43.sthings-pve.labul.sva.de/stagetime-creator/stagetime-creator
-      tag: 23.1210.1442-v0.1.76
+
 # RBAC
 serviceAccounts:
   stagetime-creator:
