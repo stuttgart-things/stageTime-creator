@@ -25,30 +25,38 @@ var (
 )
 
 func processStreams(msg *redisqueue.Message) error {
+	redisJSONHandler.SetGoRedisClient(redisClient)
 
 	if msg.Values["stage"] != nil {
 
+		// PRINT STAGE DETAILS
 		stage := fmt.Sprintf("%v", msg.Values["stage"])
 		stageSplit := strings.Split(stage, "+")
 		date := stageSplit[0]
 		revisionRunID := stageSplit[1]
 		stageNumber := stageSplit[2]
+		log.Info("REVISIONRUN: ", revisionRunID)
+		log.Info("STAGE DATE: ", date)
+		log.Info("STAGE NUMBER: ", stageNumber)
 
-		log.Info(date)
-		log.Info(revisionRunID)
-		log.Info(stageNumber)
-
-		// BEGIN TESTPRINT
-		redisJSONHandler.SetGoRedisClient(redisClient)
-
+		// PRINT REVISIONRUN STATUS
 		revisionRunStatus := sthingsCli.GetRedisJSON(redisJSONHandler, revisionRunID+"-status")
-
 		revisionRunFromRedis := server.RevisionRunStatus{}
 		err := json.Unmarshal(revisionRunStatus, &revisionRunFromRedis)
 		if err != nil {
 			log.Fatalf("Failed to JSON Unmarshal")
 		}
 		server.PrintTable(revisionRunFromRedis)
+
+		// PRINT STAGE STATUS
+		stageStatus := sthingsCli.GetRedisJSON(redisJSONHandler, revisionRunID+"-"+stageNumber)
+		stageStatusFromRedis := server.StageStatus{}
+		err = json.Unmarshal(stageStatus, &stageStatusFromRedis)
+		if err != nil {
+			log.Fatalf("Failed to JSON Unmarshal")
+		}
+		server.PrintTable(stageStatusFromRedis)
+
 		// END TESTPRINT
 
 		// revisionRunID := fmt.Sprintf("%v", msg.Values["revisionRunId"])
