@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/nitishm/go-rejson/v4"
 	server "github.com/stuttgart-things/stageTime-server/server"
@@ -27,23 +28,31 @@ func processStreams(msg *redisqueue.Message) error {
 
 	if msg.Values["stage"] != nil {
 
-		log.Info(msg.Values)
+		stage := fmt.Sprintf("%v", msg.Values["stage"])
+		stageSplit := strings.Split(stage, "+")
+		date := stageSplit[0]
+		revisionRunID := stageSplit[1]
+		stageNumber := stageSplit[2]
+
+		log.Info(date)
+		log.Info(revisionRunID)
+		log.Info(stageNumber)
 
 		// BEGIN TESTPRINT
 		redisJSONHandler.SetGoRedisClient(redisClient)
 
-		manifestJSON := sthingsCli.GetRedisJSON(redisJSONHandler, "3c5ac44c6fec00989c7e27b36630a82cdfd26e3b0-status")
+		revisionRunStatus := sthingsCli.GetRedisJSON(redisJSONHandler, revisionRunID+"-status")
 
 		revisionRunFromRedis := server.RevisionRunStatus{}
-		err := json.Unmarshal(manifestJSON, &revisionRunFromRedis)
+		err := json.Unmarshal(revisionRunStatus, &revisionRunFromRedis)
 		if err != nil {
 			log.Fatalf("Failed to JSON Unmarshal")
 		}
 		server.PrintTable(revisionRunFromRedis)
 		// END TESTPRINT
 
-		revisionRunID := fmt.Sprintf("%v", msg.Values["revisionRunId"])
-		log.Info(revisionRunID)
+		// revisionRunID := fmt.Sprintf("%v", msg.Values["revisionRunId"])
+		// log.Info(revisionRunID)
 		// allManifests := GetManifestFilesFromRedis(revisionRunID, redisJSONHandler)
 		// fmt.Println(allManifests)
 		// fmt.Println("PR0" + allManifests[0])
