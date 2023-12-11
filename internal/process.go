@@ -43,11 +43,11 @@ func processStreams(msg *redisqueue.Message) error {
 		// END TESTPRINT
 
 		revisionRunID := fmt.Sprintf("%v", msg.Values["revisionRunId"])
-		fmt.Println(revisionRunID)
-		allManifests := GetManifestFilesFromRedis(revisionRunID, redisJSONHandler)
-		fmt.Println(allManifests)
-		fmt.Println("PR0" + allManifests[0])
-		ApplyManifest(allManifests[0], tektonNamespace)
+		log.Info(revisionRunID)
+		// allManifests := GetManifestFilesFromRedis(revisionRunID, redisJSONHandler)
+		// fmt.Println(allManifests)
+		// fmt.Println("PR0" + allManifests[0])
+		// ApplyManifest(allManifests[0], tektonNamespace)
 	}
 
 	// else if msg.Values["template"] != nil {
