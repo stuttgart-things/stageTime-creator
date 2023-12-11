@@ -49,7 +49,7 @@ func processStreams(msg *redisqueue.Message) error {
 		server.PrintTable(revisionRunFromRedis)
 
 		// PRINT STAGE STATUS
-		stageStatus := sthingsCli.GetRedisJSON(redisJSONHandler, revisionRunID+"-"+stageNumber)
+		stageStatus := sthingsCli.GetRedisJSON(redisJSONHandler, revisionRunID+stageNumber)
 		stageStatusFromRedis := server.StageStatus{}
 		err = json.Unmarshal(stageStatus, &stageStatusFromRedis)
 		if err != nil {
