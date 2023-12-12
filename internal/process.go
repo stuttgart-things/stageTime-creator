@@ -57,18 +57,16 @@ func processStreams(msg *redisqueue.Message) error {
 		}
 		server.PrintTable(stageStatusFromRedis)
 
-		fmt.Println(sthingsCli.GetValuesFromRedisSet(redisClient, stageStatusFromRedis.StageID))
+		pipelineRuns := sthingsCli.GetValuesFromRedisSet(redisClient, stageStatusFromRedis.StageID)
+		log.Info("ALL PIPELEINRUNS OF THIS STAGE: ", pipelineRuns)
 
-		// PRINT PIPELINRUN STATUS
-		// pipelineRunStatus := sthingsCli.GetRedisJSON(redisJSONHandler, revisionRunID+"-"+stageNumber)
-		// stageStatusFromRedis := server.PipelineRunStatus{}
-		// err = json.Unmarshal(stageStatus, &stageStatusFromRedis)
-		// if err != nil {
-		// 	log.Fatalf("Failed to JSON Unmarshal")
-		// }
-		// server.PrintTable(stageStatusFromRedis)
+		for _, pipelineRun := range pipelineRuns {
+			log.Info("PROCESSING: ", pipelineRun)
+			manifestJSON := sthingsCli.GetRedisJSON(redisJSONHandler, pipelineRun)
+			fmt.Println(sthingsCli.ConvertJSONToYAML(string(manifestJSON)))
+			// allManifests := GetManifestFilesFromRedis(revisionRunID, redisJSONHandler)
 
-		// END TESTPRINT
+		}
 
 		// revisionRunID := fmt.Sprintf("%v", msg.Values["revisionRunId"])
 		// log.Info(revisionRunID)
