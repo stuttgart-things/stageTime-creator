@@ -57,7 +57,7 @@ func processStreams(msg *redisqueue.Message) error {
 		}
 		server.PrintTable(stageStatusFromRedis)
 
-		fmt.Println(sthingsCli.GetValuesFromRedisSet(redisClient, revisionRunID+"-"+stage))
+		fmt.Println(sthingsCli.GetValuesFromRedisSet(redisClient, stageStatusFromRedis.StageID))
 
 		// PRINT PIPELINRUN STATUS
 		// pipelineRunStatus := sthingsCli.GetRedisJSON(redisJSONHandler, revisionRunID+"-"+stageNumber)
