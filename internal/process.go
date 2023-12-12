@@ -61,11 +61,10 @@ func processStreams(msg *redisqueue.Message) error {
 		log.Info("ALL PIPELEINRUNS OF THIS STAGE: ", pipelineRuns)
 
 		for _, pipelineRun := range pipelineRuns {
-			log.Info("PROCESSING: ", pipelineRun)
+			log.Info("APPLING: ", pipelineRun)
 			manifestJSON := sthingsCli.GetRedisJSON(redisJSONHandler, pipelineRun)
 			fmt.Println(sthingsCli.ConvertJSONToYAML(string(manifestJSON)))
-			// allManifests := GetManifestFilesFromRedis(revisionRunID, redisJSONHandler)
-
+			ApplyManifest(string(manifestJSON), tektonNamespace)
 		}
 
 		// revisionRunID := fmt.Sprintf("%v", msg.Values["revisionRunId"])
@@ -73,7 +72,6 @@ func processStreams(msg *redisqueue.Message) error {
 		// allManifests := GetManifestFilesFromRedis(revisionRunID, redisJSONHandler)
 		// fmt.Println(allManifests)
 		// fmt.Println("PR0" + allManifests[0])
-		// ApplyManifest(allManifests[0], tektonNamespace)
 	}
 
 	// else if msg.Values["template"] != nil {
