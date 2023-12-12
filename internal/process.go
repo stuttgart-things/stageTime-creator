@@ -64,7 +64,7 @@ func processStreams(msg *redisqueue.Message) error {
 			log.Info("APPLING: ", pipelineRun)
 			manifestJSON := sthingsCli.GetRedisJSON(redisJSONHandler, pipelineRun)
 			fmt.Println(sthingsCli.ConvertJSONToYAML(string(manifestJSON)))
-			ApplyManifest(string(manifestJSON), tektonNamespace)
+			ApplyManifest(sthingsCli.ConvertJSONToYAML(string(manifestJSON)), tektonNamespace)
 		}
 
 		// revisionRunID := fmt.Sprintf("%v", msg.Values["revisionRunId"])
