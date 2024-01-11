@@ -11,7 +11,7 @@ require (
 	github.com/stuttgart-things/stageTime-server v0.4.1
 	github.com/stuttgart-things/sthingsBase v0.1.30
 	github.com/stuttgart-things/sthingsCli v0.1.80
-	github.com/stuttgart-things/sthingsK8s v0.1.8
+	github.com/stuttgart-things/sthingsK8s v0.1.9
 	go.hein.dev/go-version v0.1.0
 )
 
