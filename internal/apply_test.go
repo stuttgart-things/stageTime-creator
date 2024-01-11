@@ -43,7 +43,7 @@ func TestApplyManifest(t *testing.T) {
 		log.Fatal(resourceCreationError)
 	}
 
-	fmt.Println(resourceCreated)
+	assert.Equal(resourceCreationError, true)
 	// for _, tc := range testsApply {
 
 	// 	// TEST RENDER
