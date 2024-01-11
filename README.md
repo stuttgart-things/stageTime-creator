@@ -81,19 +81,29 @@ helm upgrade --install stagetime-creator oci://eu.gcr.io/stuttgart-things/staget
 
 <details><summary><b>CHECK REDIS DATA w/ CLI</b></summary>
 
-```
-# Install redis-cli #
+```bash
+# INSTALL REDIS-CLI
 sudo apt-get update
 sudo apt-get install redis
+```
 
-kubectl -n sweatshop port-forward redis-sweatshop-deployment-node-0 28015:6379 -n sweatshop-redis
+```bash
+# SHELL #1
+kubectl -n sweatshop port-forward redis-stack-node-0 28015:6379 -n stagetime-redis
+```
+
+```bash
+# SHELL #2
 redis-cli -h 127.0.0.1 -p 28015 -a ${PASSWORD}
+
 # CHECK ALL REDIS KEYS
 KEYS *
+
 # READ STREAM
-XREAD COUNT 2 STREAMS sweatshop:manifests writers 0-0 0-0
+XREAD COUNT 2 STREAMS stagetime-revisionruns writers 0-0 0-0
+
 # DELETE STREAM
-DEL sweatshop:manifests
+DEL stagetime-revisionruns
 ```
 
 </details>

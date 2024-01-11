@@ -7,11 +7,12 @@ require (
 	github.com/gomodule/redigo v1.8.3
 	github.com/nitishm/go-rejson/v4 v4.1.1-0.20230331060235-d2aa875760e4
 	github.com/redis/go-redis/v9 v9.0.5
+	github.com/stretchr/testify v1.8.4
 	github.com/stuttgart-things/redisqueue v0.0.0-20230628084515-1d31f7874df7
 	github.com/stuttgart-things/stageTime-server v0.4.1
 	github.com/stuttgart-things/sthingsBase v0.1.30
 	github.com/stuttgart-things/sthingsCli v0.1.80
-	github.com/stuttgart-things/sthingsK8s v0.1.9
+	github.com/stuttgart-things/sthingsK8s v0.1.11
 	go.hein.dev/go-version v0.1.0
 )
 
@@ -92,6 +93,7 @@ require (
 	github.com/pelletier/go-toml/v2 v2.0.8 // indirect
 	github.com/pjbgf/sha1cd v0.3.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
+	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/ryanuber/go-glob v1.0.0 // indirect
