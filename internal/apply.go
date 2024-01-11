@@ -18,13 +18,20 @@ func ApplyManifest(renderedManifest, namespace string) (manifestCreated bool) {
 	kind, _ := sthingsBase.GetRegexSubMatch(renderedManifest, "kind:(.*)")
 	resourceName, _ := sthingsBase.GetRegexSubMatch(renderedManifest, "name:(.*)")
 
-	log.Info("trying to apply " + kind + " w/ the name " + resourceName)
+	log.Info("TRYING TO APPLY " + kind + " W/ THE NAME " + resourceName)
 
-	setRedisKV(kind+"-"+resourceName, "rendered")
+	setRedisKV(kind+"-"+resourceName, "RENDERED")
 
-	if sthingsK8s.CreateDynamicResourcesFromTemplate(clusterConfig, []byte(renderedManifest), namespace) {
-		setRedisKV(kind+"-"+resourceName, "created")
+	resourceCreated, resourceCreationError := sthingsK8s.CreateDynamicResourcesFromTemplate(clusterConfig, []byte(renderedManifest), namespace)
+	if resourceCreationError != nil {
+		log.Fatal(resourceCreationError)
+	}
+
+	if resourceCreated {
+		setRedisKV(kind+"-"+resourceName, "CREATED")
 		manifestCreated = true
+	} else {
+		manifestCreated = false
 	}
 
 	return

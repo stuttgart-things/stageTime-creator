@@ -67,11 +67,6 @@ func processStreams(msg *redisqueue.Message) error {
 			ApplyManifest(sthingsCli.ConvertJSONToYAML(string(manifestJSON)), tektonNamespace)
 		}
 
-		// revisionRunID := fmt.Sprintf("%v", msg.Values["revisionRunId"])
-		// log.Info(revisionRunID)
-		// allManifests := GetManifestFilesFromRedis(revisionRunID, redisJSONHandler)
-		// fmt.Println(allManifests)
-		// fmt.Println("PR0" + allManifests[0])
 	}
 
 	// else if msg.Values["template"] != nil {
@@ -107,25 +102,6 @@ func processStreams(msg *redisqueue.Message) error {
 	// }
 
 	return nil
-}
-
-func GetManifestFilesFromRedis(stageKey string, redisJSONHandler *rejson.Handler) (allManifests []string) {
-
-	allManifestKeys := sthingsCli.GetValuesFromRedisSet(redisClient, stageKey)
-	fmt.Println("ALL KEYS", allManifestKeys)
-
-	for _, manifestKey := range allManifestKeys {
-
-		// pr := GetPipelineRunYAMLFromRedis(manifestKey, redisJSONHandler)
-		// fmt.Println(pr)
-
-		manifestJSON := sthingsCli.GetRedisJSON(redisJSONHandler, manifestKey)
-		// fmt.Println(sthingsCli.ConvertJSONToYAML(string(manifestJSON)))
-		allManifests = append(allManifests, sthingsCli.ConvertJSONToYAML(string(manifestJSON)))
-	}
-
-	return
-
 }
 
 func GetPipelineRunYAMLFromRedis(pipelineRunName string, redisJSONHandler *rejson.Handler) (pipelineRunYAML string) {
