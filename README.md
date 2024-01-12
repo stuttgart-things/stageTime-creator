@@ -89,7 +89,7 @@ sudo apt-get install redis
 
 ```bash
 # SHELL #1
-kubectl -n sweatshop port-forward redis-stack-node-0 28015:6379 -n stagetime-redis
+kubectl -n stagetime port-forward redis-stack-node-0 28015:6379 -n stagetime-redis
 ```
 
 ```bash
@@ -117,7 +117,7 @@ DEL stagetime-revisionruns
 export KUBECONFIG=~/.kube/dev11
 export TEMPLATE_PATH=~/projects/go/src/github/stageTime-creator/tests
 export TEMPLATE_NAME=job-template.yaml
-export REDIS_STREAM=sweatshop:test
+export REDIS_STREAM=stagetime:test
 export REDIS_PASSWORD=<SET-ME>
 export REDIS_SERVER=redis-pve.labul.sva.de
 export REDIS_PORT=6379
@@ -130,7 +130,7 @@ task run
 
 
 ```
-# kubectl -n sweatshop-redis port-forward redis-sweatshop-deployment-node-0 28015:6379
+# kubectl -n stagetime-redis port-forward redis-stagetime-deployment-node-0 28015:6379
 task run-test
 ```
 
@@ -139,9 +139,9 @@ task run-test
 <details><summary><b>START TEST PRODUCING (REDIS INSIDE CLUSTER)</b></summary>
 
 ```
-kubectl -n <REDIS-NS> port-forward redis-sweatshop-deployment-node-0 <HOST-PORT>:<CONTAINER-PORT>
+kubectl -n <REDIS-NS> port-forward redis-stagetime-deployment-node-0 <HOST-PORT>:<CONTAINER-PORT>
 
-# kubectl -n sweatshop-redis port-forward redis-sweatshop-deployment-node-0 28015:6379
+# kubectl -n stagetime-redis port-forward redis-stagetime-deployment-node-0 28015:6379
 
 export REDIS_STREAM=stagetime-revisionruns
 export REDIS_PASSWORD=<SETME>
