@@ -12,7 +12,7 @@ require (
 	github.com/stuttgart-things/stageTime-server v0.4.1
 	github.com/stuttgart-things/sthingsBase v0.1.30
 	github.com/stuttgart-things/sthingsCli v0.1.80
-	github.com/stuttgart-things/sthingsK8s v0.1.17
+	github.com/stuttgart-things/sthingsK8s v0.1.19
 	go.hein.dev/go-version v0.1.0
 )
 
@@ -47,6 +47,7 @@ require (
 	github.com/evanphx/json-patch/v5 v5.6.0 // indirect
 	github.com/fatih/structs v1.1.0 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
+	github.com/ghodss/yaml v1.0.0 // indirect
 	github.com/git-chglog/git-chglog v0.15.4 // indirect
 	github.com/go-git/gcfg v1.5.1-0.20230307220236-3a3c6141e376 // indirect
 	github.com/go-git/go-billy/v5 v5.5.0 // indirect

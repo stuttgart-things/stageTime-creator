@@ -10,6 +10,8 @@ import (
 	"strings"
 	"time"
 
+	sthingsK8s "github.com/stuttgart-things/sthingsK8s"
+
 	sthingsCli "github.com/stuttgart-things/sthingsCli"
 )
 
@@ -86,4 +88,15 @@ func GetAllRegexMatches(scanText, regexPattern string) []string {
 	fmt.Println(re)
 	return re.FindAllString(scanText, -1)
 
+}
+
+func ValidatePipelineRun(yamlPipelineRun string) (bool, error) {
+
+	// REWRITE PIPELINERUN FOR VALIDATION
+	pr := strings.Split(yamlPipelineRun, "timeouts")
+	paramsAsDefaults := strings.ReplaceAll("timeouts"+pr[1], "value:", "default:")
+	rewrittenPipelineRun := pr[0] + paramsAsDefaults
+	validPipelineRun, _, err := sthingsK8s.ConvertYAMLtoPipelineRun(rewrittenPipelineRun)
+
+	return validPipelineRun, err
 }

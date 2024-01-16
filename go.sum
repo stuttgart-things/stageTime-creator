@@ -163,6 +163,7 @@ github.com/frankban/quicktest v1.14.4 h1:g2rn0vABPOOXmZUj+vbmUp0lPoXEMuhTpIluN0X
 github.com/fsnotify/fsnotify v1.4.7/go.mod h1:jwhsz4b93w/PPRr/qN1Yymfu8t87LnFCMoQvtojpjFo=
 github.com/fsnotify/fsnotify v1.6.0 h1:n+5WquG0fcWoWp6xPWfHdbskMCQaFnG6PfBrh1Ky4HY=
 github.com/fsnotify/fsnotify v1.6.0/go.mod h1:sl3t1tCWJFWoRz9R8WJCbQihKKwmorjAbSClcnxKAGw=
+github.com/ghodss/yaml v1.0.0 h1:wQHKEahhL6wmXdzwWG11gIVCkOv05bNOh+Rxn0yngAk=
 github.com/ghodss/yaml v1.0.0/go.mod h1:4dBDuWmgqj2HViK6kFavaiC9ZROes6MMH2rRYeMEF04=
 github.com/git-chglog/git-chglog v0.15.4 h1:BwPDj7AghQTfpXO+UxG4mZM5MUTe9wfDuenF3jpyNf0=
 github.com/git-chglog/git-chglog v0.15.4/go.mod h1:BmWdTpqBVzPjKNrBTZGcQCrQV9zq6gFKurhWNnJbYDA=
@@ -565,8 +566,8 @@ github.com/stuttgart-things/sthingsBase v0.1.30 h1:VUZxJIDGG/FnOZGDOH+VnjVfatK4n
 github.com/stuttgart-things/sthingsBase v0.1.30/go.mod h1:W5FmSsDZBfm1wfD/RO91N/nbB8ACGbC4eBBd1ALqIx8=
 github.com/stuttgart-things/sthingsCli v0.1.80 h1:tHjtB+AmUJ0ZGb0vv0CfrDWbmiDxFlPKSVIvB1y5boQ=
 github.com/stuttgart-things/sthingsCli v0.1.80/go.mod h1:4R6ldRRjyv73bz6QxhFz8sBV512VppndEl/jWNrkzVM=
-github.com/stuttgart-things/sthingsK8s v0.1.17 h1:WZlntid+b6LvY8qerAQElsu68AinQ1/t4sd8/GDAw30=
-github.com/stuttgart-things/sthingsK8s v0.1.17/go.mod h1:9OJuAC9BVg5L4QcBLcfuRjPaBX5yvtCWARviVNXDczs=
+github.com/stuttgart-things/sthingsK8s v0.1.19 h1:t7Da/VFPggl3lmWhFh6oHgKf0BJc+VHRV8svii+BCbI=
+github.com/stuttgart-things/sthingsK8s v0.1.19/go.mod h1:lz9VZNcD1jUd0Wb9HLrtyFV46rpzAaV3F2ROoWPSJCo=
 github.com/subosito/gotenv v1.4.2 h1:X1TuBLAMDFbaTAChgCBLu3DU3UPyELpnF2jjJ2cz/S8=
 github.com/subosito/gotenv v1.4.2/go.mod h1:ayKnFf/c6rvx/2iiLrJUk1e6plDbT3edrFNGqEflhK0=
 github.com/tektoncd/pipeline v0.53.3 h1:u8Zi4AN+4DR3080Qr22hTbRyclC6DIScRQOPG4OvJRk=

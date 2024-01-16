@@ -23,17 +23,15 @@ var (
 	pipelineParams = make(map[string]string)
 	resolverParams = make(map[string]string)
 
-	listPipelineParams = make(map[string][]string)
-	revisionRunStageID = "385e2f8-1"
-	// pipelineWorkspaces   []server.Workspace
+	listPipelineParams   = make(map[string][]string)
+	revisionRunStageID   = "385e2f8-1"
 	volumeClaimTemplates []server.VolumeClaimTemplate
 
 	volumeClaimTemplate = server.VolumeClaimTemplate{"shared-workspace", "openebs-hostpath", "ReadWriteOnce", "250Mi"}
 
 	tektonPvc = server.Workspace{"volumeClaimTemplate", "volumeClaimTemplate", "codehub-ssh", "secretName"}
 	workspace = server.Workspace{"source", "secret", "acr", "secretName"}
-	// prList             = []string{"build-machineshop-image-1", "build-helm"}
-	prs []string
+	prs       []string
 )
 
 func main() {

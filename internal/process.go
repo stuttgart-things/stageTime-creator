@@ -13,7 +13,6 @@ import (
 	"github.com/nitishm/go-rejson/v4"
 	server "github.com/stuttgart-things/stageTime-server/server"
 	sthingsCli "github.com/stuttgart-things/sthingsCli"
-	sthingsK8s "github.com/stuttgart-things/sthingsK8s"
 
 	goredis "github.com/redis/go-redis/v9"
 	"github.com/stuttgart-things/redisqueue"
@@ -67,8 +66,9 @@ func processStreams(msg *redisqueue.Message) error {
 			fmt.Println(sthingsCli.ConvertJSONToYAML(string(manifestJSON)))
 
 			// CHECK IF PIPELINERUN IS VALID
-			validPipelineRun, _, prError := sthingsK8s.ConvertYAMLtoPipelineRun(string(manifestJSON))
+			validPipelineRun, prError := ValidatePipelineRun(string(manifestJSON))
 
+			// IF PIPELINERUN IS VALID - APPLY
 			if validPipelineRun {
 				ApplyManifest(sthingsCli.ConvertJSONToYAML(string(manifestJSON)), tektonNamespace)
 			} else {
