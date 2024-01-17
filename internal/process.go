@@ -63,14 +63,14 @@ func processStreams(msg *redisqueue.Message) error {
 		for _, pipelineRun := range pipelineRuns {
 			log.Info("APPLING: ", pipelineRun)
 			manifestJSON := sthingsCli.GetRedisJSON(redisJSONHandler, pipelineRun)
-			fmt.Println(sthingsCli.ConvertJSONToYAML(string(manifestJSON)))
+			pipelinRunYaml := sthingsCli.ConvertJSONToYAML(string(manifestJSON))
 
 			// CHECK IF PIPELINERUN IS VALID
-			validPipelineRun, prError := ValidatePipelineRun(string(manifestJSON))
+			validPipelineRun, prError := ValidatePipelineRun(pipelinRunYaml)
 
 			// IF PIPELINERUN IS VALID - APPLY
 			if validPipelineRun {
-				ApplyManifest(sthingsCli.ConvertJSONToYAML(string(manifestJSON)), tektonNamespace)
+				ApplyManifest(pipelinRunYaml, tektonNamespace)
 			} else {
 				log.Error("PIPELINERUN INVALID: ", prError)
 			}

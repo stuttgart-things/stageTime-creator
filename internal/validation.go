@@ -92,6 +92,8 @@ func GetAllRegexMatches(scanText, regexPattern string) []string {
 
 func ValidatePipelineRun(yamlPipelineRun string) (bool, error) {
 
+	fmt.Println(yamlPipelineRun)
+
 	// REWRITE PIPELINERUN FOR VALIDATION
 	pr := strings.Split(yamlPipelineRun, "timeouts")
 	paramsAsDefaults := strings.ReplaceAll("timeouts"+pr[1], "value:", "default:")
