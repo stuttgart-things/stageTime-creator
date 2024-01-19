@@ -23,10 +23,10 @@ func main() {
 
 	// PRINT BANNER + VERSION INFO
 	internal.PrintBanner()
-	log.Println("stageTime-creator started")
-	log.Info("redis server " + redisServer)
-	log.Info("redis port " + redisPort)
-	log.Info("redis stream " + redisStream)
+	log.Info("STAGETIME-CREATOR STARTED")
+	log.Info("REDIS SERVER " + redisServer)
+	log.Info("REDIS PORT " + redisPort)
+	log.Info("REDIS STREAM " + redisStream)
 
 	// POLL FOR VALUES IN REDIS STREAMS
 	internal.PollRedisStreams()

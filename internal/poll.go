@@ -52,7 +52,7 @@ func PollRedisStreams() {
 		}
 	}()
 
-	log.Info("start polling stream", redisStream+" on "+redisServer+":"+redisPort)
+	log.Info("START POLLING STREAM: ", redisStream+" on "+redisServer+":"+redisPort)
 
 	c.Run()
 

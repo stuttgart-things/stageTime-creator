@@ -58,7 +58,7 @@ func processStreams(msg *redisqueue.Message) error {
 		server.PrintTable(stageStatusFromRedis)
 
 		pipelineRuns := sthingsCli.GetValuesFromRedisSet(redisClient, stageStatusFromRedis.StageID)
-		log.Info("ALL PIPELEINRUNS OF THIS STAGE: ", pipelineRuns)
+		log.Info("ALL PIPELINERUNS OF THIS STAGE: ", pipelineRuns)
 
 		for _, pipelineRun := range pipelineRuns {
 			log.Info("APPLING: ", pipelineRun)
