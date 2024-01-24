@@ -47,7 +47,7 @@ deployment:
       image: scr.cd43.sthings-pve.labul.sva.de/stagetime-creator/stagetime-creator
       replicaCount: 1
       imagePullPolicy: Always
-      tag: 24.0124.0705-v0.1.97
+      tag: 24.0124.0740-v0.1.98
       securityContext:
         capabilities: {}
 # RBAC
