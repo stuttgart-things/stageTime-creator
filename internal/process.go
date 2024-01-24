@@ -44,7 +44,7 @@ func processStreams(msg *redisqueue.Message) error {
 		revisionRunFromRedis := server.RevisionRunStatus{}
 		err := json.Unmarshal(revisionRunStatus, &revisionRunFromRedis)
 		if err != nil {
-			log.Fatalf("Failed to JSON Unmarshal")
+			log.Fatalf("FAILED TO JSON UNMARSHAL REVISIONRUN STATUS")
 		}
 		server.PrintTable(revisionRunFromRedis)
 
@@ -53,7 +53,7 @@ func processStreams(msg *redisqueue.Message) error {
 		stageStatusFromRedis := server.StageStatus{}
 		err = json.Unmarshal(stageStatus, &stageStatusFromRedis)
 		if err != nil {
-			log.Fatalf("Failed to JSON Unmarshal")
+			log.Fatalf("FAILED TO JSON UNMARSHAL STAGE STATUS")
 		}
 		server.PrintTable(stageStatusFromRedis)
 
