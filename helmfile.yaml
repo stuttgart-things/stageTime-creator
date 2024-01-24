@@ -11,7 +11,7 @@ releases:
     installed: true
     namespace: stagetime-creator
     chart: stagetime-creator/stagetime-creator
-    version: v0.1.96
+    version: v0.1.97
     values:
       - "env/values.yaml.gotmpl"
 environments:
