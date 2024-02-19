@@ -5,7 +5,6 @@ Copyright © 2023 PATRICK HERMANN patrick.hermann@sva.de
 package internal
 
 import (
-	"encoding/json"
 	"fmt"
 	"os"
 	"strings"
@@ -35,32 +34,18 @@ func processStreams(msg *redisqueue.Message) error {
 		date := stageSplit[0]
 		revisionRunID := stageSplit[1]
 		stageNumber := stageSplit[2]
+
 		log.Info("REVISIONRUN: ", revisionRunID)
 		log.Info("STAGE DATE: ", date)
 		log.Info("STAGE NUMBER: ", stageNumber)
 
 		// PRINT REVISIONRUN STATUS
-
 		revisionRunFromRedis := server.GetRevisionRunFromRedis(redisJSONHandler, revisionRunID+"-status", true)
 		fmt.Println(revisionRunFromRedis)
 
-		// revisionRunStatus := sthingsCli.GetRedisJSON(redisJSONHandler, revisionRunID+"-status")
-		// revisionRunFromRedis := server.RevisionRunStatus{}
-		// err := json.Unmarshal(revisionRunStatus, &revisionRunFromRedis)
-		// if err != nil {
-		// 	log.Fatalf("FAILED TO JSON UNMARSHAL REVISIONRUN STATUS")
-		// }
-		// server.PrintTable(revisionRunFromRedis)
-
 		// PRINT STAGE STATUS
-		stageStatus := sthingsCli.GetRedisJSON(redisJSONHandler, revisionRunID+stageNumber)
-		stageStatusFromRedis := server.StageStatus{}
-
-		err := json.Unmarshal(stageStatus, &stageStatusFromRedis)
-		if err != nil {
-			log.Fatalf("FAILED TO JSON UNMARSHAL STAGE STATUS")
-		}
-		server.PrintTable(stageStatusFromRedis)
+		stageStatusFromRedis := server.GetStageFromRedis(redisJSONHandler, revisionRunID+stageNumber, true)
+		fmt.Println(stageStatusFromRedis)
 
 		pipelineRuns := sthingsCli.GetValuesFromRedisSet(redisClient, stageStatusFromRedis.StageID)
 		log.Info("ALL PIPELINERUNS OF THIS STAGE: ", pipelineRuns)
@@ -80,6 +65,9 @@ func processStreams(msg *redisqueue.Message) error {
 				log.Error("PIPELINERUN INVALID: ", prError)
 			}
 		}
+
+		// SET REVISIONRUN STATUS
+		server.SetRevisionRunStatusInRedis(redisJSONHandler, revisionRunID+"-status", "REVISIONRUN UPDATED W/ CREATOR FOR STAGE: "+stageNumber, revisionRunFromRedis, true)
 
 	}
 
