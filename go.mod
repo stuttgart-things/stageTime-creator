@@ -9,7 +9,7 @@ require (
 	github.com/redis/go-redis/v9 v9.0.5
 	github.com/stretchr/testify v1.8.4
 	github.com/stuttgart-things/redisqueue v0.0.0-20230628084515-1d31f7874df7
-	github.com/stuttgart-things/stageTime-server v0.4.1
+	github.com/stuttgart-things/stageTime-server v0.4.44
 	github.com/stuttgart-things/sthingsBase v0.1.30
 	github.com/stuttgart-things/sthingsCli v0.1.80
 	github.com/stuttgart-things/sthingsK8s v0.1.19

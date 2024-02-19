@@ -40,18 +40,23 @@ func processStreams(msg *redisqueue.Message) error {
 		log.Info("STAGE NUMBER: ", stageNumber)
 
 		// PRINT REVISIONRUN STATUS
-		revisionRunStatus := sthingsCli.GetRedisJSON(redisJSONHandler, revisionRunID+"-status")
-		revisionRunFromRedis := server.RevisionRunStatus{}
-		err := json.Unmarshal(revisionRunStatus, &revisionRunFromRedis)
-		if err != nil {
-			log.Fatalf("FAILED TO JSON UNMARSHAL REVISIONRUN STATUS")
-		}
-		server.PrintTable(revisionRunFromRedis)
+
+		revisionRunFromRedis := server.GetRevisionRunFromRedis(redisJSONHandler, revisionRunID+"-status", true)
+		fmt.Println(revisionRunFromRedis)
+
+		// revisionRunStatus := sthingsCli.GetRedisJSON(redisJSONHandler, revisionRunID+"-status")
+		// revisionRunFromRedis := server.RevisionRunStatus{}
+		// err := json.Unmarshal(revisionRunStatus, &revisionRunFromRedis)
+		// if err != nil {
+		// 	log.Fatalf("FAILED TO JSON UNMARSHAL REVISIONRUN STATUS")
+		// }
+		// server.PrintTable(revisionRunFromRedis)
 
 		// PRINT STAGE STATUS
 		stageStatus := sthingsCli.GetRedisJSON(redisJSONHandler, revisionRunID+stageNumber)
 		stageStatusFromRedis := server.StageStatus{}
-		err = json.Unmarshal(stageStatus, &stageStatusFromRedis)
+
+		err := json.Unmarshal(stageStatus, &stageStatusFromRedis)
 		if err != nil {
 			log.Fatalf("FAILED TO JSON UNMARSHAL STAGE STATUS")
 		}
@@ -77,38 +82,6 @@ func processStreams(msg *redisqueue.Message) error {
 		}
 
 	}
-
-	// else if msg.Values["template"] != nil {
-
-	// 	templateName := msg.Values["template"].(string)
-	// 	namespace := msg.Values["namespace"].(string)
-
-	// 	log.Info("templateName: ", templateName)
-	// 	log.Info("namespace: ", namespace)
-
-	// 	// VERIFY VALUES
-	// 	template, templateFileExists := ReadTemplateFromFilesystem(templatePath, templateName)
-
-	// 	if templateFileExists {
-
-	// 		log.Info("template " + templateName + " imported")
-
-	// 		log.Info("checking for loopable data..")
-	// 		loopableData, redisKey := validateCreateLoopValues(msg.Values)
-	// 		loopableData = validateMergeLoopValues(loopableData, redisKey)
-	// 		fmt.Println(loopableData)
-
-	// 		log.Info("rendering..")
-	// 		renderedManifest := RenderManifest(msg.Values, template)
-	// 		log.Info("rendered template: ", renderedManifest)
-
-	// 		ApplyManifest(renderedManifest, namespace)
-
-	// 	} else {
-	// 		log.Error("template " + templateName + " does not exist on filesystem")
-	// 	}
-
-	// }
 
 	return nil
 }

@@ -14,12 +14,12 @@ import (
 )
 
 var (
-	redisServer        = os.Getenv("REDIS_SERVER")
-	redisPort          = os.Getenv("REDIS_PORT")
-	redisPassword      = os.Getenv("REDIS_PASSWORD")
-	redisStream        = os.Getenv("REDIS_STREAM")
-	ctx                = context.Background()
-	revisionRunStageID = "385e2f8-0" //DEFAULT VALUE
+	redisServer            = os.Getenv("REDIS_SERVER")
+	redisPort              = os.Getenv("REDIS_PORT")
+	redisPassword          = os.Getenv("REDIS_PASSWORD")
+	redisStream            = os.Getenv("REDIS_STREAM")
+	ctx                    = context.Background()
+	testRevisionRunStageID = "385e2f8-0" //DEFAULT VALUE
 )
 
 func main() {
@@ -29,7 +29,7 @@ func main() {
 
 	// GET REVISION RUN ID
 	if os.Getenv("REVSIONRUN_STAGE_ID") != "" {
-		revisionRunStageID = os.Getenv("REVSIONRUN_STAGE_ID")
+		testRevisionRunStageID = os.Getenv("REVSIONRUN_STAGE_ID")
 	}
 
 	// INITALIZE REDIS
@@ -38,8 +38,8 @@ func main() {
 	redisJSONHandler.SetGoRedisClient(redisClient)
 
 	// GET ALL PIPELINERUN MANIFESTS FROM REDIS SET
-	allPipelineRunNamesFromStage := sthingsCli.GetValuesFromRedisSet(redisClient, revisionRunStageID)
-	fmt.Println("ALL PRS ON SET "+revisionRunStageID+" :", allPipelineRunNamesFromStage)
+	allPipelineRunNamesFromStage := sthingsCli.GetValuesFromRedisSet(redisClient, testRevisionRunStageID)
+	fmt.Println("ALL PRS ON SET "+testRevisionRunStageID+" :", allPipelineRunNamesFromStage)
 
 	// GET ALL PIPELINERUN MANIFESTS FROM REDIS SET
 	for _, prName := range allPipelineRunNamesFromStage {
